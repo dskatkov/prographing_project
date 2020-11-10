@@ -8,9 +8,14 @@ from gp_ui import *
 from gp_canvas import *
 
 mainWindow = tk.Tk()
+
+print(tk.filedialog.Open(mainWindow, filetypes = [("Все файлы", "*.*")]).show())
+
+canvas = Canvas(canvasFrame)
+SF = SourceFile()
+
 ui_init(mainWindow)
 
-sourceFile = SourceFile()
 
 mainWindow.mainloop()
 

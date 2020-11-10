@@ -7,12 +7,14 @@ from gp_source_file import *
 from gp_ui import *
 from gp_canvas import *
 
+
+
 mainWindow = tk.Tk()
 
-print(tk.filedialog.Open(mainWindow, filetypes = [("Все файлы", "*.*")]).show())
+#print(tk.filedialog.Open(mainWindow, filetypes = [("Все файлы", "*.*")]).show())
 
 canvas = Canvas(canvasFrame)
-SF = SourceFile()
+
 
 ui_init(mainWindow)
 

@@ -2,8 +2,9 @@ import tkinter as tk
 import tkinter.font
 
 from settings import *
+from gp_source_file import *
 
-canvasFrame, panelFrame, stateFrame = ...,...,...
+canvasFrame, panelFrame, stateFrame = ..., ..., ...
 
 def createMenu(master, tree):
     for key, val in tree.items():
@@ -20,8 +21,8 @@ def placeButtons(master, buttons, side='left', fg=btnFG, bg=btnBG):
         b = tk.Button(master=master, text=btn[0], command=btn[1], fg=btnFG, bg=btnBG)
         b.pack(side=side, padx=3, pady=3)
 
-def saveas():
-    fileName = tk.filedialog.Open(root, filetypes = [("Все файлы", "*.*")]).show()
+def saveas(root):
+    fileName = tk.filedialog.Open(root, filetypes = [("Magic files", ".vrc")]).show()
     if fileName == '':
         return
     else:
@@ -29,21 +30,21 @@ def saveas():
         #     fileName += ".txt"
         SF.save(fileName)
 
-def save():
+def save(root):
     if SF.fileName == "":
         saveas()
     else:
         SF.save(SF.fileName)
 
-def open():
-    fileName = tk.filedialog.Open(root, filetypes = [("Все файлы", "*.*")]).show()
+def open(root):
+    fileName = tk.filedialog.Open(root, filetypes = [("Magic files", ".vrc")]).show()
     if fileName == '':
         return
     else:
         SF.open(fileName)
 
-def build():
-    fileName = tk.filedialog.Open(root, filetypes = [("Все файлы", "*.*")]).show()
+def build(root):
+    fileName = tk.filedialog.Open(root, filetypes = [("Magic files", ".vrc")]).show()
     if fileName == '':
         return
     else:
@@ -67,10 +68,10 @@ def ui_init(root):
 
     panelFrameButtons = [
         ('new', ...),
-        ('open', open),
-        ('save', save),
-        ('saveas', saveas),
-        ('build', build),
+        ('open', lambda: open(root)),
+        ('save', lambda: save(root)),
+        ('saveas', lambda: saveas(root)),
+        ('build', lambda: build(root)),
     ]
     placeButtons(panelFrame, panelFrameButtons)
 

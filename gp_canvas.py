@@ -1,1 +1,4 @@
-pass
+class Canvas:
+	def draw():
+		...
+

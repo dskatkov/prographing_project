@@ -7,16 +7,11 @@ from gp_source_file import *
 from gp_ui import *
 from gp_canvas import *
 
-
 if __name__ == "__main__":
-
+	global SF
+	SF = SourceFile()
 	mainWindow = tk.Tk()
-
-	#print(tk.filedialog.Open(mainWindow, filetypes = [("Все файлы", "*.*")]).show())
-
+	ui_init(mainWindow, SF, canvas)
 	canvas = Canvas(canvasFrame)
-
-	ui_init(mainWindow)
-
 	mainWindow.mainloop()
 

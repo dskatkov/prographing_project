@@ -1,11 +1,12 @@
 class Canvas:
     def __init__(self, master):
-        ...
-    def draw(self):
-        for block in sourceFile.listOfBlocks:
-            block.draw()
+        self.master = master
+    def draw(self, SF):
+        for _, block in SF.object_ids.items():
+            print (1)
+            block.draw(self.master)
             for child in block.childs:
-                block.drawLink(child)
+                block.drawLink(child, screen)
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

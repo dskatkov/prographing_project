@@ -4,7 +4,7 @@ import tkinter.font
 from settings import *
 from gp_source_file import *
 
-canvasFrame, panelFrame, stateFrame = ..., ..., ...
+canvasFrame, panelFrame, stateFrame, SF = ..., ..., ..., ...
 
 def createMenu(master, tree):
     for key, val in tree.items():
@@ -42,6 +42,7 @@ def open(root):
         return
     else:
         SF.open(fileName)
+        canvas.draw(SF)
 
 def buildAs(root):
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ".py")]).show()
@@ -56,10 +57,14 @@ def build(root):
     else:
         SF.build(SF.fileName)
 
-def newFile(root):
+def newFile(root=None):
+    global SF
     SF = SourceFile()
+    canvas.draw(SF)
 
-def ui_init(root):
+def ui_init(root, sf, Canvas):
+    global SF, canvas
+    SF, canvas = sf, Canvas
     global canvasFrame, panelFrame, stateFrame
     root.minsize(200, 200)
 

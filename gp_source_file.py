@@ -29,9 +29,10 @@ class SourceFile:
                 continue  # пустые строки и строки-комментарии пропускаем
             type = eval(line)["type"]
             if type in classnames:
-                classnames[type](line.strip())
+                classnames[type](self, line.strip())
             else:
                 print(f'Unknown type of block! Line: "{line}"')
+
 
     def build(self, fileName):
         self.buildName = fileName
@@ -58,7 +59,8 @@ class SourceFile:
 class Block:
     #__slots__ = "classname", "id", "childs", "pos", "text"
     classname = "TBlock"
-    def __init__(self, str=''):
+    def __init__(self, SF, str=''):
+        self.SF=SF
         if str != '':
             self.parseFromStr(str)
         else:
@@ -67,14 +69,14 @@ class Block:
             self.pos = (0, 0)
             self.text = ''
 
-            SF.object_ids[self.id] = self
-            SF.max_id += 1
+            self.SF.object_ids[self.id] = self
+            self.SF.max_id += 1
             # self.title = ""
             # self.tooltip = ""
-        SF.object_ids[self.id] = self
+        self.SF.object_ids[self.id] = self
 
     def __del__(self):
-        SF.object_ids[self.id] = None
+        self.SF.object_ids[self.id] = None
 
     def move(self, newpos):
         self.pos = newpos
@@ -98,10 +100,10 @@ class Block:
         self.pos = dct["pos"]
         self.text = dct["text"]
 
-        SF.object_ids[self.id] = self
-        SF.max_id = max(SF.max_id, self.id + 1)
+        self.SF.object_ids[self.id] = self
+        self.SF.max_id = max(self.SF.max_id, self.id + 1)
 
-    def draw(self):
+    def draw(self, screen):
         print("Not implemented!")
 
     def drawLink(self, child):
@@ -112,7 +114,10 @@ class BlockOp(Block):
     #__slots__ = "classname", "id", "childs", "pos", "text"
     classname = "Op"
 
-    def draw(self):
+    def draw(self, screen):
+        x, y = self.pos
+        r = 100
+        screen.create_oval((x - r), (y - r), (x + r), (y + r))
         print("Not implemented!")
 
     def drawLink(self, child):
@@ -121,7 +126,6 @@ class BlockOp(Block):
 
 
 
-SF = SourceFile()
 classnames = {v.classname: v for v in (Block,BlockOp,)}
 
 if __name__ == "__main__":

@@ -8,16 +8,15 @@ from gp_ui import *
 from gp_canvas import *
 
 
+if __name__ == "__main__":
 
-mainWindow = tk.Tk()
+	mainWindow = tk.Tk()
 
-#print(tk.filedialog.Open(mainWindow, filetypes = [("Все файлы", "*.*")]).show())
+	#print(tk.filedialog.Open(mainWindow, filetypes = [("Все файлы", "*.*")]).show())
 
-canvas = Canvas(canvasFrame)
+	canvas = Canvas(canvasFrame)
 
+	ui_init(mainWindow)
 
-ui_init(mainWindow)
-
-
-mainWindow.mainloop()
+	mainWindow.mainloop()
 

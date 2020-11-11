@@ -30,3 +30,6 @@ spaceFG = '#ffffff'
 
 stateBG = '#404040'
 stateFG = '#ffffff'
+
+if __name__ == "__main__":
+    print("This module is not for direct call!")

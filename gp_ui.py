@@ -21,8 +21,8 @@ def placeButtons(master, buttons, side='left', fg=btnFG, bg=btnBG):
         b = tk.Button(master=master, text=btn[0], command=btn[1], fg=btnFG, bg=btnBG)
         b.pack(side=side, padx=3, pady=3)
 
-def saveas(root):
-    fileName = tk.filedialog.Open(root, filetypes = [("Magic files", ".vrc")]).show()
+def saveAs(root):
+    fileName = tk.filedialog.SaveAs(root, filetypes = [("Visual script", ".vrc")]).show()
     if fileName == '':
         return
     else:
@@ -32,23 +32,32 @@ def saveas(root):
 
 def save(root):
     if SF.fileName == "":
-        saveas()
+        saveAs(root)
     else:
         SF.save(SF.fileName)
 
 def open(root):
-    fileName = tk.filedialog.Open(root, filetypes = [("Magic files", ".vrc")]).show()
+    fileName = tk.filedialog.Open(root, filetypes = [("Visual script", ".vrc")]).show()
     if fileName == '':
         return
     else:
         SF.open(fileName)
 
-def build(root):
-    fileName = tk.filedialog.Open(root, filetypes = [("Magic files", ".vrc")]).show()
+def buildAs(root):
+    fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ".py")]).show()
     if fileName == '':
         return
     else:
         SF.build(fileName)
+
+def build(root):
+    if SF.buildName == "":
+        buildAs(root)
+    else:
+        SF.build(SF.fileName)
+
+def newFile(root):
+    SF = SourceFile()
 
 def ui_init(root):
     global canvasFrame, panelFrame, stateFrame
@@ -67,11 +76,13 @@ def ui_init(root):
     stateFrame.grid(row=2, column=0, sticky='nsew')
 
     panelFrameButtons = [
-        ('new', ...),
+        ('new', lambda: newFile(root)),
         ('open', lambda: open(root)),
         ('save', lambda: save(root)),
-        ('saveas', lambda: saveas(root)),
+        ('save as', lambda: saveAs(root)),
         ('build', lambda: build(root)),
+        ('build as', lambda: buildAs(root)),
+
     ]
     placeButtons(panelFrame, panelFrameButtons)
 
@@ -86,5 +97,5 @@ def ui_init(root):
     canvasFrame.bind("<B2-Motion>", ...)
     canvasFrame.bind("<B3-Motion>", ...)
 
-
-
+if __name__ == "__main__":
+    print("This module is not for direct call!")

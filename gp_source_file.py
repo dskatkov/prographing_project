@@ -5,7 +5,8 @@ class SourceFile:
     def __init__(self):
         self.max_id = 0
         self.object_ids = {}
-        self.fileName = ""
+        self.fileName = ''
+        self.buildName = ''
         self.type = "SOURCE FILE"
 
     def save(self, fileName):
@@ -22,6 +23,7 @@ class SourceFile:
                 classnames[s.split()[0]](s)
 
     def build(self, fileName):
+        self.buildName = fileName
         ...
 
     def addLink(self, beginBlock, endBlock):
@@ -113,3 +115,6 @@ class BlockOp(Block):
 
 
 classnames = {v.classname: v for v in (Block,BlockOp,)}
+
+if __name__ == "__main__":
+    print("This module is not for direct call!")

@@ -11,3 +11,6 @@ class Point:
 
     def fromStr(self, str):
         self.x, self.y = eval(str)
+
+if __name__ == "__main__":
+    print("This module is not for direct call!")

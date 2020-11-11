@@ -1,5 +1,3 @@
-from utils import Point
-
 
 class SourceFile:
     def __init__(self):
@@ -7,20 +5,33 @@ class SourceFile:
         self.object_ids = {}
         self.fileName = ''
         self.buildName = ''
-        self.type = "SOURCE FILE"
+        self.data = "SOURCE FILE"
 
     def save(self, fileName):
         self.fileName = fileName
-        file = open(fileName, 'rt')
+        file = open(fileName, 'wt')
+        file.write(self.data)
+        file.write(self.buildName)
+        for _, block in self.object_ids.items():
+            file.write(block.convertToStr() + '\n')
+
 
     def open(self, fileName):
         self.max_id = 0
         self.object_ids = {}
         self.fileName = fileName
+
         file = open(fileName, 'rt')
-        for s in file:
-            if s:
-                classnames[s.split()[0]](s)
+        self.data = file.readline()
+        self.buildName = file.readline()
+        for line in file:
+            if len(line.strip()) == 0 or line.strip()[0] == ';':
+                continue  # пустые строки и строки-комментарии пропускаем
+            type = eval(line)["type"]
+            if type in classnames:
+                classnames[type](line.strip())
+            else:
+                print(f'Unknown type of block! Line: "{line}"')
 
     def build(self, fileName):
         self.buildName = fileName
@@ -33,7 +44,6 @@ class SourceFile:
         ...
 
 
-SF = SourceFile()
 
 # class Link:
 #     def __init__(self, begin, end):
@@ -54,7 +64,7 @@ class Block:
         else:
             self.id = max_id
             self.childs = []
-            self.pos = Point(0, 0)
+            self.pos = (0, 0)
             self.text = ''
 
             SF.object_ids[self.id] = self
@@ -72,11 +82,24 @@ class Block:
     def edit(self, newstr):
         self.text = newstr
 
-    def convertToStr(self):
-        print("Not implemented!")
+    # def convertToStr(self):
+    #     print("Not implemented!")
 
-    def parseFromStr(self, str):
-        print("Not implemented!")
+    # def parseFromStr(self, str):
+    #     print("Not implemented!")
+
+    def convertToStr(self):
+        return '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "text":"'+str(self.text)+'"}'
+
+    def parseFromStr(self, s):
+        dct = eval(s)
+        self.id = dct["id"]
+        self.childs = dct["childs"]
+        self.pos = dct["pos"]
+        self.text = dct["text"]
+
+        SF.object_ids[self.id] = self
+        SF.max_id = max(SF.max_id, self.id + 1)
 
     def draw(self):
         print("Not implemented!")
@@ -89,23 +112,6 @@ class BlockOp(Block):
     #__slots__ = "classname", "id", "childs", "pos", "text"
     classname = "Op"
 
-    def convertToStr(self):
-        return f"{self.classname} {self.id} {self.childs} {self.pos} {self.text}"
-
-    def parseFromStr(self, str):
-        tokens = str.split()
-        # if tokens[0].lower() != self.classname:
-        #     return
-        # if len(tokens) != 8:
-        #     return
-        self.id = int(tokens[1])
-        self.childs = eval(tokens[2])
-        self.pos = Point().fromStr(tokens[3])
-        self.text = tokens[4]
-
-        SF.object_ids[self.id] = self
-        SF.max_id = max(SF.max_id, self.id + 1)
-
     def draw(self):
         print("Not implemented!")
 
@@ -114,6 +120,8 @@ class BlockOp(Block):
 
 
 
+
+SF = SourceFile()
 classnames = {v.classname: v for v in (Block,BlockOp,)}
 
 if __name__ == "__main__":

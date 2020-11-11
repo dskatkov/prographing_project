@@ -1,3 +1,4 @@
+SF = ...
 
 class SourceFile:
     def __init__(self):
@@ -120,7 +121,7 @@ class BlockOp(Block):
         screen.create_oval((x - r), (y - r), (x + r), (y + r))
         print("Not implemented!")
 
-    def drawLink(self, child):
+    def drawLink(self, child, canvas):
         print("Not implemented!")
 
 

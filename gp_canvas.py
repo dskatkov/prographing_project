@@ -1,12 +1,16 @@
+import gp_source_file as source_file
+
+canvas = ...
+
 class Canvas:
-    def __init__(self, master):
+    def __init__(self, master=None):
         self.master = master
+
     def draw(self, SF):
-        for _, block in SF.object_ids.items():
-            print (1)
+        for _, block in source_file.SF.object_ids.items():
             block.draw(self.master)
             for child in block.childs:
-                block.drawLink(child, screen)
+                block.drawLink(child, self.master)
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

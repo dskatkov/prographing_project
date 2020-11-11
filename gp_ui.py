@@ -2,9 +2,10 @@ import tkinter as tk
 import tkinter.font
 
 from settings import *
-from gp_source_file import *
+import gp_source_file as gp_source_file
+import gp_canvas as gp_canvas
 
-canvasFrame, panelFrame, stateFrame, SF = ..., ..., ..., ...
+canvasFrame, panelFrame, stateFrame, canvas = ..., ..., ..., ...
 
 def createMenu(master, tree):
     for key, val in tree.items():
@@ -28,44 +29,41 @@ def saveAs(root):
     else:
         # if not fileName.endswith(".txt"):
         #     fileName += ".txt"
-        SF.save(fileName)
+        gp_source_file.SF.save(fileName)
 
 def save(root):
-    if SF.fileName == "":
+    if gp_source_file.SF.fileName == "":
         saveAs(root)
     else:
-        SF.save(SF.fileName)
+        gp_source_file.SF.save(gp_source_file.SF.fileName)
 
 def open(root):
     fileName = tk.filedialog.Open(root, filetypes = [("Visual script", ".vrc")]).show()
     if fileName == '':
         return
     else:
-        SF.open(fileName)
-        canvas.draw(SF)
+        gp_source_file.SF.open(fileName)
+        gp_canvas.canvas.draw(gp_source_file.SF)
 
 def buildAs(root):
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ".py")]).show()
     if fileName == '':
         return
     else:
-        SF.build(fileName)
+        gp_source_file.SF.build(fileName)
 
 def build(root):
-    if SF.buildName == "":
+    if gp_source_file.SF.buildName == "":
         buildAs(root)
     else:
-        SF.build(SF.fileName)
+        gp_source_file.SF.build(gp_source_file.SF.fileName)
 
 def newFile(root=None):
-    global SF
-    SF = SourceFile()
-    canvas.draw(SF)
+    gp_source_file.SF = SourceFile()
+    gp_canvas.canvas.draw(gp_source_file.SF)
 
-def ui_init(root, sf, Canvas):
-    global SF, canvas
-    SF, canvas = sf, Canvas
-    global canvasFrame, panelFrame, stateFrame
+def ui_init(root):
+    global canvasFrame, panelFrame, stateFrame, canvas
     root.minsize(200, 200)
 
     root.columnconfigure(0, weight=1, minsize=200)
@@ -75,6 +73,8 @@ def ui_init(root, sf, Canvas):
     panelFrame = tk.Frame(master=root, bg=panelBG)
     canvasFrame = tk.Frame(master=root, bg=textBG)
     stateFrame = tk.Frame(master=root, bg=stateBG)
+    canvas = tk.Canvas(master=canvasFrame, bg=textBG)
+    canvas.pack()
 
     panelFrame.grid(row=0, column=0, sticky='nsew')
     canvasFrame.grid(row=1, column=0, sticky='nsew')
@@ -91,9 +91,9 @@ def ui_init(root, sf, Canvas):
     ]
     placeButtons(panelFrame, panelFrameButtons)
 
-    mainMenu = tk.Menu(master=root)
-    createMenu(mainMenu, mainMenu_tree)
-    root.config(menu=mainMenu)
+    # mainMenu = tk.Menu(master=root)
+    # createMenu(mainMenu, mainMenu_tree)
+    # root.config(menu=mainMenu)
 
     canvasFrame.bind("<Button-1>", ...)
     canvasFrame.bind("<Button-2>", ...)

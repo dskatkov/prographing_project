@@ -3,15 +3,15 @@ import tkinter.filedialog
 import tkinter.messagebox
 import tkinter.font
 
-from gp_source_file import *
-from gp_ui import *
-from gp_canvas import *
+import gp_source_file as gp_source_file
+import gp_ui as gp_ui
+import gp_canvas as gp_canvas
 
 if __name__ == "__main__":
-	global SF
-	SF = SourceFile()
-	mainWindow = tk.Tk()
-	ui_init(mainWindow, SF, canvas)
-	canvas = Canvas(canvasFrame)
-	mainWindow.mainloop()
+    gp_source_file.SF = gp_source_file.SourceFile()
+    mainWindow = tk.Tk()
+    gp_canvas.canvas = gp_canvas.Canvas()
+    gp_ui.ui_init(mainWindow)
+    gp_canvas.canvas.master = gp_ui.canvas
+    mainWindow.mainloop()
 

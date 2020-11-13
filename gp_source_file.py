@@ -1,4 +1,5 @@
 SF = ...
+import math as m
 
 class SourceFile:
     def __init__(self):
@@ -60,7 +61,7 @@ class SourceFile:
 class Block:
     #__slots__ = "classname", "id", "childs", "pos", "text"
     classname = "TBlock"
-    def __init__(self, SF, str=''):
+    def __init__(self, SF, str='', r = 10):
         self.SF=SF
         if str != '':
             self.parseFromStr(str)
@@ -75,6 +76,7 @@ class Block:
             # self.title = ""
             # self.tooltip = ""
         self.SF.object_ids[self.id] = self
+        self.r = r
 
     def __del__(self):
         self.SF.object_ids[self.id] = None
@@ -117,13 +119,18 @@ class BlockOp(Block):
 
     def draw(self, canvas):
         x, y = self.pos
-        r = 10
-        canvas.create_oval((x - r), (y - r), (x + r), (y + r))
+        r = self.r
+        canvas.create_oval((x - r), (y - r), (x + r), (y + r), fill="#05f")
 
     def drawLink(self, child, canvas):
         x1, y1 = self.pos
         x2, y2 = child.pos
-        canvas.create_line(x1, y1, x2, y2)
+        r1, r2 = self.r, child.r
+        start_point = [x1, y1]
+        finish_point = [x2, y2]
+        
+
+        canvas.create_line(start_point[0], start_point[1], finish_point[0], finish_point[1])
         print("Not implemented!")
 
 

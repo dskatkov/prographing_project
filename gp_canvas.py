@@ -8,9 +8,9 @@ class Canvas:
 
     def draw(self, SF):
         for _, block in source_file.SF.object_ids.items():
-            block.draw(self.master)
             for child in block.childs:
                 block.drawLink(child, self.master)
+            block.draw(self.master)
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

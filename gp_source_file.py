@@ -115,13 +115,15 @@ class BlockOp(Block):
     #__slots__ = "classname", "id", "childs", "pos", "text"
     classname = "Op"
 
-    def draw(self, screen):
+    def draw(self, canvas):
         x, y = self.pos
-        r = 100
-        screen.create_oval((x - r), (y - r), (x + r), (y + r))
-        print("Not implemented!")
+        r = 10
+        canvas.create_oval((x - r), (y - r), (x + r), (y + r))
 
     def drawLink(self, child, canvas):
+        x1, y1 = self.pos
+        x2, y2 = child.pos
+        canvas.create_line(x1, y1, x2, y2)
         print("Not implemented!")
 
 

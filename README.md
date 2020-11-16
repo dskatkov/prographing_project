@@ -1,3 +1,3 @@
-This project is about graphical representation of highly-brunched program.
+This project is about graphical representation of highly-branched program.
 It used to ease navigation through complicated code by visual representation.
-Denis Ballakh and Denis Ktkov, PSFAP MIPT 2020
+Denis Ballakh and Denis Katkov, DGAP MIPT 2020

@@ -7,9 +7,9 @@ class Canvas:
         self.master = master
 
     def draw(self, SF):
-        for _, block in source_file.SF.object_ids.items():
+        for _, block in SF.object_ids.items():
             for child in block.childs:
-                block.drawLink(source_file.SF.object_ids[child], self.master)
+                block.drawLink(SF.object_ids[child], self.master)
             block.draw(self.master)
 
 if __name__ == "__main__":

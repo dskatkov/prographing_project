@@ -59,7 +59,7 @@ def build(root):
         gp_source_file.SF.build(gp_source_file.SF.fileName)
 
 def newFile(root=None):
-    gp_source_file.SF = SourceFile()
+    gp_source_file.SF = gp_source_file.SourceFile()
     gp_canvas.canvas.draw(gp_source_file.SF)
 
 def ui_init(root):

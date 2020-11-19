@@ -7,6 +7,7 @@ class Canvas:
         self.master = master
 
     def draw(self, SF):
+    	#self.master.clear()
         for _, block in SF.object_ids.items():
             for child in block.childs:
                 block.drawLink(SF.object_ids[child], self.master)

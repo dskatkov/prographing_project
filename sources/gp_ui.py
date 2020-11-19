@@ -5,7 +5,7 @@ from settings import *
 import gp_source_file as gp_source_file
 import gp_canvas as gp_canvas
 
-canvasFrame, panelFrame, stateFrame, canvas = ..., ..., ..., ...
+canvasFrame = panelFrame = stateFrame = canvas = ...
 
 def createMenu(master, tree):
     for key, val in tree.items():

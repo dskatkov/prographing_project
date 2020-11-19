@@ -1,7 +1,11 @@
 SourceFile v0.0.1
 
-{"type":"Op", "id":0, "childs":[1, 2], "pos":(100, 50), "text":"#1"}
-{"type":"Op", "id":1, "childs":[3], "pos":(50, 100), "text":"#2"}
-{"type":"Op", "id":2, "childs":[3, 4], "pos":(150, 100), "text":"#3"}
-{"type":"Op", "id":3, "childs":[], "pos":(50, 150), "text":"#4"}
-{"type":"Op", "id":4, "childs":[], "pos":(150, 150), "text":"#5"}
+{"type":"Op", "id":0, "childs":[1, 2], "pos":(100, 50), "text":"op_1"}
+{"type":"Op", "id":1, "childs":[3], "pos":(50, 100), "text":"op_2"}
+{"type":"If", "id":2, "childs":[3, 4], "pos":(150, 100), "text":"if_3"}
+{"type":"Op", "id":3, "childs":[], "pos":(50, 150), "text":"op_4"}
+{"type":"Op", "id":4, "childs":[], "pos":(150, 150), "text":"op_5"}
+{"type":"If", "id":5, "childs":[6], "pos":(200, 50), "text":"if_1"}
+{"type":"If", "id":6, "childs":[7], "pos":(300, 100), "text":"if_2"}
+{"type":"If", "id":7, "childs":[8], "pos":(200, 100), "text":"if_3"}
+{"type":"Op", "id":8, "childs":[], "pos":(200, 150), "text":"block in Ifs"}

@@ -31,39 +31,70 @@ spaceFG = '#ffffff'
 stateBG = '#404040'
 stateFG = '#ffffff'
 
+# Цвета соединяющих линий
+# A_B = A->B
+# A_  = A->*
+#  _B = *->B
+#  _  = *->*
 linkColores = {
-	"_": "#000000",
+    "_": "#000000",
 
-	"Op_":"#000000",
-	"_Op":"#000000",
-	"Op_Op": "#ffffff",
-	"Op_If": "#ff0000",
+    "Op_":"#000000",
+    "_Op":"#000000",
+    "Op_Op": "#ffffff",
+    "Op_If": "#ff0000",
 
-	"If_":"#000000",
-	"_If":"#000000",
-	"If_If": "#0000ff",
-	"If_Op": "#00ff00",
+    "If_":"#000000",
+    "_If":"#000000",
+    "If_If": "#0000ff",
+    "If_Op": "#00ff00",
 }
-
+# Цвета кружков блоков разного типа
 drawColores = {
-	"_": "#ffffff",
-	"Op": "#8080ff",
-	"If": "#80ff80",
+    "_": "#ffffff",
+    "Op": "#8080ff",
+    "If": "#80ff80",
 }
 
-{
-	"Op":{
-		"incTab": 0,
-    	"hasPostfix": 0,
-    	"prefix": "self.text",
-    	"postfix": "",
-	},
-	"If":{
-		"incTab": 1,
-    	"hasPostfix": 1,
-    	"prefix": "'if (' + self.text + ') {'",
-    	"postfix": "'}'",
-	},
+# Поведение блоков при сборке
+blockTypes = {
+    "Op":{
+        "*": {
+            "incTab": 0,
+            "hasPostfix": 0,
+            "prefix": "self.text1",
+            "postfix": "",
+        },
+        "py": {
+        },
+    },
+    "If":{
+        "*": {
+            "incTab": 1,
+            "hasPostfix": 1,
+            "prefix": "'if (' + self.text1 + ') {'",
+            "postfix": "'}'",
+        },
+        "py": {
+            "hasPostfix": 0,
+            "prefix": "'if ' + self.text1 + ':'",
+            "postfix": "",
+        },
+    },
+    "For":{
+        "*": {
+            "incTab": 1,
+            "hasPostfix": 1,
+            "prefix": "'for ('+self.text1+'; '+self.text2+'; '+self.text3+') {'",
+            "postfix": "'}'",
+        },
+        "py": {
+            "hasPostfix": 0,
+            "prefix": "'for '+self.text1+' in '+self.text2+':'",
+            "postfix": "",
+        },
+    },
+
 }
 
 if __name__ == "__main__":

@@ -14,12 +14,14 @@ class SourceFile:
         self.object_ids = {}
         self.fileName = ''
         self.buildName = ''
-        self.data = "new SOURCE FILE"
+        self.data = '---'
+        self.lang = 'dab'
 
     def save(self, fileName):
         self.fileName = fileName
         file = open(fileName, 'wt')
         file.write(self.data + '\n')
+        file.write(self.lang + '\n')
         file.write(self.buildName + '\n')
         for _, block in self.object_ids.items():
             file.write(block.convertToStr() + '\n')
@@ -33,13 +35,14 @@ class SourceFile:
 
         file = open(fileName, 'rt')
         self.data = file.readline()[:-1]
+        self.lang = file.readline()[:-1]
         self.buildName = file.readline()[:-1]
         for line in file:
             if len(line.strip()) == 0 or line.strip()[0] == ';':
                 continue  # пустые строки и строки-комментарии пропускаем
             type = eval(line)["type"]
-            if type in classnames:
-                classnames[type](self, line.strip(), creating_type=1)
+            if type in blockTypes:
+                Block(self, line.strip(), creating_type=1)
             else:
                 print(f'Unknown type of block! Line: "{line}"')
 
@@ -62,12 +65,10 @@ class SourceFile:
         file.write(s)
         file.close()
 
-
-
 # classname id childs pos text
 class Block:
     #__slots__ = "classname", "id", "childs", "pos", "text"
-    classname = "TBlock"
+    classname = "_"
     incTab = 0
     hasPostfix = 0
 
@@ -102,30 +103,43 @@ class Block:
         self.text = newstr
 
     def convertToStr(self):
-        return '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "text":"'+str(self.text)+'"}'
+        return '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "text1":"'+str(self.text1)+'"}'
 
     def parseFromStr(self, s):
         dct = eval(s)
+        self.classname = dct["type"]
         self.id = dct["id"]
         self.childs = dct["childs"]
         self.pos = dct["pos"]
-        self.text = dct["text"]
+        self.text1 = dct["text1"]
         # Возможность добавлять несколько текстовых полей в блок. Еще не реализовано
         if "text2" in dct: self.text2 = dct["text2"] 
-        if "text3" in dct: self.text2 = dct["text3"]
+        if "text3" in dct: self.text3 = dct["text3"]
 
     def build(self, s, tab):
         self.sortChilds()
-        s += tab + self.prefix() + '\n'
-        if self.incTab:
+
+        langs = blockTypes[self.classname]
+        if self.SF.lang in langs:
+            behavior = langs[self.SF.lang]
+        elif '*' in langs:
+            behavior = langs['*']
+        else:
+            behavior = {}
+
+        for token in ["incTab","hasPostfix","prefix","postfix",]:
+            if not (token in behavior): behavior[token]=langs['*'][token]
+
+        s += tab + eval(behavior["prefix"]) + '\n'
+        if behavior["incTab"]:
             tab += ' ' * 4
         for child_id in self.childs:
             child = self.SF.object_ids[child_id]
             s, tab = child.build(s, tab)
-        if self.incTab:
+        if behavior["incTab"]:
             tab = tab[:-4]
-        if self.hasPostfix:
-            s += tab + self.postfix() + '\n'
+        if behavior["hasPostfix"]:
+            s += tab + eval(behavior["postfix"]) + '\n'
         return s, tab
 
     def sortChilds(self):
@@ -196,35 +210,6 @@ class Block:
             color = '#000000'
  
         canvas.create_line(x1, y1, x2, y2, fill=color)
-
-
-
-class BlockOp(Block):
-    classname = "Op"
-    incTab = 0
-    hasPostfix = 0
-
-    def prefix(self):
-        return self.text
-
-    def postfix(self):
-        print("Not implemented!")
-        return ''
-
-
-class BlockIf(Block):
-    classname = "If"
-    incTab = 1
-    hasPostfix = 1
-
-    def prefix(self):
-        return 'if (' + self.text + ') {'
-
-    def postfix(self):
-        return '}'
-
-
-classnames = {v.classname: v for v in (Block,BlockOp,BlockIf,)}
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

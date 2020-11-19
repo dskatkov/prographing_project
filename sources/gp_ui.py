@@ -54,12 +54,13 @@ def build(root):
         gp_source_file.SF.build(gp_source_file.SF.buildName)
 
 def buildAs(root):
-    fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ".py")]).show()
+    ext = '.'+gp_source_file.SF.lang
+    fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ext)]).show()
     if fileName == '':
         return
     else:
-        if not fileName.endswith('.py'):
-            fileName += '.py'
+        if not fileName.endswith(ext):
+            fileName += ext
         gp_source_file.SF.build(fileName)
 
 def newFile(root=None):

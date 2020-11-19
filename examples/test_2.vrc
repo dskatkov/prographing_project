@@ -1,11 +1,12 @@
-SourceFile v0.0.1
+dab
+dab
 C:/GitHub/prographing_project/examples/build_file.py
-{"type":"Op", "id":0, "childs":[1, 2], "pos":(150, 50), "text":"op_1"}
-{"type":"Op", "id":1, "childs":[3], "pos":(100, 100), "text":"op_2"}
-{"type":"If", "id":2, "childs":[3, 4], "pos":(200, 100), "text":"if_3"}
-{"type":"Op", "id":3, "childs":[], "pos":(100, 150), "text":"op_4"}
-{"type":"Op", "id":4, "childs":[], "pos":(200, 150), "text":"op_5"}
-{"type":"If", "id":5, "childs":[6], "pos":(250, 50), "text":"if_1"}
-{"type":"If", "id":6, "childs":[7], "pos":(275, 75), "text":"if_2"}
-{"type":"If", "id":7, "childs":[8], "pos":(300, 100), "text":"if_3"}
-{"type":"Op", "id":8, "childs":[], "pos":(325, 150), "text":"block in Ifs"}
+{"type":"Op", "id":0, "childs":[1, 2], "pos":(150, 50), "text1":"op_1"}
+{"type":"Op", "id":1, "childs":[3], "pos":(100, 100), "text1":"op_2"}
+{"type":"If", "id":2, "childs":[3, 4], "pos":(200, 100), "text1":"if_3"}
+{"type":"Op", "id":3, "childs":[], "pos":(100, 150), "text1":"op_4"}
+{"type":"Op", "id":4, "childs":[], "pos":(200, 150), "text1":"op_5"}
+{"type":"If", "id":5, "childs":[6], "pos":(250, 50), "text1":"if_1"}
+{"type":"If", "id":6, "childs":[7], "pos":(275, 75), "text1":"if_2"}
+{"type":"If", "id":7, "childs":[8], "pos":(300, 100), "text1":"if_3"}
+{"type":"Op", "id":8, "childs":[], "pos":(325, 150), "text1":"block in Ifs"}

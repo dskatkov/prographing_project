@@ -8,15 +8,16 @@ class SourceFile:
         self.object_ids = {}
         self.fileName = ''
         self.buildName = ''
-        self.data = "SOURCE FILE"
+        self.data = "new SOURCE FILE"
 
     def save(self, fileName):
         self.fileName = fileName
         file = open(fileName, 'wt')
-        file.write(self.data)
-        file.write(self.buildName)
+        file.write(self.data + '\n')
+        file.write(self.buildName + '\n')
         for _, block in self.object_ids.items():
             file.write(block.convertToStr() + '\n')
+        file.close()
 
 
     def open(self, fileName):
@@ -25,8 +26,8 @@ class SourceFile:
         self.fileName = fileName
 
         file = open(fileName, 'rt')
-        self.data = file.readline()
-        self.buildName = file.readline()
+        self.data = file.readline()[:-1]
+        self.buildName = file.readline()[:-1]
         for line in file:
             if len(line.strip()) == 0 or line.strip()[0] == ';':
                 continue  # пустые строки и строки-комментарии пропускаем
@@ -51,6 +52,9 @@ class SourceFile:
             if self.parents(i) == []:
                 s, tab = obj.build(s, tab)
         print(s)
+        file = open(self.buildName, 'wt')
+        file.write(s)
+        file.close()
 
 
 

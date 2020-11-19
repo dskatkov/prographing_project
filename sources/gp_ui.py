@@ -27,12 +27,12 @@ def saveAs(root):
     if fileName == '':
         return
     else:
-        # if not fileName.endswith(".txt"):
-        #     fileName += ".txt"
+        if not fileName.endswith('.vrc'):
+            fileName += '.vrc'
         gp_source_file.SF.save(fileName)
 
 def save(root):
-    if gp_source_file.SF.fileName == "":
+    if gp_source_file.SF.fileName == '':
         saveAs(root)
     else:
         gp_source_file.SF.save(gp_source_file.SF.fileName)
@@ -42,21 +42,25 @@ def open(root):
     if fileName == '':
         return
     else:
+        if not fileName.endswith('.vrc'):
+            fileName += '.vrc'
         gp_source_file.SF.open(fileName)
         gp_canvas.canvas.draw(gp_source_file.SF)
+
+def build(root):
+    if gp_source_file.SF.buildName == '':
+        buildAs(root)
+    else:
+        gp_source_file.SF.build(gp_source_file.SF.fileName)
 
 def buildAs(root):
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ".py")]).show()
     if fileName == '':
         return
     else:
+        if not fileName.endswith('.py'):
+            fileName += '.py'
         gp_source_file.SF.build(fileName)
-
-def build(root):
-    if gp_source_file.SF.buildName == "":
-        buildAs(root)
-    else:
-        gp_source_file.SF.build(gp_source_file.SF.fileName)
 
 def newFile(root=None):
     gp_source_file.SF = gp_source_file.SourceFile()

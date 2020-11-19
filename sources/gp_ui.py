@@ -3,25 +3,11 @@ import tkinter.font
 import time
 
 from settings import *
+from utils import *
 import gp_source_file as gp_source_file
 import gp_canvas as gp_canvas
 
 canvasFrame = panelFrame = stateFrame = canvas = ...
-
-def createMenu(master, tree):
-    for key, val in tree.items():
-        m = tk.Menu(master=master, tearoff=0)
-        if type(val)==type({}):
-            createMenu(m, val)
-        else:
-            master.add_command(label=key, command=val)
-            continue
-        master.add_cascade(label=key, menu=m)
-
-def placeButtons(master, buttons, side='left', fg=btnFG, bg=btnBG):
-    for btn in buttons:
-        b = tk.Button(master=master, text=btn[0], command=btn[1], fg=btnFG, bg=btnBG)
-        b.pack(side=side, padx=3, pady=3)
 
 def saveAs(root):
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Visual script", ".vrc")]).show()
@@ -74,36 +60,39 @@ Work with mouse begins. It is not Finished yet
 
 
 def click_hit(click):
-    for block in gp_source_file.SF.object_ids.items():
-        print(block[1])
-        distance = ((block[1].pos[0] - click.x) ** 2 + (block[1].pos[1] - click.y) ** 2) ** 0.5
-        if distance <= block[1].r:
-            return block[1]
+    print(f'handling click: ({click.x},{click.y})')
+    for _, block in gp_source_file.SF.object_ids.items():
+        print('checking block: '+block.convertToStr())
+        distance2 = (block.pos[0] - click.x) ** 2 + (block.pos[1] - click.y) ** 2
+        if distance2 <= block.r ** 2:
+            print('ok')
+            return block
 
 def b1_double(click):
-    print ('hit2')
+    print ('left double click')
     block = click_hit(click)
     if block:
-        block.edit()
+        if not block.text_editor:
+            block.edit(tk.Toplevel(canvasFrame))
     else:
         block = gp_source_file.Block(gp_source_file.SF)
         block.pos = (click.x, click.y)
     gp_canvas.canvas.draw(gp_source_file.SF)
 
 def b3_double(click):
-    pass
+    print ('right double click')
 
 def button1(click):
-    pass
+    print ('left click')
 
 def button3(click):
-    print ('hit')
+    print ('right click')
 
 def b1_motion(click):
-    pass
+    print (f'left motion:({click.x},{click.y})')
 
 def b3_motion(click):
-    pass
+    print (f'right motion:({click.x},{click.y})')
 
 '''
 Here work with mouse ended. spacetime is going back to normal
@@ -134,7 +123,8 @@ def ui_init(root):
         ('save as', lambda: saveAs(root)),
         ('build', lambda: build(root)),
         ('build as', lambda: buildAs(root)),
-
+        ('canvas redraw', lambda: gp_canvas.canvas.draw(gp_source_file.SF)),
+        ('build log', lambda: gp_source_file.SF.build(gp_source_file.SF.buildName, 0))
     ]
     placeButtons(panelFrame, panelFrameButtons)
 

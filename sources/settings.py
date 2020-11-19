@@ -1,20 +1,21 @@
 textEditorMenu_tree = {
-    "OK": 1,
-    "Отмена": 0,
+    "OK": lambda: print('ok, not implemented'),
+    "Отмена": lambda: print('cancel, not implemented'),
 }
 
 mainMenu_tree = {
     "Файл": {
-        "Новый файл": 0,
-        "Открыть...": 0,
-        "Сохранить": ...,
-        "Сохранить как...": 0,
+        "Новый файл": lambda: print('new file, not implemented'),
+        "Открыть...": lambda: print('open, not implemented'),
+        "Сохранить": lambda: print('save, not implemented'),
+        "Сохранить как...": lambda: print('save as, not implemented'),
     },
     "Сборка": {
-        "Собрать исходник": 0,
+        "Собрать исходник": lambda: print('build, not implemented'),
     },
-    "Выход": 0,
+    "Выход": lambda: print('exit, not implemented'),
 }
+
 
 btnBG = '#202020'
 btnFG = '#ffffff'
@@ -30,6 +31,8 @@ spaceFG = '#ffffff'
 
 stateBG = '#404040'
 stateFG = '#ffffff'
+
+blockTypes = ["Op", "If", "For"]
 
 # Цвета соединяющих линий
 # A_B = A->B
@@ -56,8 +59,9 @@ drawColores = {
     "If": "#80ff80",
 }
 
+
 # Поведение блоков при сборке
-blockTypes = {
+blockTypeBehavior = {
     "*":{
 
     },
@@ -67,16 +71,19 @@ blockTypes = {
             "hasPostfix": 0,
             "prefix": "<1>",
             "postfix": "",
+            "multiline": 1,
         },
         "py": {
         },
     },
+
     "If":{
         "*": {
             "incTab": 1,
             "hasPostfix": 1,
             "prefix": "if (<1>) {",
             "postfix": "}",
+            "multiline": 0,
         },
         "py": {
             "hasPostfix": 0,
@@ -84,12 +91,14 @@ blockTypes = {
             "postfix": "",
         },
     },
+
     "For":{
         "*": {
             "incTab": 1,
             "hasPostfix": 1,
             "prefix": "for (<1>; <2>; <3>) {",
             "postfix": "}",
+            "multiline": 0,
         },
         "py": {
             "hasPostfix": 0,

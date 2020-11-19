@@ -2,8 +2,9 @@ import tkinter as tk
 import tkinter.ttk
 from os import getcwd
 #import math as m
-#from PIL import Image, ImageTk
+from PIL import Image, ImageTk
 
+import text_editor
 from settings import *
 
 SF = ...
@@ -53,7 +54,7 @@ class SourceFile:
                 res = res + [i]
         return res
 
-    def build(self, fileName):
+    def build(self, fileName, save=1):
         self.buildName = fileName
         s = ''
         tab = ''
@@ -61,9 +62,10 @@ class SourceFile:
             if self.parents(i) == []:
                 s, tab = obj.build(s, tab)
         print(s)
-        file = open(self.buildName, 'wt')
-        file.write(s)
-        file.close()
+        if save:
+            file = open(self.buildName, 'wt')
+            file.write(s)
+            file.close()
 
 
 # classname id childs pos text
@@ -73,8 +75,9 @@ class Block:
     incTab = 0
     hasPostfix = 0
 
-    def __init__(self, SF, str='', r = 10, creating_type=0):
+    def __init__(self, SF, str='', creating_type=0):
         self.SF = SF
+        self.text_editor = None
         # creating_type == 0 - создание нового элемента
         # creating_type == 1 - парсинг элемента из файла
         if creating_type == 1:
@@ -88,14 +91,14 @@ class Block:
             self.id = max_id
             self.childs = []
             self.pos = (0, 0)
-            self.text = ''
+            self.text1 = ''
 
             self.SF.object_ids[self.id] = self
             self.SF.max_id += 1
             # self.title = ""
             # self.tooltip = ""
         self.SF.object_ids[self.id] = self
-        self.r = r
+        self.r = 10
 
     def __del__(self):
         self.SF.object_ids[self.id] = None
@@ -103,12 +106,16 @@ class Block:
     def move(self, newpos):
         self.pos = newpos
 
-    def edit(self):
+    def edit(self, master):
         print('here edition window is opening')
+        self.text_editor = master
+        text_editor.TextEditor(master, self)
         #self.text = newstr
 
     def convertToStr(self):
-        return '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "text1":"'+str(self.text1)+'"}'
+        result = '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "text1":"'+str(self.text1)+'"}'
+        result = result.replace('\n', '\\n')
+        return result
 
     def parseFromStr(self, s):
         dct = eval(s)
@@ -125,7 +132,7 @@ class Block:
     def build(self, s, tab):
         self.sortChilds()
 
-        langs = blockTypes[self.classname]
+        langs = blockTypeBehavior[self.classname]
         if self.SF.lang in langs:
             behavior = langs[self.SF.lang]
         elif '*' in langs:
@@ -133,24 +140,34 @@ class Block:
         else:
             behavior = {}
 
-        for token in ["incTab","hasPostfix","prefix","postfix",]:
-            if not (token in behavior): behavior[token]=langs['*'][token]
+        for token in ["incTab","hasPostfix","prefix","postfix","multiline"]:
+            if not (token in behavior): behavior[token] = langs['*'][token]
        
         repl = lambda s: s.replace('<1>', self.text1).replace('<2>', self.text2).replace('<3>', self.text3)
         prefix = repl(behavior["prefix"])
         if behavior["hasPostfix"]:
             postfix = repl(behavior["postfix"])
         
-        s += tab + prefix + '\n'
+        if behavior["multiline"]:
+            for line in prefix.split('\n'):
+                s += tab + line + '\n'
+        else:
+            s += tab + prefix + '\n'
+
         if behavior["incTab"]:
             tab += '    '
+
         for child_id in self.childs:
             child = self.SF.object_ids[child_id]
             s, tab = child.build(s, tab)
         if behavior["incTab"]:
             tab = tab[:-4]
         if behavior["hasPostfix"]:
-            s += tab + postfix + '\n'
+            if behavior["multiline"]:
+                for line in postfix.split('\n'):
+                    s += tab + line + '\n'
+            else:
+                s += tab + postfix + '\n'
         return s, tab
 
     def sortChilds(self):

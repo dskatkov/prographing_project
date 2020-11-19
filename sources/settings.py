@@ -58,11 +58,14 @@ drawColores = {
 
 # Поведение блоков при сборке
 blockTypes = {
+    "*":{
+
+    },
     "Op":{
         "*": {
             "incTab": 0,
             "hasPostfix": 0,
-            "prefix": "self.text1",
+            "prefix": "<1>",
             "postfix": "",
         },
         "py": {
@@ -72,12 +75,12 @@ blockTypes = {
         "*": {
             "incTab": 1,
             "hasPostfix": 1,
-            "prefix": "'if (' + self.text1 + ') {'",
-            "postfix": "'}'",
+            "prefix": "if (<1>) {",
+            "postfix": "}",
         },
         "py": {
             "hasPostfix": 0,
-            "prefix": "'if ' + self.text1 + ':'",
+            "prefix": "if <1>:",
             "postfix": "",
         },
     },
@@ -85,12 +88,12 @@ blockTypes = {
         "*": {
             "incTab": 1,
             "hasPostfix": 1,
-            "prefix": "'for ('+self.text1+'; '+self.text2+'; '+self.text3+') {'",
-            "postfix": "'}'",
+            "prefix": "for (<1>; <2>; <3>) {",
+            "postfix": "}",
         },
         "py": {
             "hasPostfix": 0,
-            "prefix": "'for '+self.text1+' in '+self.text2+':'",
+            "prefix": "for <1> in <2>:",
             "postfix": "",
         },
     },

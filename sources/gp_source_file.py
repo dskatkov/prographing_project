@@ -111,10 +111,11 @@ class Block:
         self.id = dct["id"]
         self.childs = dct["childs"]
         self.pos = dct["pos"]
-        self.text1 = dct["text1"]
         # Возможность добавлять несколько текстовых полей в блок. Еще не реализовано
-        if "text2" in dct: self.text2 = dct["text2"] 
-        if "text3" in dct: self.text3 = dct["text3"]
+        self.text1 = dct["text1"] if "text1" in dct else ""
+        self.text2 = dct["text2"] if "text2" in dct else ""
+        self.text3 = dct["text3"] if "text3" in dct else ""
+
 
     def build(self, s, tab):
         self.sortChilds()
@@ -129,17 +130,22 @@ class Block:
 
         for token in ["incTab","hasPostfix","prefix","postfix",]:
             if not (token in behavior): behavior[token]=langs['*'][token]
-
-        s += tab + eval(behavior["prefix"]) + '\n'
+       
+        repl = lambda s: s.replace('<1>', self.text1).replace('<2>', self.text2).replace('<3>', self.text3)
+        prefix = repl(behavior["prefix"])
+        if behavior["hasPostfix"]:
+            postfix = repl(behavior["postfix"])
+        
+        s += tab + prefix + '\n'
         if behavior["incTab"]:
-            tab += ' ' * 4
+            tab += '    '
         for child_id in self.childs:
             child = self.SF.object_ids[child_id]
             s, tab = child.build(s, tab)
         if behavior["incTab"]:
             tab = tab[:-4]
         if behavior["hasPostfix"]:
-            s += tab + eval(behavior["postfix"]) + '\n'
+            s += tab + postfix + '\n'
         return s, tab
 
     def sortChilds(self):

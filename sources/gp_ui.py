@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.font
+import time
 
 from settings import *
 import gp_source_file as gp_source_file
@@ -67,6 +68,47 @@ def newFile(root=None):
     gp_source_file.SF = gp_source_file.SourceFile()
     gp_canvas.canvas.draw(gp_source_file.SF)
 
+'''
+Work with mouse begins. It is not Finished yet
+'''
+
+
+def click_hit(click):
+    for block in gp_source_file.SF.object_ids.items():
+        print(block[1])
+        distance = ((block[1].pos[0] - click.x) ** 2 + (block[1].pos[1] - click.y) ** 2) ** 0.5
+        if distance <= block[1].r:
+            return block[1]
+
+def b1_double(click):
+    print ('hit2')
+    block = click_hit(click)
+    if block:
+        block.edit()
+    else:
+        block = gp_source_file.Block(gp_source_file.SF)
+        block.pos = (click.x, click.y)
+    gp_canvas.canvas.draw(gp_source_file.SF)
+
+def b3_double(click):
+    pass
+
+def button1(click):
+    pass
+
+def button3(click):
+    print ('hit')
+
+def b1_motion(click):
+    pass
+
+def b3_motion(click):
+    pass
+
+'''
+Here work with mouse ended. spacetime is going back to normal
+'''
+
 def ui_init(root):
     global canvasFrame, panelFrame, stateFrame, canvas
     root.minsize(200, 200)
@@ -100,12 +142,15 @@ def ui_init(root):
     # createMenu(mainMenu, mainMenu_tree)
     # root.config(menu=mainMenu)
 
-    canvasFrame.bind("<Button-1>", ...)
-    canvasFrame.bind("<Button-2>", ...)
-    canvasFrame.bind("<Button-3>", ...)
-    canvasFrame.bind("<B1-Motion>", ...)
-    canvasFrame.bind("<B2-Motion>", ...)
-    canvasFrame.bind("<B3-Motion>", ...)
+    canvas.bind("<Double-Button-1>", b1_double)
+    canvas.bind("<Double-Button-2>", ...)
+    canvas.bind("<Double-Button-3>", b3_double)
+    canvas.bind("<Button-1>", button1)
+    canvas.bind("<Button-2>", ...)
+    canvas.bind("<Button-3>", button3)
+    canvas.bind("<B1-Motion>", b1_motion)
+    canvas.bind("<B2-Motion>", ...)
+    canvas.bind("<B3-Motion>", b3_motion)
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

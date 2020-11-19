@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.ttk
 from os import getcwd
 #import math as m
-from PIL import Image, ImageTk
+#from PIL import Image, ImageTk
 
 from settings import *
 
@@ -65,6 +65,7 @@ class SourceFile:
         file.write(s)
         file.close()
 
+
 # classname id childs pos text
 class Block:
     #__slots__ = "classname", "id", "childs", "pos", "text"
@@ -81,6 +82,9 @@ class Block:
             self.SF.object_ids[self.id] = self
             self.SF.max_id = max(self.SF.max_id, self.id + 1)
         else:
+
+            max_id = len(SF.object_ids) + 1
+
             self.id = max_id
             self.childs = []
             self.pos = (0, 0)
@@ -99,8 +103,9 @@ class Block:
     def move(self, newpos):
         self.pos = newpos
 
-    def edit(self, newstr):
-        self.text = newstr
+    def edit(self):
+        print('here edition window is opening')
+        #self.text = newstr
 
     def convertToStr(self):
         return '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "text1":"'+str(self.text1)+'"}'

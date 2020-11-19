@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.filedialog
 import tkinter.messagebox
 import tkinter.font
+from os import getcwd
 
 import gp_source_file as gp_source_file
 import gp_ui as gp_ui

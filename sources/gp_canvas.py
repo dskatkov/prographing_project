@@ -8,10 +8,16 @@ class Canvas:
         self.master = master
 
     def draw(self, SF):
+        # Очистка
         self.master.create_rectangle(0, 0, 2000, 2000, fill=textBG)
+
+        # Линки
         for _, block in SF.object_ids.items():
             for child in block.childs:
                 block.drawLink(SF.object_ids[child], self.master)
+
+        # Блоки
+        for _, block in SF.object_ids.items():
             block.draw(self.master)
 
 if __name__ == "__main__":

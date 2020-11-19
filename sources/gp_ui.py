@@ -51,7 +51,7 @@ def build(root):
     if gp_source_file.SF.buildName == '':
         buildAs(root)
     else:
-        gp_source_file.SF.build(gp_source_file.SF.fileName)
+        gp_source_file.SF.build(gp_source_file.SF.buildName)
 
 def buildAs(root):
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ".py")]).show()

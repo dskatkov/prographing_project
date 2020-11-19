@@ -1,4 +1,10 @@
-import math as m
+import tkinter as tk
+import tkinter.ttk
+from os import getcwd
+#import math as m
+from PIL import Image, ImageTk
+
+from settings import *
 
 SF = ...
 
@@ -58,24 +64,6 @@ class SourceFile:
 
 
 
-
-    def addLink(self, beginBlock, endBlock):
-        ...
-
-    def delLink(self, beginBlock, endBlock):
-        ...
-
-
-
-# class Link:
-#     def __init__(self, begin, end):
-#         ...
-
-#     def delLink():
-#         ...
-
-
-
 # classname id childs pos text
 class Block:
     #__slots__ = "classname", "id", "childs", "pos", "text"
@@ -122,18 +110,12 @@ class Block:
         self.childs = dct["childs"]
         self.pos = dct["pos"]
         self.text = dct["text"]
-
-
-    def build(self, s, tab):
-        print("Not implemented!")
-
-    def draw(self, screen):
-        print("Not implemented!")
-
-    def drawLink(self, child):
-        print("Not implemented!")
+        # Возможность добавлять несколько текстовых полей в блок. Еще не реализовано
+        if "text2" in dct: self.text2 = dct["text2"] 
+        if "text3" in dct: self.text2 = dct["text3"]
 
     def build(self, s, tab):
+        self.sortChilds()
         s += tab + self.prefix() + '\n'
         if self.incTab:
             tab += ' ' * 4
@@ -146,6 +128,20 @@ class Block:
             s += tab + self.postfix() + '\n'
         return s, tab
 
+    def sortChilds(self):
+        self.childs.sort(key=lambda id: self.SF.object_ids[id].pos)
+
+    def addLink(self, child):
+        if not (child in self.childs):
+            self.childs.append(child)
+
+    def delLink(self, child):
+        if child in self.childs:
+            self.childs.remove(child)
+
+    def parents(self):
+        return self.SF.parents(self.id)
+
     def prefix(self):
         print("Not implemented!")
         return ''
@@ -154,8 +150,56 @@ class Block:
         print("Not implemented!")
         return ''
 
+    def draw(self, canvas):
+        x, y = self.pos
+        r = self.r
+
+        # photo_ = Image.open(getcwd() + '\\Image\\' + self.classname + '.bmp')
+        # photo = ImageTk.PhotoImage(photo_)
+        # photo = tk.PhotoImage(file='C:\\GitHub\\prographing_project\\sources\\Image\\' + self.classname + '.gif')
+        # print("image size: %dx%d" % (photo.width(), photo.height()))
+        # canvas.create_image(x, y, image=photo, anchor='center') #не работает
+
+
+        ct = self.classname
+        if ct in drawColores:
+            color = drawColores[ct]
+        elif '_' in drawColores:
+            color = drawColores['_']
+        else:
+            color = '#000000'
+
+        canvas.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
+        canvas.create_text(x, y, text=self.id, font="Consolas 10")
+
+    def drawLink(self, child, canvas):
+        x1, y1 = self.pos
+        x2, y2 = child.pos
+        r1, r2 = self.r, child.r
+        x1, y1 = x1, y1 #TODO scale
+        x2, y2 = x2, y2
+        
+        # Поиск наиболее подходящего цвета из списка
+        ct = child.classname
+        pair = self.classname + '_' + ct
+        left = self.classname + '_'
+        right = '_' + ct
+        if pair in linkColores:
+            color = linkColores[pair]
+        elif left in linkColores:
+            color = linkColores[left]
+        elif right in linkColores:
+            color = linkColores[right]
+        elif '_' in linkColores:
+            color = linkColores['_']
+        else:
+            color = '#000000'
+ 
+        canvas.create_line(x1, y1, x2, y2, fill=color)
+
+
+
 class BlockOp(Block):
-    #__slots__ = "classname", "id", "childs", "pos", "text"
     classname = "Op"
     incTab = 0
     hasPostfix = 0
@@ -167,29 +211,8 @@ class BlockOp(Block):
         print("Not implemented!")
         return ''
 
-    def draw(self, canvas):
-        x, y = self.pos
-        r = self.r
-        canvas.create_oval((x - r), (y - r), (x + r), (y + r), fill="blue")
-        canvas.create_text(x, y, text=self.id, font="Consolas 10")
-
-    def drawLink(self, child, canvas):
-        x1, y1 = self.pos
-        x2, y2 = child.pos
-        r1, r2 = self.r, child.r
-        x1, y1 = x1, y1 #TODO scale
-        x2, y2 = x2, y2
-        
-        ct = child.classname
-        if ct == 'Op': color = 'green'
-        elif ct == 'If': color = 'red'
-        else: color = 'white'
-
-        canvas.create_line(x1, y1, x2, y2, fill=color)
-
 
 class BlockIf(Block):
-    #__slots__ = "classname", "id", "childs", "pos", "text"
     classname = "If"
     incTab = 1
     hasPostfix = 1
@@ -199,28 +222,6 @@ class BlockIf(Block):
 
     def postfix(self):
         return '}'
-
-    def draw(self, canvas):
-        x, y = self.pos
-        r = self.r
-        canvas.create_oval((x - r), (y - r), (x + r), (y + r), fill="orange")
-        canvas.create_text(x, y, text=self.id, font="Consolas 10")
-
-    def drawLink(self, child, canvas):
-        x1, y1 = self.pos
-        x2, y2 = child.pos
-        r1, r2 = self.r, child.r
-        x1, y1 = x1, y1 #TODO scale
-        x2, y2 = x2, y2
-        
-        ct = child.classname
-        if ct == 'Op': color = 'red'
-        elif ct == 'If': color = 'green'
-        else: color = 'white'
-
-        canvas.create_line(x1, y1, x2, y2, fill=color)
-
-
 
 
 classnames = {v.classname: v for v in (Block,BlockOp,BlockIf,)}

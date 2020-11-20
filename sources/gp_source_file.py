@@ -6,6 +6,7 @@ from PIL import Image, ImageTk
 
 import text_editor
 from settings import *
+from utils import *
 
 SF = ...
 
@@ -132,18 +133,10 @@ class Block:
     def build(self, s, tab):
         self.sortChilds()
 
-        langs = blockTypeBehavior[self.classname]
-        if self.SF.lang in langs:
-            behavior = langs[self.SF.lang]
-        elif '*' in langs:
-            behavior = langs['*']
-        else:
-            behavior = {}
-
-        for token in ["incTab","hasPostfix","prefix","postfix","multiline"]:
-            if not (token in behavior): behavior[token] = langs['*'][token]
+        behavior = getSettingsByLang(self.SF.lang)[self.classname]['build']
        
-        repl = lambda s: s.replace('<1>', self.text1).replace('<2>', self.text2).replace('<3>', self.text3)
+        repl = formatStrOp(self)
+
         prefix = repl(behavior["prefix"])
         if behavior["hasPostfix"]:
             postfix = repl(behavior["postfix"])
@@ -184,14 +177,6 @@ class Block:
     def parents(self):
         return self.SF.parents(self.id)
 
-    def prefix(self):
-        print("Not implemented!")
-        return ''
-
-    def postfix(self):
-        print("Not implemented!")
-        return ''
-
     def draw(self, canvas):
         x, y = self.pos
         r = self.r
@@ -206,10 +191,8 @@ class Block:
         ct = self.classname
         if ct in drawColores:
             color = drawColores[ct]
-        elif '_' in drawColores:
-            color = drawColores['_']
         else:
-            color = '#000000'
+            color = drawColores['_']
 
         canvas.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
         canvas.create_text(x, y, text=self.id, font="Consolas 10")
@@ -232,10 +215,8 @@ class Block:
             color = linkColores[left]
         elif right in linkColores:
             color = linkColores[right]
-        elif '_' in linkColores:
-            color = linkColores['_']
         else:
-            color = '#000000'
+            color = linkColores['_']
  
         canvas.create_line(x1, y1, x2, y2, fill=color)
 

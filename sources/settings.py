@@ -1,3 +1,5 @@
+
+
 textEditorMenu_tree = {
     "OK": lambda: print('ok, not implemented'),
     "Отмена": lambda: print('cancel, not implemented'),
@@ -68,17 +70,17 @@ drawColores = {
 # Получение строки из объекта 
 # "if (<1>) {".replace(key, eval(val))
 keyWords = {
-    "<1>": "self.text1", # текстовые блоки для подстановок
-    "<2>": "self.text2",
-    "<3>": "self.text3",
-    "<4>": "self.text4",
-    "<5>": "self.text5",
-    "<desc>": "self.desc", # описание блока на канвасе
+    "<1>": "text1", # текстовые блоки для подстановок
+    "<2>": "text2",
+    "<3>": "text3",
+    "<4>": "text4",
+    "<5>": "text5",
+    "<desc>": "desc", # описание блока на канвасе
 
     #"<>": "self.",
 }
 
-languages = {
+languagePrePostfix = {
     "*": {
         "prefix": "",
         "postfix": "",
@@ -97,108 +99,109 @@ languages = {
     },
 }
 
-allSettings = {
-    "Op": {
-        "canvas": {
-            "image": "Op.bmp",
-            "tooltip": "<1>",
+t_op = {"Op": {
+    "canvas": {
+        "image": "Op.bmp",
+        "tooltip": "<1>",
+    },
+    "edit": {
+        "<desc>": {
+            "header": "name",
+            "type": "singleline",
         },
-        "edit": {
-            "<desc>": {
-                "header": "name",
-                "type": "singleline",
-            },
-            "<1>": {
-                "header": "code",
-                "type": "multiline",
-            },
-        },
-        "build": {
-            "*": {
-                "incTab": 0,
-                "hasPostfix": 0,
-                "prefix": "<1>",
-                "postfix": "",
-                "multiline": 1,
-            },
-            "py": {
-            },
+        "<1>": {
+            "header": "code",
+            "type": "multiline",
         },
     },
-    "If": {
-        "canvas": {
-            "image": "If.bmp",
-            "tooltip": "if (<1>)",
+    "build": {
+        "*": {
+            "incTab": 0,
+            "hasPostfix": 0,
+            "prefix": "<1>",
+            "postfix": "",
+            "multiline": 1,
         },
-        "edit": {
-            "<desc>": {
-                "header": "name",
-                "type": "singleline",
-            },
-            "<1>": {
-                "header": "condition",
-                "type": "singleline",
-            },
-        },
-        "build": {
-            "*": {
-                "incTab": 1,
-                "hasPostfix": 1,
-                "prefix": "if (<1>) {",
-                "postfix": "}",
-                "multiline": 0,
-            },
-            "py": {
-                "hasPostfix": 0,
-                "prefix": "if <1>:",
-                "postfix": "",
-            },
+        "py": {
         },
     },
-    "For": {
-        "canvas": {
-            "image": "For.bmp",
-            "tooltip": "for (<1>; <2>; <3>)",
-        },
-        "edit": {
-            "<desc>": {
-                "header": "name",
-                "type": "singleline",
-            },
-            "<1>": {
-                "header": "init",
-                "type": "singleline",
-            },
-            "<2>": {
-                "header": "condition",
-                "type": "singleline",
-            },
-            "<3>": {
-                "header": "iter",
-                "type": "singleline",
-            },
-        },
-        "build": {
-            "*": {
-                "incTab": 1,
-                "hasPostfix": 1,
-                "prefix": "for (<1>; <2>; <3>) {",
-                "postfix": "}",
-                "multiline": 0,
-            },
-            "py": {
-                "hasPostfix": 0,
-                "prefix": "for <1> in <2>:",
-                "postfix": "",
-            },
-        },
-    },
-}
+}}
 
-settings = {}
+t_if = {"If": {
+    "canvas": {
+        "image": "If.bmp",
+        "tooltip": "if (<1>)",
+    },
+    "edit": {
+        "<desc>": {
+            "header": "name",
+            "type": "singleline",
+        },
+        "<1>": {
+            "header": "condition",
+            "type": "singleline",
+        },
+    },
+    "build": {
+        "*": {
+            "incTab": 1,
+            "hasPostfix": 1,
+            "prefix": "if (<1>) {",
+            "postfix": "}",
+            "multiline": 0,
+        },
+        "py": {
+            "hasPostfix": 0,
+            "prefix": "if <1>:",
+            "postfix": "",
+        },
+    },
+}}
 
-def getSettingsByLang(lang):
-    ... # достать все настройки только для этого языка
+
+
+t_for =  {"For": {
+    "canvas": {
+        "image": "For.bmp",
+        "tooltip": "for (<1>; <2>; <3>)",
+    },
+    "edit": {
+        "<desc>": {
+            "header": "name",
+            "type": "singleline",
+        },
+        "<1>": {
+            "header": "init",
+            "type": "singleline",
+        },
+        "<2>": {
+            "header": "condition",
+            "type": "singleline",
+        },
+        "<3>": {
+            "header": "iter",
+            "type": "singleline",
+        },
+    },
+    "build": {
+        "*": {
+            "incTab": 1,
+            "hasPostfix": 1,
+            "prefix": "for (<1>; <2>; <3>) {",
+            "postfix": "}",
+            "multiline": 0,
+        },
+        "py": {
+            "hasPostfix": 0,
+            "prefix": "for <1> in <2>:",
+            "postfix": "",
+        },
+    },
+}}
+
+
+
+t_all = ["Op", "If", "For"]
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

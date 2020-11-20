@@ -14,6 +14,11 @@ mainMenu_tree = {
         "Собрать исходник": lambda: print('build, not implemented'),
     },
     "Выход": lambda: print('exit, not implemented'),
+    "Язык": {
+        "py": lambda: print('py file, not implemented'),
+        "c": lambda: print('c file, not implemented'),
+        "pas": lambda: print('pas file, not implemented'),
+    },
 }
 
 
@@ -35,10 +40,10 @@ stateFG = '#ffffff'
 blockTypes = ["Op", "If", "For"]
 
 # Цвета соединяющих линий
-# A_B = A->B
-# A_  = A->*
-#  _B = *->B
-#  _  = *->*
+# A_B = A-->B
+# A_  = A-->*
+#  _B = *-->B
+#  _  = *-->*
 linkColores = {
     "_": "#000000",
 
@@ -57,57 +62,143 @@ drawColores = {
     "_": "#ffffff",
     "Op": "#8080ff",
     "If": "#80ff80",
+    "For": "Orange",
 }
 
+# Получение строки из объекта 
+# "if (<1>) {".replace(key, eval(val))
+keyWords = {
+    "<1>": "self.text1", # текстовые блоки для подстановок
+    "<2>": "self.text2",
+    "<3>": "self.text3",
+    "<4>": "self.text4",
+    "<5>": "self.text5",
+    "<desc>": "self.desc", # описание блока на канвасе
 
-# Поведение блоков при сборке
-blockTypeBehavior = {
-    "*":{
-
-    },
-    "Op":{
-        "*": {
-            "incTab": 0,
-            "hasPostfix": 0,
-            "prefix": "<1>",
-            "postfix": "",
-            "multiline": 1,
-        },
-        "py": {
-        },
-    },
-
-    "If":{
-        "*": {
-            "incTab": 1,
-            "hasPostfix": 1,
-            "prefix": "if (<1>) {",
-            "postfix": "}",
-            "multiline": 0,
-        },
-        "py": {
-            "hasPostfix": 0,
-            "prefix": "if <1>:",
-            "postfix": "",
-        },
-    },
-
-    "For":{
-        "*": {
-            "incTab": 1,
-            "hasPostfix": 1,
-            "prefix": "for (<1>; <2>; <3>) {",
-            "postfix": "}",
-            "multiline": 0,
-        },
-        "py": {
-            "hasPostfix": 0,
-            "prefix": "for <1> in <2>:",
-            "postfix": "",
-        },
-    },
-
+    #"<>": "self.",
 }
+
+languages = {
+    "*": {
+        "prefix": "",
+        "postfix": "",
+    },
+    "c": {
+        "prefix": "",
+        "postfix": "",
+    },
+    "py": {
+        "prefix": "",
+        "postfix": "",
+    },
+    "pas": {
+        "prefix": "BEGIN",
+        "postfix": "END.",
+    },
+}
+
+allSettings = {
+    "Op": {
+        "canvas": {
+            "image": "Op.bmp",
+            "tooltip": "<1>",
+        },
+        "edit": {
+            "<desc>": {
+                "header": "name",
+                "type": "singleline",
+            },
+            "<1>": {
+                "header": "code",
+                "type": "multiline",
+            },
+        },
+        "build": {
+            "*": {
+                "incTab": 0,
+                "hasPostfix": 0,
+                "prefix": "<1>",
+                "postfix": "",
+                "multiline": 1,
+            },
+            "py": {
+            },
+        },
+    },
+    "If": {
+        "canvas": {
+            "image": "If.bmp",
+            "tooltip": "if (<1>)",
+        },
+        "edit": {
+            "<desc>": {
+                "header": "name",
+                "type": "singleline",
+            },
+            "<1>": {
+                "header": "condition",
+                "type": "singleline",
+            },
+        },
+        "build": {
+            "*": {
+                "incTab": 1,
+                "hasPostfix": 1,
+                "prefix": "if (<1>) {",
+                "postfix": "}",
+                "multiline": 0,
+            },
+            "py": {
+                "hasPostfix": 0,
+                "prefix": "if <1>:",
+                "postfix": "",
+            },
+        },
+    },
+    "For": {
+        "canvas": {
+            "image": "For.bmp",
+            "tooltip": "for (<1>; <2>; <3>)",
+        },
+        "edit": {
+            "<desc>": {
+                "header": "name",
+                "type": "singleline",
+            },
+            "<1>": {
+                "header": "init",
+                "type": "singleline",
+            },
+            "<2>": {
+                "header": "condition",
+                "type": "singleline",
+            },
+            "<3>": {
+                "header": "iter",
+                "type": "singleline",
+            },
+        },
+        "build": {
+            "*": {
+                "incTab": 1,
+                "hasPostfix": 1,
+                "prefix": "for (<1>; <2>; <3>) {",
+                "postfix": "}",
+                "multiline": 0,
+            },
+            "py": {
+                "hasPostfix": 0,
+                "prefix": "for <1> in <2>:",
+                "postfix": "",
+            },
+        },
+    },
+}
+
+settings = {}
+
+def getSettingsByLang(lang):
+    ... # достать все настройки только для этого языка
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

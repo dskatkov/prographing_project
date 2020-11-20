@@ -110,7 +110,7 @@ def ui_init(root):
     canvasFrame = tk.Frame(master=root, bg=textBG)
     stateFrame = tk.Frame(master=root, bg=stateBG)
     canvas = tk.Canvas(master=canvasFrame, bg=textBG)
-    canvas.pack()
+    canvas.pack(expand=1)
 
     panelFrame.grid(row=0, column=0, sticky='nsew')
     canvasFrame.grid(row=1, column=0, sticky='nsew')
@@ -128,9 +128,9 @@ def ui_init(root):
     ]
     placeButtons(panelFrame, panelFrameButtons)
 
-    # mainMenu = tk.Menu(master=root)
-    # createMenu(mainMenu, mainMenu_tree)
-    # root.config(menu=mainMenu)
+    mainMenu = tk.Menu(master=root)
+    createMenu(mainMenu, mainMenu_tree)
+    root.config(menu=mainMenu)
 
     canvas.bind("<Double-Button-1>", b1_double)
     canvas.bind("<Double-Button-2>", ...)

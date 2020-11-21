@@ -9,6 +9,8 @@ class Canvas:
         self.master = master
         self.viewpos = (0, 0)
         self.viewzoom = 1
+        self.handling = None
+        self.touch = None
 
     def draw(self, SF):
         # Очистка
@@ -46,6 +48,9 @@ class Canvas:
         else:
             color = drawColores['_']
 
+
+        if block.chosen:
+            self.master.create_rectangle((x - r), (y - r), (x + r), (y + r), fill=color)
         self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
         # self.master.create_text(x, y, text=block.id, font="Consolas 10")
         self.master.create_text(x + 1.5 * r, y, text=block.data['<desc>'], anchor='w', font="Consolas 10")

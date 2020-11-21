@@ -80,7 +80,11 @@ b3_state = ''
 def b1(click):
     b1_state = 'n'
     print (f'left click: ({click.x},{click.y})')
-    ...
+    block = find_block(click)
+    if block:
+        block.chosen = True
+        gp_canvas.canvas.handling = block
+        gp_canvas.canvas.touch = (click.x, click.y)
     redraw()
 
 def b2(click):
@@ -126,7 +130,10 @@ def b3_double(click):
 def b1_motion(click):
     b1_state = 'm'
     print (f'left motion: ({click.x},{click.y})')
-    ...
+    if gp_canvas.canvas.handling:
+        shift = (click.x - gp_canvas.canvas.touch[0], click.y - gp_canvas.canvas.touch[1])
+        gp_canvas.canvas.handling.move(shift)
+        gp_canvas.canvas.touch = (click.x, click.y)
     redraw()
 
 def b2_motion(click):
@@ -184,7 +191,7 @@ Here work with mouse ended. spacetime is going back to normal
 '''
 
 def ui_init(root):
-    global canvasFrame, panelFrame, stateFrame, canvas, mainWindow
+    global canvasFrame, panelFrame, stateFrame, canvas, mainWindow, chosen
     root.minsize(200, 200)
 
     root.columnconfigure(0, weight=1, minsize=200)

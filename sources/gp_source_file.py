@@ -89,9 +89,10 @@ class SourceFile:
 # }
 class Block:
     #__slots__ = "classname", "id", "childs", "pos", "text"
-    def __init__(self, SF, str='', type='_', creating_type=0):
+    def __init__(self, SF, str = '', type = '_', creating_type = 0, chosen = False):
         self.SF = SF
         self.text_editor = None
+        self.chosen = chosen
         # creating_type == 0 - создание нового элемента
         # creating_type == 1 - парсинг элемента из файла
         if creating_type == 1:
@@ -119,8 +120,8 @@ class Block:
     def __del__(self):
         self.SF.object_ids.remove(self.id)
 
-    def move(self, newpos):
-        self.pos = newpos
+    def move(self, shift):
+        self.pos = (self.pos[0] + shift[0], self.pos[1] + shift[1])
 
     def edit(self, master, canvas):
         print('here edition window is opening')

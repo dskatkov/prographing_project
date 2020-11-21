@@ -50,7 +50,7 @@ class SourceFile:
             if len(line.strip()) == 0 or line.strip()[0] == ';':
                 continue  # пустые строки и строки-комментарии пропускаем
             type = eval(line)["type"]
-            if type in blockTypes:
+            if type in t_all:
                 Block(self, line.strip(), creating_type=1)
             else:
                 print(f'Unknown type of block! Line: "{line}"')
@@ -104,7 +104,7 @@ class Block:
 
             self.id = SF.max_id
             self.childs = []
-            self.pos = (0, 0)
+            self.pos = Point(0, 0)
             self.data = {}
             self.classname = type
 
@@ -119,9 +119,12 @@ class Block:
 
     def delete(self):
         SF.object_ids.pop(self.id)
+        for _, block in SF.object_ids.items():
+            if self.id in block.childs:
+                block.childs.remove(self.id)
 
     def move(self, shift):
-        self.pos = (self.pos[0] + shift[0], self.pos[1] + shift[1])
+        self.pos = (self.pos + shift).round()
 
     def edit(self, master, canvas):
         print('here edition window is opening')
@@ -139,7 +142,7 @@ class Block:
         self.classname = dct["type"]
         self.id = dct["id"]
         self.childs = dct["childs"]
-        self.pos = dct["pos"]
+        self.pos = Point().fromTuple(dct["pos"])
         self.data = dct["data"]
 
         # self.data = None

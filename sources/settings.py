@@ -39,8 +39,6 @@ spaceFG = '#ffffff'
 stateBG = '#404040'
 stateFG = '#ffffff'
 
-blockTypes = ["Op", "If", "For"]
-
 # Цвета соединяющих линий
 # A_B = A-->B
 # A_  = A-->*
@@ -49,23 +47,25 @@ blockTypes = ["Op", "If", "For"]
 linkColores = {
     "_": "#000000",
 
-    "Op_":"#000000",
-    "_Op":"#000000",
-    "Op_Op": "#ffffff",
-    "Op_If": "#ff0000",
+    "op_":"#000000",
+    "_op":"#000000",
+    "op_op": "#ffffff",
+    "op_if": "#ff0000",
 
-    "If_":"#000000",
-    "_If":"#000000",
-    "If_If": "#0000ff",
-    "If_Op": "#00ff00",
+    "if_":"#000000",
+    "_if":"#000000",
+    "if_if": "#0000ff",
+    "if_op": "#00ff00",
 }
 
 # Цвета кружков блоков разного типа
 drawColores = {
-    "_": "#ffffff",
-    "Op": "#8080ff",
-    "If": "#80ff80",
-    "For": "Orange",
+    "_": "White",
+    "op": "Blue",
+    "if": "Green",
+    "for": "Orange",
+    "class": "Black",
+    "function": "Pink",
 }
 
 # Получение строки из объекта 
@@ -127,7 +127,7 @@ t_default = {"_": {
     },
 }}
 
-t_op = {"Op": {
+t_op = {"op": {
     "canvas": {
         "image": "Op.bmp",
         "tooltip": "<1>",
@@ -155,7 +155,7 @@ t_op = {"Op": {
     },
 }}
 
-t_if = {"If": {
+t_if = {"if": {
     "canvas": {
         "image": "If.bmp",
         "tooltip": "if (<1>)",
@@ -188,7 +188,7 @@ t_if = {"If": {
 
 
 
-t_for =  {"For": {
+t_for =  {"for": {
     "canvas": {
         "image": "For.bmp",
         "tooltip": "for (<1>; <2>; <3>)",
@@ -227,11 +227,79 @@ t_for =  {"For": {
     },
 }}
 
+t_class =  {"class": {
+    "canvas": {
+        "image": "class.bmp",
+        "tooltip": "class <1>",
+    },
+    "edit": {
+        "<desc>": {
+            "header": "name",
+            "type": "singleline",
+        },
+        "<1>": {
+            "header": "class name",
+            "type": "singleline",
+        },
+    },
+    "build": {
+        "*": {
+            "incTab": 1,
+            "hasPostfix": 1,
+            "prefix": "class <1> {",
+            "postfix": "}",
+            "multiline": 0,
+        },
+        "py": {
+            "hasPostfix": 0,
+            "prefix": "class <1>:",
+            "postfix": "",
+        },
+    },
+}}
 
+t_function =  {"function": {
+    "canvas": {
+        "image": "function.bmp",
+        "tooltip": "function <1>(<2>)",
+    },
+    "edit": {
+        "<desc>": {
+            "header": "name",
+            "type": "singleline",
+        },
+        "<1>": {
+            "header": "fn name",
+            "type": "singleline",
+        },
+        "<2>": {
+            "header": "fn params",
+            "type": "singleline",
+        },
+    },
+    "build": {
+        "*": {
+            "incTab": 1,
+            "hasPostfix": 1,
+            "prefix": "function <1>(<2>) {",
+            "postfix": "}",
+            "multiline": 0,
+        },
+        "py": {
+            "hasPostfix": 0,
+            "prefix": "def <1>(<2>):",
+            "postfix": "",
+        },
+    },
+}}
 
-t_all = ["_", "Op", "If", "For"]
+blockR = 0.4
+nearToLine = 0.1
 
-debug_flag = False
+t_all = ["_", "op", "if", "for", 'class', 'function']
+
+debug_flag = True
+profile = True
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

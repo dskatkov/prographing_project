@@ -7,8 +7,8 @@ canvas = ...
 class Canvas:
     def __init__(self, master=None):
         self.master = master
-        self.viewpos = (0, 0)
-        self.viewzoom = 1
+        self.viewpos = Point(0, 0)
+        self.viewzoom = 10
         self.handling = None
         self.touch = None
         self.link_creation = None
@@ -30,14 +30,14 @@ class Canvas:
             self.drawBlock(block)
 
     def scale(self, pos):
-        return vecMul(vecSum(pos, vecMul(self.viewpos, -1)), self.viewzoom) # (pos-viewpos)*zoom
+        return (pos - self.viewpos) * self.viewzoom # vecMul(vecSum(pos, vecMul(self.viewpos, -1)), self.viewzoom) # (pos-viewpos)*zoom
 
     def unscale(self, pos):
-        return vecSum(self.viewpos, vecMul(pos, 1/self.viewzoom)) # pos/zoom+viewpos
+        return pos * (1 / self.viewzoom) + self.viewpos # vecSum(self.viewpos, vecMul(pos, 1/self.viewzoom)) # pos/zoom+viewpos
 
     def drawBlock(self, block):
-        x, y = self.scale(block.pos)
-        r = 10 * self.viewzoom
+        x, y = self.scale(block.pos).tuple()
+        r = blockR * self.viewzoom
 
         # photo_ = Image.open(getcwd() + '\\Image\\' + block.classname + '.bmp')
         # photo = ImageTk.PhotoImage(photo_)
@@ -61,12 +61,13 @@ class Canvas:
 
 
     def drawLink(self, block, child):
-        x1, y1 = self.scale(block.pos)
-        if type(child)==tuple:
-            x2, y2 = child[0], child[1]
+        x1, y1 = self.scale(block.pos).tuple()
+
+        if isinstance(child, Point):
+            x2, y2 = child.x, child.y
             color = linkColores['_']
         else:
-            x2, y2 = self.scale(child.pos)
+            x2, y2 = self.scale(child.pos).tuple()
             # Поиск наиболее подходящего цвета из списка
             pair = block.classname + '_' + child.classname
             left = block.classname + '_'

@@ -1,6 +1,49 @@
 import tkinter as tk
 from settings import *
 
+class Point:
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+    def __add__(a, b):
+        return Point(a.x+b.x, a.y+b.y)
+
+    def __mul__(a, k):
+        return Point(a.x*k, a.y*k)
+
+    def __neg__(a):
+        return a*(-1)
+
+    def __sub__(a, b):
+        return a + (-b)
+
+    def __str__(self):
+        return f'({self.x},{self.y})'
+
+    def __eq__(a, b):
+        return a.x == b.x and a.y == b.y
+
+    def __lt__(a, b):
+        if a.y < b.y:
+            return True
+        elif a.y == b.y and a.x < b.x:
+            return True
+        else:
+            return False
+
+    def abs(self):
+        return (self.x ** 2 + self.y ** 2) ** (1/2)
+
+    def fromTuple(self, tup):
+        return Point(tup[0], tup[1])
+
+    def tuple(self):
+        return self.x, self.y
+
+    def round(self, s=1):
+        return Point(round(self.x/s)*s, round(self.y/s)*s)
+
 def debug_return(str):
     if debug_flag:
         print(str)
@@ -23,10 +66,12 @@ def debug_return(str):
 #         self.x, self.y = tpl
 
 def vecSum(a, b):
-	return a[0] + b[0], a[1] + b[1]
+    print('Warning vecSum')
+    return a[0] + b[0], a[1] + b[1]
 
 def vecMul(a, k):
-	return a[0] * k, a[1] * k
+    print('Warning vecMul')
+    return a[0] * k, a[1] * k
 
 def createMenu(master, tree):
     for key, val in tree.items():
@@ -118,7 +163,7 @@ def createDictByPath(path, val):
 def setDictValByPath(d, path, val):
     return dictMerge(d, createDictByPath(path, val), f=takeSecond)
 
-allTypes = dictMerge(t_default, t_op, t_if, t_for)
+allTypes = dictMerge(t_default, t_op, t_if, t_for, t_class, t_function)
 
 
 
@@ -133,4 +178,8 @@ allTypes = dictMerge(t_default, t_op, t_if, t_for)
 
 
 if __name__ == '__main__':
+    p1 = Point(1, 2)
+    p2 = Point(-5, -7)
+    print(p1<p2)
+    print(p1*10)
     print('This module is not for direct call!')

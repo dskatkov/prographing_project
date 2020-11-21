@@ -1,0 +1,30 @@
+---
+py
+C:/GitHub/prographing_project/examples/gp_sourcefile.py
+{"type":"class", "id":0, "childs":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "pos":(34,25), "data":{'<desc>': 'class Block', '<1>': 'Block'}}
+{"type":"function", "id":1, "childs":[16], "pos":(40,27), "data":{'<desc>': '__init__', '<1>': '__init__', '<2>': "self, SF, str = '', type = '_', creating_type = 0, chosen = False"}}
+{"type":"function", "id":2, "childs":[17], "pos":(40,29), "data":{'<desc>': 'delete', '<1>': 'delete', '<2>': 'self'}}
+{"type":"function", "id":3, "childs":[28], "pos":(40,31), "data":{'<desc>': 'move', '<1>': 'move', '<2>': 'self, shift'}}
+{"type":"function", "id":4, "childs":[18], "pos":(40,33), "data":{'<desc>': 'edit', '<1>': 'edit', '<2>': 'self, master, canvas'}}
+{"type":"function", "id":5, "childs":[26], "pos":(40,35), "data":{'<desc>': 'convertToStr', '<1>': 'convertToStr', '<2>': 'self'}}
+{"type":"function", "id":6, "childs":[27], "pos":(40,37), "data":{'<desc>': 'parseFromStr', '<1>': 'parseFromStr', '<2>': 'self, s'}}
+{"type":"function", "id":7, "childs":[19], "pos":(40,39), "data":{'<desc>': 'formatStrOp', '<1>': 'formatStrOp', '<2>': 'self'}}
+{"type":"function", "id":8, "childs":[20], "pos":(40,41), "data":{'<desc>': 'formatStr', '<1>': 'formatStr', '<2>': 'self, s'}}
+{"type":"function", "id":9, "childs":[21], "pos":(40,43), "data":{'<desc>': 'build', '<1>': 'build', '<2>': 'self, s, tab'}}
+{"type":"function", "id":10, "childs":[24], "pos":(40,45), "data":{'<desc>': 'sortChilds', '<1>': 'sortChilds', '<2>': 'self'}}
+{"type":"function", "id":11, "childs":[25], "pos":(40,47), "data":{'<desc>': 'addLink', '<1>': 'addLink', '<2>': 'self, child'}}
+{"type":"function", "id":12, "childs":[22], "pos":(40,49), "data":{'<desc>': 'delLink', '<1>': 'delLink', '<2>': 'self, child'}}
+{"type":"function", "id":13, "childs":[23], "pos":(40,51), "data":{'<desc>': 'parents', '<1>': 'parents', '<2>': 'self'}}
+{"type":"op", "id":16, "childs":[], "pos":(47,27), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":17, "childs":[], "pos":(47,29), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":18, "childs":[], "pos":(47,33), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":19, "childs":[], "pos":(47,39), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":20, "childs":[], "pos":(47,41), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":21, "childs":[], "pos":(47,43), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":22, "childs":[], "pos":(47,49), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":23, "childs":[], "pos":(47,51), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":24, "childs":[], "pos":(47,45), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":25, "childs":[], "pos":(47,47), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":26, "childs":[], "pos":(47,35), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":27, "childs":[], "pos":(47,37), "data":{'<desc>': '', '<1>': ''}}
+{"type":"op", "id":28, "childs":[], "pos":(47,31), "data":{'<desc>': '', '<1>': ''}}

@@ -1,6 +1,10 @@
 import tkinter as tk
 from settings import *
 
+def debug_return(str):
+    if debug_flag:
+        print(str)
+
 # class Point:
 #     def __init__(self, x=0, y=0):
 #         self.x = x

@@ -18,6 +18,20 @@ Work with mouse begins. It is not Finished yet
 def redraw():
     gp_canvas.canvas.draw(gp_source_file.SF)
 
+def downtree(block, marks):
+    for id in block.childs:
+        if gp_source_file.SF.object_ids[id] in marks:
+            return True
+        elif downtree(gp_source_file.SF.object_ids[id], marks):
+            return True
+    return False
+
+
+def cycle_checkout(SF, block):
+    marks = [block]
+    cycle = False
+    return downtree(block, marks)
+
 def find_block(click):
     debug_return(f'handling click: ({click.x},{click.y})')
     sfclick = gp_canvas.canvas.unscale((click.x, click.y))
@@ -83,7 +97,7 @@ def b2_double(click):
 def b3_double(click):
     b3_state = 'd'
     debug_return (f'right double click: ({click.x},{click.y})')
-    ...
+    #for gp_source_file.
     redraw()
 
 
@@ -134,6 +148,9 @@ def b3_release(click):
             if gp_source_file.SF.object_ids[obj] == block:
                 id = obj
         gp_canvas.canvas.handling.childs.append(id)
+        if cycle_checkout(gp_source_file.SF, block):
+            gp_canvas.canvas.handling.delLink(id)
+            print('ban cycle!!!')
     gp_canvas.canvas.touch = None
     gp_canvas.canvas.link_creation = False
     if gp_canvas.canvas.handling:

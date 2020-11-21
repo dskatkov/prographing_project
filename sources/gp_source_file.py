@@ -200,7 +200,7 @@ class Block:
 
     def delLink(self, child):
         if child in self.childs:
-            self.childs.remove(child)
+            self.childs.pop(child)
 
     def parents(self):
         return self.SF.parents(self.id)

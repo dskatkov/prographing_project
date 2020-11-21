@@ -233,9 +233,5 @@ t_all = ["_", "Op", "If", "For"]
 
 debug_flag = False
 
-def debug_return(str):
-    if debug_flag:
-        print(str)
-
 if __name__ == "__main__":
     print("This module is not for direct call!")

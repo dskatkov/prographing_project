@@ -107,6 +107,10 @@ t_default = {"_": {
         "tooltip": "UNDEF TYPE",
     },
     "edit": {
+        "<desc>": {
+            "header": "name",
+            "type": "invisible"
+        },
         "<class>": {
             "header": "TYPE",
             "type": "singleline",

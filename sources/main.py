@@ -10,9 +10,9 @@ import gp_canvas as gp_canvas
 
 if __name__ == "__main__":
     gp_source_file.SF = gp_source_file.SourceFile()
-    mainWindow = tk.Tk()
+    gp_ui.mainWindow = tk.Tk()
     gp_canvas.canvas = gp_canvas.Canvas()
-    gp_ui.ui_init(mainWindow)
+    gp_ui.ui_init(gp_ui.mainWindow)
     gp_canvas.canvas.master = gp_ui.canvas
-    mainWindow.mainloop()
+    gp_ui.mainWindow.mainloop()
 

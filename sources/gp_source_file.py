@@ -105,7 +105,7 @@ class Block:
             self.childs = []
             self.pos = (0, 0)
             self.data = {}
-            self.classname = '_'
+            self.classname = type
 
             for key, val in allTypes[self.classname]['edit'].items():
                 self.data[key] = ''
@@ -117,15 +117,15 @@ class Block:
         self.SF.object_ids[self.id] = self
 
     def __del__(self):
-        self.SF.object_ids[self.id] = None
+        self.SF.object_ids.remove(self.id)
 
     def move(self, newpos):
         self.pos = newpos
 
-    def edit(self, master):
+    def edit(self, master, canvas):
         print('here edition window is opening')
         self.text_editor = master
-        text_editor.TextEditor(master, self)
+        text_editor.TextEditor(master, self, canvas)
         #self.text = newstr
 
     def convertToStr(self):
@@ -146,13 +146,23 @@ class Block:
         #     if attr in dct:
         #         setattr(self.data, attr, dct[attr])
 
+    def formatStrOp(self):
+        return lambda s: self.formatStr(s)
+
+    def formatStr(self, s):
+        res = s
+        for key, val in self.data.items():
+            if key in res:
+                res = res.replace(key, val)
+        return res
+
 
     def build(self, s, tab):
         self.sortChilds()
 
         behavior = getSettingsByLang(self.SF.lang)[self.classname]['build']
        
-        repl = formatStrOp(self)
+        repl = self.formatStrOp()
 
         prefix = repl(behavior["prefix"])
         if behavior["hasPostfix"]:

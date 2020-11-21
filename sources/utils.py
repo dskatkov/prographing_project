@@ -18,6 +18,12 @@ from settings import *
 #     def fromTuple(self, tpl):
 #         self.x, self.y = tpl
 
+def vecSum(a, b):
+	return a[0] + b[0], a[1] + b[1]
+
+def vecMul(a, k):
+	return a[0] * k, a[1] * k
+
 def createMenu(master, tree):
     for key, val in tree.items():
         m = tk.Menu(master=master, tearoff=0)
@@ -82,15 +88,7 @@ def dictMerge(*dicts, f=lambda x,y: normalMerge(x,y,f=takeFirst)):
 
     return res
 
-def formatStrOp(block):
-    return lambda s: formatStr(block, s)
 
-def formatStr(block, s):
-    res = s
-    for key, val in block.data.items():
-        if key in res:
-            res = res.replace(key, val)
-    return res
 
 def getDictValByPath(d, path):
     val = d
@@ -131,5 +129,4 @@ allTypes = dictMerge(t_default, t_op, t_if, t_for)
 
 
 if __name__ == '__main__':
-    print(getSettingsByLang('py'))
     print('This module is not for direct call!')

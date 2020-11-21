@@ -1,11 +1,14 @@
 import gp_source_file as source_file
 from settings import *
+from utils import *
 
 canvas = ...
 
 class Canvas:
     def __init__(self, master=None):
         self.master = master
+        self.viewpos = (0, 0)
+        self.viewzoom = 1
 
     def draw(self, SF):
         # Очистка
@@ -20,10 +23,15 @@ class Canvas:
         for _, block in SF.object_ids.items():
             self.drawBlock(block)
 
+    def scale(self, pos):
+        return vecMul(vecSum(pos, vecMul(self.viewpos, -1)), self.viewzoom) # (pos-viewpos)*zoom
+
+    def unscale(self, pos):
+        return vecSum(self.viewpos, vecMul(pos, 1/self.viewzoom)) # pos/zoom+viewpos
 
     def drawBlock(self, block):
-        x, y = block.pos
-        r = 10
+        x, y = self.scale(block.pos)
+        r = 10 * self.viewzoom
 
         # photo_ = Image.open(getcwd() + '\\Image\\' + block.classname + '.bmp')
         # photo = ImageTk.PhotoImage(photo_)
@@ -39,14 +47,13 @@ class Canvas:
             color = drawColores['_']
 
         self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
-        self.master.create_text(x, y, text=block.id, font="Consolas 10")
+        # self.master.create_text(x, y, text=block.id, font="Consolas 10")
+        self.master.create_text(x + 1.5 * r, y, text=block.data['<desc>'], anchor='w', font="Consolas 10")
+
 
     def drawLink(self, block, child):
-        x1, y1 = block.pos
-        x2, y2 = child.pos
-
-        x1, y1 = x1, y1 #TODO scale
-        x2, y2 = x2, y2
+        x1, y1 = self.scale(block.pos)
+        x2, y2 = self.scale(child.pos)
 
         # Поиск наиболее подходящего цвета из списка
         pair = block.classname + '_' + child.classname

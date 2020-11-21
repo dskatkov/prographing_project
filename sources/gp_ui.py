@@ -7,7 +7,8 @@ from utils import *
 import gp_source_file as gp_source_file
 import gp_canvas as gp_canvas
 
-canvasFrame = panelFrame = stateFrame = canvas = ...
+# canvas - tk.Canvas
+canvasFrame = panelFrame = stateFrame = canvas = mainWindow = ...
 
 def saveAs(root):
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Visual script", ".vrc")]).show()
@@ -33,6 +34,8 @@ def open(root):
             fileName += '.vrc'
         gp_source_file.SF.open(fileName)
         gp_canvas.canvas.draw(gp_source_file.SF)
+        mainWindow.title(fileName)
+
 
 def build(root):
     if gp_source_file.SF.buildName == '':
@@ -57,49 +60,131 @@ def newFile(root=None):
 '''
 Work with mouse begins. It is not Finished yet
 '''
+def redraw():
+    gp_canvas.canvas.draw(gp_source_file.SF)
 
-
-def click_hit(click):
+def find_block(click):
     print(f'handling click: ({click.x},{click.y})')
+    sfclick = gp_canvas.canvas.unscale((click.x, click.y))
     for _, block in gp_source_file.SF.object_ids.items():
         print('checking block: '+block.convertToStr())
-        distance2 = (block.pos[0] - click.x) ** 2 + (block.pos[1] - click.y) ** 2
+        distance2 = (block.pos[0] - sfclick[0]) ** 2 + (block.pos[1] - sfclick[1]) ** 2
         if distance2 <= 10 ** 2:
             print('ok')
             return block
 
+b1_state = ''
+b2_state = ''
+b3_state = ''
+
+def b1(click):
+    b1_state = 'n'
+    print (f'left click: ({click.x},{click.y})')
+    ...
+    redraw()
+
+def b2(click):
+    b2_state = 'n'
+    print (f'wheel click: ({click.x},{click.y})')
+    ...
+    redraw()
+
+def b3(click):
+    b2_state = 'n'
+    ...
+    redraw()
+    print (f'right click: ({click.x},{click.y})')
+
+
 def b1_double(click):
-    print ('left double click')
-    block = click_hit(click)
+    b1_state = 'd'
+    print (f'left double click: ({click.x},{click.y})')
+
+    block = find_block(click)
     if block:
         if not block.text_editor:
-            block.edit(tk.Toplevel(canvasFrame))
+            block.edit(tk.Toplevel(canvasFrame), gp_canvas.canvas)
     else:
         block = gp_source_file.Block(gp_source_file.SF)
-        block.pos = (click.x, click.y)
-    gp_canvas.canvas.draw(gp_source_file.SF)
+        block.pos = gp_canvas.canvas.unscale((click.x, click.y))
+
+    redraw()
+
+def b2_double(click):
+    b2_state = 'd'
+    print (f'wheel double click: ({click.x},{click.y})')
+    ...
+    redraw()
 
 def b3_double(click):
-    print ('right double click')
+    b3_state = 'd'
+    print (f'right double click: ({click.x},{click.y})')
+    ...
+    redraw()
 
-def button1(click):
-    print ('left click')
-
-def button3(click):
-    print ('right click')
 
 def b1_motion(click):
-    print (f'left motion:({click.x},{click.y})')
+    b1_state = 'm'
+    print (f'left motion: ({click.x},{click.y})')
+    ...
+    redraw()
+
+def b2_motion(click):
+    b2_state = 'm'
+    print (f'wheel motion:({click.x},{click.y})')
+    ...
+    redraw()
 
 def b3_motion(click):
+    b3_state = 'm'
     print (f'right motion:({click.x},{click.y})')
+    ...
+    redraw()
+
+
+def b1_release(click):
+    b1_state = ''
+    print (f'left release:({click.x},{click.y})')
+    ...
+    redraw()
+
+def b2_release(click):
+    b2_state = ''
+    print (f'wheel release:({click.x},{click.y})')
+    ...
+    redraw()
+
+def b3_release(click):
+    b3_state = ''
+    print (f'right release:({click.x},{click.y})')
+    ...
+    redraw()
+
+
+def wheel(click):
+    print(f'wheel:({click.x},{click.y}) {click.delta}')
+    k = 2.718281828459045 ** (0.1*click.delta/120)
+    scale = gp_canvas.canvas.scale
+    unscale = gp_canvas.canvas.unscale
+
+    # Я не знаю, как и почему это работает, но оно работает (с какой-то погрешностью?!)
+    pos = (click.x, click.y)
+    pos = vecMul(pos, 1 / gp_canvas.canvas.viewzoom)
+    sfpos = unscale(pos)
+    gp_canvas.canvas.viewzoom *= k
+    sfnewpos = unscale(pos)
+    sfshift = vecSum(sfnewpos, vecMul(sfpos, -1))
+    shift = vecMul(sfshift, -gp_canvas.canvas.viewzoom)
+    gp_canvas.canvas.viewpos = vecSum(gp_canvas.canvas.viewpos, shift)
+
+    redraw()
 
 '''
 Here work with mouse ended. spacetime is going back to normal
 '''
 
 def ui_init(root):
-    global canvasFrame, panelFrame, stateFrame, canvas
+    global canvasFrame, panelFrame, stateFrame, canvas, mainWindow
     root.minsize(200, 200)
 
     root.columnconfigure(0, weight=1, minsize=200)
@@ -110,7 +195,7 @@ def ui_init(root):
     canvasFrame = tk.Frame(master=root, bg=textBG)
     stateFrame = tk.Frame(master=root, bg=stateBG)
     canvas = tk.Canvas(master=canvasFrame, bg=textBG)
-    canvas.pack(expand=1)
+    canvas.pack(fill='both', expand=1)
 
     panelFrame.grid(row=0, column=0, sticky='nsew')
     canvasFrame.grid(row=1, column=0, sticky='nsew')
@@ -126,26 +211,32 @@ def ui_init(root):
         ('canvas redraw', lambda: gp_canvas.canvas.draw(gp_source_file.SF)),
         ('build log', lambda: gp_source_file.SF.build('', 0)),
         ('save log', lambda: gp_source_file.SF.save('', 0)),
-
     ]
+
     placeButtons(panelFrame, panelFrameButtons)
 
     mainMenu = tk.Menu(master=root)
     createMenu(mainMenu, mainMenu_tree)
     root.config(menu=mainMenu)
 
+    canvas.bind("<Button-1>", b1)
+    canvas.bind("<Button-2>", b2)
+    canvas.bind("<Button-3>", b3)
+
     canvas.bind("<Double-Button-1>", b1_double)
-    canvas.bind("<Double-Button-2>", ...)
+    canvas.bind("<Double-Button-2>", b2_double)
     canvas.bind("<Double-Button-3>", b3_double)
-    canvas.bind("<Button-1>", button1)
-    canvas.bind("<Button-2>", ...)
-    canvas.bind("<Button-3>", button3)
+
     canvas.bind("<B1-Motion>", b1_motion)
-    canvas.bind("<B2-Motion>", ...)
+    canvas.bind("<B2-Motion>", b2_motion)
     canvas.bind("<B3-Motion>", b3_motion)
-    # canvas.bind("<B1-Release>", b1_motion)
-    # canvas.bind("<B2-Release>", ...)
-    # canvas.bind("<B3-Release>", b3_motion)
+
+    canvas.bind("<ButtonRelease-1>", b1_release)
+    canvas.bind("<ButtonRelease-2>", b2_release)
+    canvas.bind("<ButtonRelease-3>", b3_release)
+
+    canvas.bind("<MouseWheel>", wheel)
+
 
 
 if __name__ == "__main__":

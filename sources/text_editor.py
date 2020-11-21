@@ -5,18 +5,31 @@ import tkinter.font
 
 from settings import *
 from utils import *
+import gp_canvas as gp_canvas
+
+def getText(textArea):
+    if isinstance(textArea, tk.Entry):
+        return textArea.get()
+    elif isinstance(textArea, tk.Text):
+        return textArea.get('1.0', 'end')[:-1]
+    else:
+        print('Unknown type of textarea')
+        return ''
+
 
 class TextEditor:
-    def __init__(self, root, block):
+    def __init__(self, root, block, canvas):
         self.block = block
         self.root = root
+        self.canvas = canvas
 
         #configuring main window
-        root.minsize(200, 200)
+        root.minsize(400, 200)
 
         root.columnconfigure(0, weight=1, minsize=200)
-        root.rowconfigure([0,2], weight=0, minsize=20)
+        root.rowconfigure(0, weight=0, minsize=0)
         root.rowconfigure(1, weight=1, minsize=100)
+        root.rowconfigure(2, weight=0, minsize=20)
 
         #creating menu
         # mainMenu = tk.Menu(master=root)
@@ -28,32 +41,46 @@ class TextEditor:
         self.editFrame = tk.Frame(master=root)
         self.stateFrame = tk.Frame(master=root, bg=stateBG)
 
-        self.panelFrame.grid(row=0, column=0, sticky='nsew')
+        #self.panelFrame.grid(row=0, column=0, sticky='nsew')
         self.editFrame.grid(row=1, column=0, sticky='nsew')
         self.stateFrame.grid(row=2, column=0, sticky='nsew')
 
-            # #placing textbox to editFrame
-            # self.textBox1 = tk.Text(master=self.editFrame, bg=textBG, fg=textFG, wrap='word', undo=True, maxundo=0)
-            # self.textBox1.pack(fill='both', expand=1)
-
+        # Словарь со всеми полями для редактирования
         self.textAreas = {}
 
         d = allTypes[block.classname]['edit']
         for key, val in d.items():
-            lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=val['header'])
-            lbl.pack(fill='x', expand=0)
             if val['type'] == 'singleline':
+                type = 1
+            elif val['type'] == 'multiline':
+                type = 2
+            elif val['type'] == 'invisible':
+                type = 0
+            else:
+                type = -1
+
+            if type == -1:
+                print('Unknown type of editing field')
+            elif type == 0:
+                pass
+            elif type == 1:
+                lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=val['header'])
+                lbl.pack(fill='x', expand=0)
+
                 ta = tk.Entry(master=self.editFrame, bg=textBG, fg=textFG)
                 ta.insert(0, block.data[key])
-                ta.pack(fill='x', expand=0)
-            elif val['type'] == 'multiline':
-                ta = tk.Text(master=self.editFrame, bg=textBG, fg=textFG, wrap='word')
-                ta.insert('1.0', block.data[key])
-                ta.pack(fill='x', expand=1)
-            else:
-                raise '123'
+                ta.pack(fill='x', expand=0, side="top")
 
-            self.textAreas[key] = ta
+                self.textAreas[key] = ta
+            elif type == 2:
+                lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=val['header'])
+                lbl.pack(fill='x', expand=0)
+
+                ta = tk.Text(master=self.editFrame, height=1, bg=textBG, fg=textFG, wrap='word')
+                ta.insert('1.0', block.data[key])
+                ta.pack(fill='both', expand=1, side="top")
+
+                self.textAreas[key] = ta
 
 
         #placing buttons to panelFrame
@@ -70,9 +97,8 @@ class TextEditor:
         ]
         placeButtons(self.stateFrame, stateFrameButtons, side='right')
 
-        self.open(self.block)
-
-        self.root.protocol("WM_DELETE_WINDOW", self.close)
+        self.root.protocol("WM_DELETE_WINDOW", lambda: self.close(-1))
+        self.root.title(block.classname + ' ' + block.data['<desc>'])
 
 # def dialogOpenFile(root, textArea):
 
@@ -83,12 +109,6 @@ class TextEditor:
 
 # def dialogSaveFile(root, textArea):
 #     open(fileName, 'wt').write(textArea.get('1.0', 'end'))
-
-    def open(self, block):
-        pass
-        # self.textBox1.delete('1.0', 'end')
-        # self.textBox1.insert('1.0', block.text1)
-        # self.root.title(f'type: {block.classname} pos: {block.pos} childs: {block.childs} text1: {block.text1}')
 
     def close(self, state=-1):
         # state == -1 - спросить о закрытии и о сохранении
@@ -114,13 +134,23 @@ class TextEditor:
             # print('opening: '+str(self.block.data))
             d = allTypes[self.block.classname]['edit']
             for key, val in d.items():
-                if isinstance(self.textAreas[key], tk.Entry):
-                    self.block.data[key] = self.textAreas[key].get()
-                elif isinstance(self.textAreas[key], tk.Text):
-                    self.block.data[key] = self.textAreas[key].get('1.0', 'end')[:-1]
+                if key == '<class>':
+                    print('changing type')
+                    cn = getText(self.textAreas[key])
+                    if cn in allTypes:
+                        self.block.classname = cn
+                        self.block.data = {}
+                        for key_, _ in allTypes[self.block.classname]['edit'].items():
+                            self.block.data[key_] = ''
+                    else:
+                        print('Unknown type of block')
+                    break
+                if key in self.textAreas:
+                    self.block.data[key] = getText(self.textAreas[key])
             self.root.destroy()
             self.block.text_editor = None
 
+        self.canvas.draw(self.block.SF)
 # def mainWindow(root):
 #     #configuring main window
 #     root.minsize(600, 400)

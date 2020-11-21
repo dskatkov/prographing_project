@@ -117,8 +117,8 @@ class Block:
             # self.tooltip = ""
         self.SF.object_ids[self.id] = self
 
-    def __del__(self):
-        self.SF.object_ids.pop(self.id)
+    def delete(self):
+        SF.object_ids.pop(self.id)
 
     def move(self, shift):
         self.pos = (self.pos[0] + shift[0], self.pos[1] + shift[1])
@@ -200,7 +200,7 @@ class Block:
 
     def delLink(self, child):
         if child in self.childs:
-            self.childs.pop(child)
+            self.childs.remove(child)
 
     def parents(self):
         return self.SF.parents(self.id)

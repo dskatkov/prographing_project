@@ -12,9 +12,7 @@ def assign_canvasFrame(canvasframe):
     global canvasFrame
     canvasFrame=canvasframe
 
-'''
-Work with mouse begins. It is not Finished yet
-'''
+
 def redraw():
     gp_canvas.canvas.draw(gp_source_file.SF)
 
@@ -26,6 +24,30 @@ def downtree(block, marks):
             return True
     return False
 
+def distance_to_line(begin, end, point):
+    x1, y1 = begin[0], begin[1]
+    x2, y2 = end[0], end[1]
+    x, y = point[0], point[1]
+    #a, b, c are factors of ax+by+c=0 equation
+    a = 1/(x2-x1+0.1)
+    b = 1/(y1-y2+0.1)
+    c = -x1*a -y1*b
+    dist = (a*x + b*y + c) / (a**2 + b**2)**0.5
+    return dist
+
+def near_to_line(begin, end, point):
+    d = distance_to_line(begin, end, point)
+    x1, y1 = begin[0], begin[1]
+    x2, y2 = end[0], end[1]
+    x, y = point[0], point[1]
+    if x2<x1:
+        x2, x1 = x1, x2
+    if y2 < y1:
+        y2, y1 = y1, y2
+    if d**2 < 100:
+        if (x1-10 < x < x2+10) and (y1-10 < y < y2+10):
+            return True
+    return False
 
 def cycle_checkout(SF, block):
     marks = [block]
@@ -97,7 +119,21 @@ def b2_double(click):
 def b3_double(click):
     b3_state = 'd'
     debug_return (f'right double click: ({click.x},{click.y})')
-    #for gp_source_file.
+    block = find_block(click)
+    gp_canvas.canvas.handling = block
+
+    for p in gp_source_file.SF.object_ids:
+        parent = gp_source_file.SF.object_ids[p]
+        for child in parent.childs:
+            begin = parent.pos
+            end = gp_source_file.SF.object_ids[child].pos
+            point = (click.x, click.y)
+            if near_to_line(begin, end, point):
+                parent.delLink(child)
+
+    if block:
+        if tk.messagebox.askyesno("Delete?", "Do you want to delete block" + block.data['<desc>'] + "?", parent=canvasFrame):
+            block.delete()
     redraw()
 
 
@@ -176,7 +212,3 @@ def wheel(click):
     gp_canvas.canvas.viewpos = vecSum(gp_canvas.canvas.viewpos, shift)
 
     redraw()
-
-'''
-Here work with mouse ended. spacetime is going back to normal
-'''

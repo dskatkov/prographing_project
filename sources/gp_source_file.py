@@ -118,7 +118,7 @@ class Block:
         self.SF.object_ids[self.id] = self
 
     def __del__(self):
-        self.SF.object_ids.remove(self.id)
+        self.SF.object_ids.pop(self.id)
 
     def move(self, shift):
         self.pos = (self.pos[0] + shift[0], self.pos[1] + shift[1])

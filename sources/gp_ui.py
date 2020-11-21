@@ -64,13 +64,13 @@ def redraw():
     gp_canvas.canvas.draw(gp_source_file.SF)
 
 def find_block(click):
-    print(f'handling click: ({click.x},{click.y})')
+    debug_return(f'handling click: ({click.x},{click.y})')
     sfclick = gp_canvas.canvas.unscale((click.x, click.y))
     for _, block in gp_source_file.SF.object_ids.items():
-        print('checking block: '+block.convertToStr())
+        debug_return('checking block: '+block.convertToStr())
         distance2 = (block.pos[0] - sfclick[0]) ** 2 + (block.pos[1] - sfclick[1]) ** 2
         if distance2 <= 10 ** 2:
-            print('ok')
+            debug_return('ok')
             return block
 
 b1_state = ''
@@ -79,7 +79,7 @@ b3_state = ''
 
 def b1(click):
     b1_state = 'n'
-    print (f'left click: ({click.x},{click.y})')
+    debug_return (f'left click: ({click.x},{click.y})')
     block = find_block(click)
     if block:
         block.chosen = True
@@ -89,20 +89,25 @@ def b1(click):
 
 def b2(click):
     b2_state = 'n'
-    print (f'wheel click: ({click.x},{click.y})')
+    debug_return (f'wheel click: ({click.x},{click.y})')
     ...
     redraw()
 
 def b3(click):
     b2_state = 'n'
-    ...
+    block = find_block(click)
+    if block:
+        block.chosen = True
+        gp_canvas.canvas.handling = block
+        gp_canvas.canvas.link_creation = click.x, click.y
+        gp_canvas.canvas.touch = (click.x, click.y)
     redraw()
-    print (f'right click: ({click.x},{click.y})')
+    debug_return (f'right click: ({click.x},{click.y})')
 
 
 def b1_double(click):
     b1_state = 'd'
-    print (f'left double click: ({click.x},{click.y})')
+    debug_return (f'left double click: ({click.x},{click.y})')
 
     block = find_block(click)
     if block:
@@ -116,20 +121,20 @@ def b1_double(click):
 
 def b2_double(click):
     b2_state = 'd'
-    print (f'wheel double click: ({click.x},{click.y})')
+    debug_return (f'wheel double click: ({click.x},{click.y})')
     ...
     redraw()
 
 def b3_double(click):
     b3_state = 'd'
-    print (f'right double click: ({click.x},{click.y})')
+    debug_return (f'right double click: ({click.x},{click.y})')
     ...
     redraw()
 
 
 def b1_motion(click):
     b1_state = 'm'
-    #print (f'left motion: ({click.x},{click.y})')
+    debug_return (f'left motion: ({click.x},{click.y})')
     if gp_canvas.canvas.handling:
         shift = (click.x - gp_canvas.canvas.touch[0], click.y - gp_canvas.canvas.touch[1])
         gp_canvas.canvas.handling.move(shift)
@@ -138,40 +143,53 @@ def b1_motion(click):
 
 def b2_motion(click):
     b2_state = 'm'
-    #print (f'wheel motion:({click.x},{click.y})')
+    debug_return (f'wheel motion:({click.x},{click.y})')
     ...
     redraw()
 
 def b3_motion(click):
     b3_state = 'm'
-    #print (f'right motion:({click.x},{click.y})')
-    ...
+    debug_return (f'right motion:({click.x},{click.y})')
+    if gp_canvas.canvas.handling:
+        gp_canvas.canvas.link_creation = click.x, click.y
     redraw()
 
 
-def b1_release(click):
+def b3_release(click):
     b1_state = ''
-    print (f'left release:({click.x},{click.y})')
+    debug_return (f'right release:({click.x},{click.y})')
+    block = find_block(click)
+    if (block) and (not block == gp_canvas.canvas.handling) and (not block in gp_canvas.canvas.handling.childs):
+        for obj in gp_source_file.SF.object_ids:
+            if gp_source_file.SF.object_ids[obj] == block:
+                id = obj
+        gp_canvas.canvas.handling.childs.append(id)
     gp_canvas.canvas.touch = None
-    gp_canvas.canvas.handling.chosen = False
+    gp_canvas.canvas.link_creation = False
+    if gp_canvas.canvas.handling:
+        gp_canvas.canvas.handling.chosen = False
     gp_canvas.canvas.handling = None
     redraw()
 
 def b2_release(click):
     b2_state = ''
-    print (f'wheel release:({click.x},{click.y})')
+    debug_return (f'wheel release:({click.x},{click.y})')
     ...
     redraw()
 
-def b3_release(click):
+def b1_release(click):
     b3_state = ''
-    print (f'right release:({click.x},{click.y})')
-    ...
+    debug_return (f'left release:({click.x},{click.y})')
+
+    gp_canvas.canvas.touch = None
+    if gp_canvas.canvas.handling:
+        gp_canvas.canvas.handling.chosen = False
+    gp_canvas.canvas.handling = None
     redraw()
 
 
 def wheel(click):
-    print(f'wheel:({click.x},{click.y}) {click.delta}')
+    debug_return(f'wheel:({click.x},{click.y}) {click.delta}')
     k = 2.718281828459045 ** (0.1*click.delta/120)
     scale = gp_canvas.canvas.scale
     unscale = gp_canvas.canvas.unscale
@@ -249,4 +267,4 @@ def ui_init(root):
 
 
 if __name__ == "__main__":
-    print("This module is not for direct call!")
+    debug_return("This module is not for direct call!")

@@ -11,6 +11,7 @@ class Canvas:
         self.viewzoom = 1
         self.handling = None
         self.touch = None
+        self.link_creation = None
 
     def draw(self, SF):
         # Очистка
@@ -20,6 +21,9 @@ class Canvas:
         for _, block in SF.object_ids.items():
             for child in block.childs:
                 self.drawLink(block, SF.object_ids[child])
+        if self.link_creation:
+            self.drawLink(self.handling, self.link_creation)
+
 
         # Блоки
         for _, block in SF.object_ids.items():
@@ -58,20 +62,23 @@ class Canvas:
 
     def drawLink(self, block, child):
         x1, y1 = self.scale(block.pos)
-        x2, y2 = self.scale(child.pos)
-
-        # Поиск наиболее подходящего цвета из списка
-        pair = block.classname + '_' + child.classname
-        left = block.classname + '_'
-        right = '_' + child.classname
-        if pair in linkColores:
-            color = linkColores[pair]
-        elif left in linkColores:
-            color = linkColores[left]
-        elif right in linkColores:
-            color = linkColores[right]
-        else:
+        if type(child)==tuple:
+            x2, y2 = child[0], child[1]
             color = linkColores['_']
+        else:
+            x2, y2 = self.scale(child.pos)
+            # Поиск наиболее подходящего цвета из списка
+            pair = block.classname + '_' + child.classname
+            left = block.classname + '_'
+            right = '_' + child.classname
+            if pair in linkColores:
+                color = linkColores[pair]
+            elif left in linkColores:
+                color = linkColores[left]
+            elif right in linkColores:
+                color = linkColores[right]
+            else:
+                color = linkColores['_']
 
         self.master.create_line(x1, y1, x2, y2, fill=color)
 

@@ -59,6 +59,7 @@ linkColores = {
     "If_If": "#0000ff",
     "If_Op": "#00ff00",
 }
+
 # Цвета кружков блоков разного типа
 drawColores = {
     "_": "#ffffff",
@@ -69,16 +70,16 @@ drawColores = {
 
 # Получение строки из объекта 
 # "if (<1>) {".replace(key, eval(val))
-keyWords = {
-    "<1>": "text1", # текстовые блоки для подстановок
-    "<2>": "text2",
-    "<3>": "text3",
-    "<4>": "text4",
-    "<5>": "text5",
-    "<desc>": "desc", # описание блока на канвасе
+# keyWords = {
+#     "<1>": "text1", # текстовые блоки для подстановок
+#     "<2>": "text2",
+#     "<3>": "text3",
+#     "<4>": "text4",
+#     "<5>": "text5",
+#     "<desc>": "desc", # описание блока на канвасе
 
-    #"<>": "self.",
-}
+#     #"<>": "self.",
+# }
 
 languagePrePostfix = {
     "*": {
@@ -98,6 +99,29 @@ languagePrePostfix = {
         "postfix": "END.",
     },
 }
+
+
+t_default = {"_": {
+    "canvas": {
+        "image": "undef.bmp",
+        "tooltip": "UNDEF TYPE",
+    },
+    "edit": {
+        "<class>": {
+            "header": "TYPE",
+            "type": "singleline",
+        },
+    },
+    "build": {
+        "*": {
+            "incTab": 0,
+            "hasPostfix": 0,
+            "prefix": "",
+            "postfix": "",
+            "multiline": 0,
+        },
+    },
+}}
 
 t_op = {"Op": {
     "canvas": {
@@ -201,7 +225,7 @@ t_for =  {"For": {
 
 
 
-t_all = ["Op", "If", "For"]
+t_all = ["_", "Op", "If", "For"]
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

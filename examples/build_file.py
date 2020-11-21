@@ -1,19 +1,22 @@
-op_1
-
-123
-
-wqe
-
-op_2
-op_4
-if (if_3) {
-    op_4
-    op_5
+print(a, b)
+# comment
+build.debug = True
+print(first branch)
+last block
+for (int i = 0; i <= 5; i++) {
+    out('i = ' + i);
 }
-if (if_1) {
-    if (if_2) {
-        if (if_3) {
-            block in Ifs
-        }
+// abc
+if second_branch_condition:
+    last block
+    for (int i = 0; i <= 5; i++) {
+        out('i = ' + i);
     }
-}
+    // abc
+    after if and #3
+if first condition:
+    if second condition:
+        if third condition:
+            code1
+            code2
+            code3

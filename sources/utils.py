@@ -87,9 +87,9 @@ def formatStrOp(block):
 
 def formatStr(block, s):
     res = s
-    for key, attr in keyWords.items():
+    for key, val in block.data.items():
         if key in res:
-            res = res.replace(key, getattr(block, attr))
+            res = res.replace(key, val)
     return res
 
 def getDictValByPath(d, path):
@@ -116,7 +116,7 @@ def createDictByPath(path, val):
 def setDictValByPath(d, path, val):
     return dictMerge(d, createDictByPath(path, val), f=takeSecond)
 
-allTypes = dictMerge(t_op, t_if, t_for)
+allTypes = dictMerge(t_default, t_op, t_if, t_for)
 
 
 

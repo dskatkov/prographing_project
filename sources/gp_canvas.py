@@ -14,11 +14,55 @@ class Canvas:
         # Линки
         for _, block in SF.object_ids.items():
             for child in block.childs:
-                block.drawLink(SF.object_ids[child], self.master)
+                self.drawLink(block, SF.object_ids[child])
 
         # Блоки
         for _, block in SF.object_ids.items():
-            block.draw(self.master)
+            self.drawBlock(block)
+
+
+    def drawBlock(self, block):
+        x, y = block.pos
+        r = 10
+
+        # photo_ = Image.open(getcwd() + '\\Image\\' + block.classname + '.bmp')
+        # photo = ImageTk.PhotoImage(photo_)
+        # photo = tk.PhotoImage(file='C:\\GitHub\\prographing_project\\sources\\Image\\' + block.classname + '.gif')
+        # print("image size: %dx%d" % (photo.width(), photo.height()))
+        # canvas.create_image(x, y, image=photo, anchor='center') #не работает
+
+
+        ct = block.classname
+        if ct in drawColores:
+            color = drawColores[ct]
+        else:
+            color = drawColores['_']
+
+        self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
+        self.master.create_text(x, y, text=block.id, font="Consolas 10")
+
+    def drawLink(self, block, child):
+        x1, y1 = block.pos
+        x2, y2 = child.pos
+
+        x1, y1 = x1, y1 #TODO scale
+        x2, y2 = x2, y2
+
+        # Поиск наиболее подходящего цвета из списка
+        pair = block.classname + '_' + child.classname
+        left = block.classname + '_'
+        right = '_' + child.classname
+        if pair in linkColores:
+            color = linkColores[pair]
+        elif left in linkColores:
+            color = linkColores[left]
+        elif right in linkColores:
+            color = linkColores[right]
+        else:
+            color = linkColores['_']
+
+        self.master.create_line(x1, y1, x2, y2, fill=color)
+
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

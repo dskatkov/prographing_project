@@ -64,7 +64,7 @@ def click_hit(click):
     for _, block in gp_source_file.SF.object_ids.items():
         print('checking block: '+block.convertToStr())
         distance2 = (block.pos[0] - click.x) ** 2 + (block.pos[1] - click.y) ** 2
-        if distance2 <= block.r ** 2:
+        if distance2 <= 10 ** 2:
             print('ok')
             return block
 
@@ -124,7 +124,9 @@ def ui_init(root):
         ('build', lambda: build(root)),
         ('build as', lambda: buildAs(root)),
         ('canvas redraw', lambda: gp_canvas.canvas.draw(gp_source_file.SF)),
-        ('build log', lambda: gp_source_file.SF.build(gp_source_file.SF.buildName, 0))
+        ('build log', lambda: gp_source_file.SF.build('', 0)),
+        ('save log', lambda: gp_source_file.SF.save('', 0)),
+
     ]
     placeButtons(panelFrame, panelFrameButtons)
 
@@ -141,6 +143,10 @@ def ui_init(root):
     canvas.bind("<B1-Motion>", b1_motion)
     canvas.bind("<B2-Motion>", ...)
     canvas.bind("<B3-Motion>", b3_motion)
+    # canvas.bind("<B1-Release>", b1_motion)
+    # canvas.bind("<B2-Release>", ...)
+    # canvas.bind("<B3-Release>", b3_motion)
+
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

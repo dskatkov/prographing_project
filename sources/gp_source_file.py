@@ -17,17 +17,24 @@ class SourceFile:
         self.fileName = ''
         self.buildName = ''
         self.data = '---'
-        self.lang = 'dab'
+        self.lang = 'py'
 
-    def save(self, fileName):
-        self.fileName = fileName
-        file = open(fileName, 'wt')
-        file.write(self.data + '\n')
-        file.write(self.lang + '\n')
-        file.write(self.buildName + '\n')
+    def save(self, fileName, save=1):
+        s = ''
+        s += self.data + '\n'
+        s += self.lang + '\n'
+        s += self.buildName + '\n'
         for _, block in self.object_ids.items():
-            file.write(block.convertToStr() + '\n')
-        file.close()
+            s += block.convertToStr() + '\n'
+
+        if save:
+            self.fileName = fileName
+            file = open(fileName, 'wt')
+            file.write(s)
+            file.close()
+        else:
+            print('Save log:')
+            print(s)
 
 
     def open(self, fileName):
@@ -56,27 +63,33 @@ class SourceFile:
         return res
 
     def build(self, fileName, save=1):
-        self.buildName = fileName
         s = ''
         tab = ''
         for i, obj in self.object_ids.items():
-            if self.parents(i) == []:
+            if not self.parents(i):
                 s, tab = obj.build(s, tab)
-        print(s)
+
         if save:
+            self.buildName = fileName
             file = open(self.buildName, 'wt')
             file.write(s)
             file.close()
+        else:
+            print('Build log:')
+            print(s)
 
-
-# classname id childs pos text
+# {
+#     "type": "Op",
+#     "id": 8,
+#     "childs": [],
+#     "pos": (325, 150),
+#     "data": {
+#         "text1": "op_8"
+#     }
+# }
 class Block:
     #__slots__ = "classname", "id", "childs", "pos", "text"
-    classname = "_"
-    incTab = 0
-    hasPostfix = 0
-
-    def __init__(self, SF, str='', creating_type=0):
+    def __init__(self, SF, str='', type='_', creating_type=0):
         self.SF = SF
         self.text_editor = None
         # creating_type == 0 - создание нового элемента
@@ -86,20 +99,22 @@ class Block:
             self.SF.object_ids[self.id] = self
             self.SF.max_id = max(self.SF.max_id, self.id + 1)
         else:
+            max_id = len(SF.object_ids)
 
-            max_id = len(SF.object_ids) + 1
-
-            self.id = max_id
+            self.id = SF.max_id
             self.childs = []
             self.pos = (0, 0)
-            self.text1 = ''
+            self.data = {}
+            self.classname = '_'
 
-            self.SF.object_ids[self.id] = self
-            self.SF.max_id += 1
+            for key, val in allTypes[self.classname]['edit'].items():
+                self.data[key] = ''
+
+            SF.object_ids[self.id] = self
+            SF.max_id += 1
             # self.title = ""
             # self.tooltip = ""
         self.SF.object_ids[self.id] = self
-        self.r = 10
 
     def __del__(self):
         self.SF.object_ids[self.id] = None
@@ -114,7 +129,7 @@ class Block:
         #self.text = newstr
 
     def convertToStr(self):
-        result = '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "text1":"'+str(self.text1)+'"}'
+        result = '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "data":'+str(self.data)+'}'
         result = result.replace('\n', '\\n')
         return result
 
@@ -124,10 +139,12 @@ class Block:
         self.id = dct["id"]
         self.childs = dct["childs"]
         self.pos = dct["pos"]
-        # Возможность добавлять несколько текстовых полей в блок. Еще не реализовано
-        self.text1 = dct["text1"] if "text1" in dct else ""
-        self.text2 = dct["text2"] if "text2" in dct else ""
-        self.text3 = dct["text3"] if "text3" in dct else ""
+        self.data = dct["data"]
+
+        # self.data = None
+        # for _, attr in data.items():
+        #     if attr in dct:
+        #         setattr(self.data, attr, dct[attr])
 
 
     def build(self, s, tab):
@@ -176,49 +193,6 @@ class Block:
 
     def parents(self):
         return self.SF.parents(self.id)
-
-    def draw(self, canvas):
-        x, y = self.pos
-        r = self.r
-
-        # photo_ = Image.open(getcwd() + '\\Image\\' + self.classname + '.bmp')
-        # photo = ImageTk.PhotoImage(photo_)
-        # photo = tk.PhotoImage(file='C:\\GitHub\\prographing_project\\sources\\Image\\' + self.classname + '.gif')
-        # print("image size: %dx%d" % (photo.width(), photo.height()))
-        # canvas.create_image(x, y, image=photo, anchor='center') #не работает
-
-
-        ct = self.classname
-        if ct in drawColores:
-            color = drawColores[ct]
-        else:
-            color = drawColores['_']
-
-        canvas.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
-        canvas.create_text(x, y, text=self.id, font="Consolas 10")
-
-    def drawLink(self, child, canvas):
-        x1, y1 = self.pos
-        x2, y2 = child.pos
-        r1, r2 = self.r, child.r
-        x1, y1 = x1, y1 #TODO scale
-        x2, y2 = x2, y2
-        
-        # Поиск наиболее подходящего цвета из списка
-        ct = child.classname
-        pair = self.classname + '_' + ct
-        left = self.classname + '_'
-        right = '_' + ct
-        if pair in linkColores:
-            color = linkColores[pair]
-        elif left in linkColores:
-            color = linkColores[left]
-        elif right in linkColores:
-            color = linkColores[right]
-        else:
-            color = linkColores['_']
- 
-        canvas.create_line(x1, y1, x2, y2, fill=color)
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

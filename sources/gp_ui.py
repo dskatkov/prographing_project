@@ -129,7 +129,7 @@ def b3_double(click):
 
 def b1_motion(click):
     b1_state = 'm'
-    print (f'left motion: ({click.x},{click.y})')
+    #print (f'left motion: ({click.x},{click.y})')
     if gp_canvas.canvas.handling:
         shift = (click.x - gp_canvas.canvas.touch[0], click.y - gp_canvas.canvas.touch[1])
         gp_canvas.canvas.handling.move(shift)
@@ -138,13 +138,13 @@ def b1_motion(click):
 
 def b2_motion(click):
     b2_state = 'm'
-    print (f'wheel motion:({click.x},{click.y})')
+    #print (f'wheel motion:({click.x},{click.y})')
     ...
     redraw()
 
 def b3_motion(click):
     b3_state = 'm'
-    print (f'right motion:({click.x},{click.y})')
+    #print (f'right motion:({click.x},{click.y})')
     ...
     redraw()
 
@@ -152,7 +152,9 @@ def b3_motion(click):
 def b1_release(click):
     b1_state = ''
     print (f'left release:({click.x},{click.y})')
-    ...
+    gp_canvas.canvas.touch = None
+    gp_canvas.canvas.handling.chosen = False
+    gp_canvas.canvas.handling = None
     redraw()
 
 def b2_release(click):

@@ -263,7 +263,7 @@ nearToLine = 0.1
 zoomSpeed = 0.1
 
 # Флаг дебага
-debug_flag = 0
+debug_flag = 1
 # Флаг профилирования
 profile = 1
 

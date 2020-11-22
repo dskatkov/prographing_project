@@ -91,7 +91,7 @@ def placeButtons(master, buttons, side='left', fg=btnFG, bg=btnBG):
 
 def getSettingsByLang(lang):
     res = {}
-    for type in t_all:
+    for type in allTypes:
         res = dictMerge(
             res, 
             createDictByPath(

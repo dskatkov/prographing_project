@@ -55,6 +55,7 @@ def buildAs(root):
     if fileName == '':
         return
     else:
+        debug_return ('Building to '+fileName)
         if not fileName.endswith(ext):
             fileName += ext
         gp_source_file.SF.build(fileName)

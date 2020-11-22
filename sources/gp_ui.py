@@ -45,7 +45,7 @@ def build(root):
         gp_source_file.SF.build(gp_source_file.SF.buildName)
 
 def buildAs(root):
-    ext = '.'+gp_source_file.SF.lang
+    ext = '.b.'+gp_source_file.SF.lang
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ext)]).show()
     if fileName == '':
         return

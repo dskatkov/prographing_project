@@ -44,9 +44,18 @@ class Point:
     def round(self, s=1):
         return Point(round(self.x/s)*s, round(self.y/s)*s)
 
-def debug_return(str):
+debug_log = ...
+def debug_init(file):
+    global debug_log
+    debug_log = file
+
+def debug_close():
+    global debug_log
+    debug_log.close()
+
+def debug_return(s):
     if debug_flag:
-        print(str)
+        debug_log.write(str(s) + '\n')
 
 # class Point:
 #     def __init__(self, x=0, y=0):

@@ -38,7 +38,7 @@ drawColores = {
     "_": "#404040",
     "op": "#FFFFFF",
     "if": "#F92472",
-    "for": "#282923",
+    "for": "#FD9622",
     "class": "#67D8EF",
     "function": "#A6E22B",
 }

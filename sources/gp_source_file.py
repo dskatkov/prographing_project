@@ -80,9 +80,14 @@ class SourceFile:
         """Составляет текст программы и сохраняет его в файл"""
         s = ''
         tab = ''
-        for i, obj in self.object_ids.items():
+
+        rootBlock = Block(self, type='op')
+        for i, _ in self.object_ids.items():
             if not self.parents(i):
-                s, tab = obj.build(s, tab)
+                rootBlock.addLink(i)
+        rootBlock.sortChilds()
+        s, tab = rootBlock.build(s, tab)
+        rootBlock.delete()
 
         if save:
             self.buildName = fileName
@@ -100,14 +105,14 @@ class Block:
     SF - SourceFile, в котором находится данный блок
     text_editor - tk окно редактора данного блока
     chosen - является ли блок выбран мышью для перетаскивания
-    id - id (sic!)
+    id - id
     childs - список id дочерних блоков
     pos - Point позиция блока на холсте
     classname - тип блока строкой
     data - словарь данных блока для подстановок
     """
     #__slots__ = "classname", "id", "childs", "pos", "text"
-    def __init__(self, SF, str = '', type = '_', creating_type = 0, chosen = False):
+    def __init__(self, SF, str='', type='_', creating_type=0, chosen=False):
         self.SF = SF
         self.text_editor = None
         self.chosen = chosen
@@ -226,7 +231,7 @@ class Block:
 
     def addLink(self, child):
         """Добавляет дочерний элемент"""
-        if not (child in self.childs):
+        if not (child in self.childs) and (child != self.id):
             self.childs.append(child)
 
     def delLink(self, child):

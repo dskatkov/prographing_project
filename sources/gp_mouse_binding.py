@@ -8,15 +8,19 @@ from utils import *
 import gp_source_file as gp_source_file
 import gp_canvas as gp_canvas
 
+
 def assign_canvasFrame(canvasframe):
+    """Что это???"""
     global canvasFrame
     canvasFrame = canvasframe
 
 
 def redraw():
+    """Перерисовывает холст"""
     gp_canvas.canvas.draw(gp_source_file.SF)
 
 def distance_to_line(begin, end, point):
+    """Расстояние от прямой (begin, end) до точки point"""
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()
@@ -28,12 +32,13 @@ def distance_to_line(begin, end, point):
     return dist
 
 def near_to_line(begin, end, point):
+    """Проверяет близость точки прямой"""
     eps = nearToLine
     d = distance_to_line(begin, end, point)
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()
-    if x2<x1:
+    if x2 < x1:
         x2, x1 = x1, x2
     if y2 < y1:
         y2, y1 = y1, y2
@@ -43,6 +48,7 @@ def near_to_line(begin, end, point):
     return False
 
 def findCycle(SF, block, root):
+    """Проверяет существование цикла ссылок"""
     for id in block.childs:
         child = SF.object_ids[id]
         if child is root:
@@ -51,16 +57,13 @@ def findCycle(SF, block, root):
             return True
     return False
 
-def allChilds(SF, block):
-    res = [block]
-    for b in block.childs:
-        child = SF.object_ids[b]
-        res.append(child)
 
 def cycle_checkout(SF, block):
+    """Проверяет существование цикла ссылок"""
     return findCycle(SF, block, block)
 
 def find_block(click):
+    """Находит блок по позиции клика"""
     debug_return(f'handling click: ({click.x},{click.y})')
     sfclick = gp_canvas.canvas.unscale(Point(click.x, click.y))
     for _, block in gp_source_file.SF.object_ids.items():
@@ -69,6 +72,8 @@ def find_block(click):
         if distance <= blockR:
             debug_return('check ok')
             return block
+
+"""Обработчики нажатия клавиш"""
 
 b1_state = ''
 b2_state = ''
@@ -192,7 +197,7 @@ def b3_release(click):
         for obj in gp_source_file.SF.object_ids:
             if gp_source_file.SF.object_ids[obj] == block:
                 id = obj
-        gp_canvas.canvas.handling.childs.append(id)
+        gp_canvas.canvas.handling.addLink(id)
         if cycle_checkout(gp_source_file.SF, block):
             gp_canvas.canvas.handling.delLink(id)
             debug_return ('ban cycle!!!')

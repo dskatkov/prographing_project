@@ -1,29 +1,4 @@
-
-
-textEditorMenu_tree = {
-    "OK": lambda: print('ok, not implemented'),
-    "Отмена": lambda: print('cancel, not implemented'),
-}
-
-mainMenu_tree = {
-    "Файл": {
-        "Новый файл": lambda: print('new file, not implemented'),
-        "Открыть...": lambda: print('open, not implemented'),
-        "Сохранить": lambda: print('save, not implemented'),
-        "Сохранить как...": lambda: print('save as, not implemented'),
-    },
-    "Сборка": {
-        "Собрать исходник": lambda: print('build, not implemented'),
-    },
-    "Выход": lambda: print('exit, not implemented'),
-    "Язык": {
-        "py": lambda: print('py file, not implemented'),
-        "c": lambda: print('c file, not implemented'),
-        "pas": lambda: print('pas file, not implemented'),
-    },
-}
-
-
+# Цвета различных элементов
 btnBG = '#202020'
 btnFG = '#ffffff'
 
@@ -68,18 +43,6 @@ drawColores = {
     "function": "Pink",
 }
 
-# Получение строки из объекта 
-# "if (<1>) {".replace(key, eval(val))
-# keyWords = {
-#     "<1>": "text1", # текстовые блоки для подстановок
-#     "<2>": "text2",
-#     "<3>": "text3",
-#     "<4>": "text4",
-#     "<5>": "text5",
-#     "<desc>": "desc", # описание блока на канвасе
-
-#     #"<>": "self.",
-# }
 
 languagePrePostfix = {
     "*": {
@@ -101,6 +64,7 @@ languagePrePostfix = {
 }
 
 
+# Описания типов блоков
 t_default = {"_": {
     "canvas": {
         "image": "undef.bmp",
@@ -185,8 +149,6 @@ t_if = {"if": {
         },
     },
 }}
-
-
 
 t_for =  {"for": {
     "canvas": {
@@ -293,14 +255,17 @@ t_function =  {"function": {
     },
 }}
 
+# Радиус блока (1 - размер клетки)
 blockR = 0.4
+# Что-то связанное с проверкой принадлежности линии
 nearToLine = 0.1
+# Скорость зума колесом мыши
 zoomSpeed = 0.1
 
-t_all = ["_", "op", "if", "for", 'class', 'function']
-
-debug_flag = True
-profile = True
+# Флаг дебага
+debug_flag = 0
+# Флаг профилирования
+profile = 1
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

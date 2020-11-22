@@ -2,16 +2,17 @@ import tkinter as tk
 import tkinter.font
 import time
 
+import gp_source_file as gp_source_file
+import gp_canvas as gp_canvas
 from gp_mouse_binding import *
 from settings import *
 from utils import *
-import gp_source_file as gp_source_file
-import gp_canvas as gp_canvas
 
 # canvas - tk.Canvas
 canvasFrame = panelFrame = stateFrame = canvas = mainWindow = ...
 
 def saveAs(root):
+    """Обработчик кнопки save as"""
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Visual script", ".vrc")]).show()
     if fileName == '':
         return
@@ -21,12 +22,14 @@ def saveAs(root):
         gp_source_file.SF.save(fileName)
 
 def save(root):
+    """Обработчик кнопки save"""
     if gp_source_file.SF.fileName == '':
         saveAs(root)
     else:
         gp_source_file.SF.save(gp_source_file.SF.fileName)
 
 def open(root):
+    """Обработчик кнопки open"""
     fileName = tk.filedialog.Open(root, filetypes = [("Visual script", ".vrc")]).show()
     if fileName == '':
         return
@@ -37,14 +40,16 @@ def open(root):
         gp_canvas.canvas.draw(gp_source_file.SF)
         mainWindow.title(fileName)
 
-
 def build(root):
+
+    """Обработчик кнопки build"""
     if gp_source_file.SF.buildName == '':
         buildAs(root)
     else:
         gp_source_file.SF.build(gp_source_file.SF.buildName)
 
 def buildAs(root):
+    """Обработчик кнопки build as"""
     ext = '.b.'+gp_source_file.SF.lang
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ext)]).show()
     if fileName == '':
@@ -55,12 +60,14 @@ def buildAs(root):
         gp_source_file.SF.build(fileName)
 
 def newFile(root=None):
+    """Обработчик кнопки new file"""
     gp_source_file.SF = gp_source_file.SourceFile()
     gp_canvas.canvas.draw(gp_source_file.SF)
 
 
 
 def ui_init(root):
+    """Инициализирует UI: кнопки + обработчики"""
     global canvasFrame, panelFrame, stateFrame, canvas, mainWindow, chosen
     root.minsize(200, 200)
 
@@ -92,6 +99,25 @@ def ui_init(root):
 
     placeButtons(panelFrame, panelFrameButtons)
 
+
+
+    mainMenu_tree = {
+        "Файл": {
+            "Новый файл": lambda: print('new file, not implemented'),
+            "Открыть...": lambda: print('open, not implemented'),
+            "Сохранить": lambda: print('save, not implemented'),
+            "Сохранить как...": lambda: print('save as, not implemented'),
+        },
+        "Сборка": {
+            "Собрать исходник": lambda: print('build, not implemented'),
+        },
+        "Выход": lambda: print('exit, not implemented'),
+        "Язык": {
+            "py": lambda: print('py file, not implemented'),
+            "c": lambda: print('c file, not implemented'),
+            "pas": lambda: print('pas file, not implemented'),
+        },
+    }
     mainMenu = tk.Menu(master=root)
     createMenu(mainMenu, mainMenu_tree)
     root.config(menu=mainMenu)

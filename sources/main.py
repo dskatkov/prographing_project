@@ -23,18 +23,27 @@ from utils import *
         # pip install graphvix
 
 def main():
+    # Создаем единственный экземпляр исходника, далее работать будем с ним
     gp_source_file.SF = gp_source_file.SourceFile()
+    # Главное окно
     gp_ui.mainWindow = tk.Tk()
+    # Объект, умеющий рисовать наше поле
     gp_canvas.canvas = gp_canvas.Canvas()
+    # Инициализация UI (создание и расположение фреймов + обработчики мыши)
     gp_ui.ui_init(gp_ui.mainWindow)
+    # Указываем нашему холсту на tk.Canvas, на котором он будет рисовать
     gp_canvas.canvas.master = gp_ui.canvas
+    # Цикл событий tkinter
     gp_ui.mainWindow.mainloop()
 
 
 
 if __name__ == "__main__":
-
+    # Профилирование
     if profile:
+        # from heartrate import trace, files
+        # trace(files=files.all)
+
         import cProfile, pstats, io
         from pstats import SortKey
         pr = cProfile.Profile()
@@ -43,7 +52,7 @@ if __name__ == "__main__":
         from pympler import tracker
         memory_tracker = tracker.SummaryTracker()
         
-
+    # Лог дебага
     if debug_flag:
         debug_file = open('logs/########.log', 'wt')
         debug_init(debug_file)
@@ -51,9 +60,11 @@ if __name__ == "__main__":
 
     main()
 
+    # Лог дебага
     if debug_flag:
         debug_close()
 
+    # Профилирование
     if profile:
         # Граф ссылок (.dot создает, но не находит рендерер (хотя я его ставил))
         # import objgraph
@@ -72,7 +83,7 @@ if __name__ == "__main__":
         # Вывод в лог профилирование времени выполнения
         pr.disable()
         s = io.StringIO()
-        sortby = SortKey.CALLS # CALLS CUMULATIVE FILENAME LINE NAME NFL PCALLS STDNAME TIME
+        sortby = SortKey.TIME # CALLS CUMULATIVE FILENAME LINE NAME NFL PCALLS STDNAME TIME
         ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
         ps.print_stats()
         file = open('logs/time_profiling.log', 'wt')

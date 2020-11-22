@@ -14,7 +14,9 @@ class Canvas:
         self.link_creation = None
 
     def draw(self, SF):
+        """Рисует холст (блоки + линки)"""
         # Очистка
+        self.master.delete("all")
         self.master.create_rectangle(0, 0, 2000, 2000, fill=textBG)
 
         # Линки
@@ -30,12 +32,15 @@ class Canvas:
             self.drawBlock(block)
 
     def scale(self, pos):
+        """положение на холсте -> положение на экране"""
         return (pos - self.viewpos) * self.viewzoom # vecMul(vecSum(pos, vecMul(self.viewpos, -1)), self.viewzoom) # (pos-viewpos)*zoom
 
     def unscale(self, pos):
+        """положение на экране -> положение на холсте"""
         return pos * (1 / self.viewzoom) + self.viewpos # vecSum(self.viewpos, vecMul(pos, 1/self.viewzoom)) # pos/zoom+viewpos
 
     def drawBlock(self, block):
+        """Рисует блок"""
         x, y = self.scale(block.pos).tuple()
         r = blockR * self.viewzoom
 
@@ -54,13 +59,15 @@ class Canvas:
 
 
         if block.chosen:
-            self.master.create_rectangle((x - r), (y - r), (x + r), (y + r), fill=color)
+            R = 1.3 * r
+            self.master.create_oval((x - R), (y - R), (x + R), (y + R), fill='lime')
         self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
         # self.master.create_text(x, y, text=block.id, font="Consolas 10")
         self.master.create_text(x + 1.5 * r, y, text=block.data['<desc>'], anchor='w', font="Consolas 10")
 
 
     def drawLink(self, block, child):
+        """Рисует линк"""
         x1, y1 = self.scale(block.pos).tuple()
 
         if isinstance(child, Point):

@@ -8,6 +8,7 @@ from utils import *
 import gp_canvas as gp_canvas
 
 def getText(textArea):
+    """Возвращает содержимое поля"""
     if isinstance(textArea, tk.Entry):
         return textArea.get()
     elif isinstance(textArea, tk.Text):
@@ -18,6 +19,17 @@ def getText(textArea):
 
 
 class TextEditor:
+    """
+    Класс редактора блока
+    block - редактируемый блок
+    canvas - холст, отрисовка которого произойдет при закрытии редактора
+    root - окно редактора
+    panelFrame - фрейм панели кнопок
+    editFrame - фрейм всех полей для редактирования
+    stateFrame - фрейм нижней строки
+    textAreas - словарь {<название поля>:<tk объект для редактирования>}
+
+    """
     def __init__(self, root, block, canvas):
         self.block = block
         self.root = root
@@ -111,6 +123,7 @@ class TextEditor:
 #     open(fileName, 'wt').write(textArea.get('1.0', 'end'))
 
     def close(self, state=-1):
+        """Закрывает редактор"""
         # state == -1 - спросить о закрытии и о сохранении
         # state == 0 - закрыть без сохранения
         # state == 1 - закрыть с сохранением
@@ -151,43 +164,3 @@ class TextEditor:
             self.block.text_editor = None
 
         self.canvas.draw(self.block.SF)
-# def mainWindow(root):
-#     #configuring main window
-#     root.minsize(600, 400)
-#     root.title('initial title')
-
-#     root.columnconfigure(0, weight=1, minsize=200)
-#     root.rowconfigure([0, 2], weight=0, minsize=30)
-#     root.rowconfigure(1, weight=1, minsize=100)
-
-#     #creating menu
-#     mainMenu = tk.Menu(master=root)
-#     createMenu(mainMenu, mainMenu_tree)
-#     root.config(menu=mainMenu)
-
-#     #creating and placing frames
-#     panelFrame = tk.Frame(master=root, bg=panelBG)
-#     spaceFrame = tk.Frame(master=root, bg=spaceBG)
-#     stateFrame = tk.Frame(master=root, bg=stateBG)
-
-#     panelFrame.grid(row=0, column=0, sticky='nsew')
-#     spaceFrame.grid(row=1, column=0, sticky='nsew')
-#     stateFrame.grid(row=2, column=0, sticky='nsew')
-
-#     #placing buttons to panelFrame
-#     panelFrameButtons = [
-#         ('text', None),
-#         ('save', None),
-#         ('open', None),
-#         ('build', None),
-#     ]
-#     placeButtons(panelFrame, panelFrameButtons, side='left')
-
-#     #placing labels to stateFrame
-#     stateLeftLabel = tk.Label(master=stateFrame, text="left label", bg=stateBG, fg=stateFG)
-#     stateRightLabel = tk.Label(master=stateFrame, text="right label", bg=stateBG, fg=stateFG)
-#     stateCenterLabel = tk.Label(master=stateFrame, text="right label", bg=stateFG, fg=stateFG)
-
-#     stateLeftLabel.pack(side='left', fill='y')
-#     stateRightLabel.pack(side='right', fill='y')
-#     stateCenterLabel.pack(side='top', fill='both')

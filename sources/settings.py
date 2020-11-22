@@ -35,12 +35,12 @@ linkColores = {
 
 # Цвета кружков блоков разного типа
 drawColores = {
-    "_": "White",
-    "op": "Blue",
-    "if": "Green",
-    "for": "Orange",
-    "class": "Black",
-    "function": "Pink",
+    "_": "#404040",
+    "op": "#FFFFFF",
+    "if": "#F92472",
+    "for": "#282923",
+    "class": "#67D8EF",
+    "function": "#A6E22B",
 }
 
 
@@ -265,7 +265,7 @@ zoomSpeed = 0.1
 # Флаг дебага
 debug_flag = 1
 # Флаг профилирования
-profile = 1
+profile = 0
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

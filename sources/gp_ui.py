@@ -20,6 +20,7 @@ def saveAs(root):
         if not fileName.endswith('.vrc'):
             fileName += '.vrc'
         gp_source_file.SF.save(fileName)
+        mainWindow.title(fileName)
 
 def save(root):
     """Обработчик кнопки save"""
@@ -64,6 +65,7 @@ def newFile(root=None):
     """Обработчик кнопки new file"""
     gp_source_file.SF = gp_source_file.SourceFile()
     gp_canvas.canvas.draw(gp_source_file.SF)
+    mainWindow.title('new file')
 
 
 

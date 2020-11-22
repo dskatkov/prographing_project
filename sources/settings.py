@@ -295,6 +295,7 @@ t_function =  {"function": {
 
 blockR = 0.4
 nearToLine = 0.1
+zoomSpeed = 0.1
 
 t_all = ["_", "op", "if", "for", 'class', 'function']
 

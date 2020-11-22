@@ -184,7 +184,7 @@ allTypes = dictMerge(t_default, t_op, t_if, t_for, t_class, t_function)
 # print(dictMergeSmall({1:2,3:4},{5:6,1:7}))
 
 
-
+e = 2.718281828459045
 
 if __name__ == '__main__':
     p1 = Point(1, 2)

@@ -10,27 +10,19 @@ import gp_canvas as gp_canvas
 
 def assign_canvasFrame(canvasframe):
     global canvasFrame
-    canvasFrame=canvasframe
+    canvasFrame = canvasframe
 
 
 def redraw():
     gp_canvas.canvas.draw(gp_source_file.SF)
-
-def downtree(block, marks):
-    for id in block.childs:
-        if gp_source_file.SF.object_ids[id] in marks:
-            return True
-        elif downtree(gp_source_file.SF.object_ids[id], marks):
-            return True
-    return False
 
 def distance_to_line(begin, end, point):
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()
     #a, b, c are factors of ax+by+c=0 equation
-    a = 1/(x2-x1+0.001)
-    b = 1/(y1-y2+0.001)
+    a = 1 / (x2 - x1 + 0.001)
+    b = 1 / (y1 - y2 + 0.001)
     c = -x1*a -y1*b
     dist = (a*x + b*y + c) / (a**2 + b**2)**0.5
     return dist
@@ -50,10 +42,23 @@ def near_to_line(begin, end, point):
             return True
     return False
 
+def findCycle(SF, block, root):
+    for id in block.childs:
+        child = SF.object_ids[id]
+        if child is root:
+            return True
+        elif findCycle(SF, child, root):
+            return True
+    return False
+
+def allChilds(SF, block):
+    res = [block]
+    for b in block.childs:
+        child = SF.object_ids[b]
+        res.append(child)
+
 def cycle_checkout(SF, block):
-    marks = [block]
-    cycle = False
-    return downtree(block, marks)
+    return findCycle(SF, block, block)
 
 def find_block(click):
     debug_return(f'handling click: ({click.x},{click.y})')
@@ -190,7 +195,7 @@ def b3_release(click):
         gp_canvas.canvas.handling.childs.append(id)
         if cycle_checkout(gp_source_file.SF, block):
             gp_canvas.canvas.handling.delLink(id)
-            print('ban cycle!!!')
+            debug_return ('ban cycle!!!')
     gp_canvas.canvas.touch = None
     gp_canvas.canvas.link_creation = False
     if gp_canvas.canvas.handling:
@@ -200,8 +205,8 @@ def b3_release(click):
 
 
 def wheel(click):
-    debug_return(f'wheel:({click.x},{click.y}) {click.delta}')
-    k = 2.718281828459045 ** (0.1*click.delta/120)
+    debug_return (f'wheel:({click.x},{click.y}) {click.delta}')
+    k = e ** (zoomSpeed*click.delta/120)
     scale = gp_canvas.canvas.scale
     unscale = gp_canvas.canvas.unscale
 

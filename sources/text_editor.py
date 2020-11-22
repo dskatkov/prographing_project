@@ -13,7 +13,7 @@ def getText(textArea):
     elif isinstance(textArea, tk.Text):
         return textArea.get('1.0', 'end')[:-1]
     else:
-        print('Unknown type of textarea')
+        debug_return ('Unknown type of textarea')
         return ''
 
 
@@ -60,7 +60,7 @@ class TextEditor:
                 type = -1
 
             if type == -1:
-                print('Unknown type of editing field')
+                debug_return ('Unknown type of editing field')
             elif type == 0:
                 pass
             elif type == 1:
@@ -135,7 +135,7 @@ class TextEditor:
             d = allTypes[self.block.classname]['edit']
             for key, val in d.items():
                 if key == '<class>':
-                    print('changing type')
+                    debug_return ('changing type')
                     cn = getText(self.textAreas[key])
                     if cn in allTypes:
                         self.block.classname = cn
@@ -143,7 +143,7 @@ class TextEditor:
                         for key_, _ in allTypes[self.block.classname]['edit'].items():
                             self.block.data[key_] = ''
                     else:
-                        print('Unknown type of block')
+                        debug_return ('Unknown type of block')
                     break
                 if key in self.textAreas:
                     self.block.data[key] = getText(self.textAreas[key])

@@ -127,7 +127,6 @@ class Block:
         self.pos = (self.pos + shift).round()
 
     def edit(self, master, canvas):
-        print('here edition window is opening')
         self.text_editor = master
         text_editor.TextEditor(master, self, canvas)
         #self.text = newstr

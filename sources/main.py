@@ -2,13 +2,25 @@ import tkinter as tk
 import tkinter.filedialog
 import tkinter.messagebox
 import tkinter.font
-from os import getcwd
+import os
 
 import gp_source_file as gp_source_file
 import gp_ui as gp_ui
 import gp_canvas as gp_canvas
 from settings import *
 from utils import *
+
+# Профилирование памяти (из консоли)
+    # pip install memory_profiler 
+    # Рисование графика
+        # pip install matplotlib
+# Профилирование памяти
+# pip install pympler
+# Граф ссылок
+    # pip install objgraph
+    # Для рисования графа
+        # pip install xdot
+        # pip install graphvix
 
 def main():
     gp_source_file.SF = gp_source_file.SourceFile()
@@ -19,6 +31,7 @@ def main():
     gp_ui.mainWindow.mainloop()
 
 
+
 if __name__ == "__main__":
 
     if profile:
@@ -27,8 +40,12 @@ if __name__ == "__main__":
         pr = cProfile.Profile()
         pr.enable()
 
+        from pympler import tracker
+        memory_tracker = tracker.SummaryTracker()
+        
+
     if debug_flag:
-        debug_file = open('########.log', 'wt')
+        debug_file = open('logs/########.log', 'wt')
         debug_init(debug_file)
 
 
@@ -38,12 +55,26 @@ if __name__ == "__main__":
         debug_close()
 
     if profile:
+        # Граф ссылок (.dot создает, но не находит рендерер (хотя я его ставил))
+        # import objgraph
+        # objgraph.show_refs(
+        #     [
+        #         gp_source_file.SF, 
+        #         gp_ui.mainWindow, 
+        #         gp_canvas.canvas,
+        #     ], 
+        #     filename='logs/refs-graph.png'
+        # )
+
+        # Вывод количества новых бъектов
+        memory_tracker.print_diff()
+
+        # Вывод в лог профилирование времени выполнения
         pr.disable()
         s = io.StringIO()
-        sortby = SortKey.CUMULATIVE
+        sortby = SortKey.CALLS # CALLS CUMULATIVE FILENAME LINE NAME NFL PCALLS STDNAME TIME
         ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
         ps.print_stats()
-
-        file = open('Profiling.log', 'wt')
+        file = open('logs/time_profiling.log', 'wt')
         file.write(s.getvalue())
         file.close()

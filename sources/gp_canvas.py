@@ -16,6 +16,7 @@ class Canvas:
     def draw(self, SF):
         """Рисует холст (блоки + линки)"""
         # Очистка
+        self.SF = SF
         self.master.delete("all")
         self.master.create_rectangle(0, 0, 2000, 2000, fill=textBG)
 
@@ -26,10 +27,14 @@ class Canvas:
         if self.link_creation:
             self.drawLink(self.handling, self.link_creation)
 
-
         # Блоки
         for _, block in SF.object_ids.items():
             self.drawBlock(block)
+
+        # Подписи
+        for _, block in SF.object_ids.items():
+            self.drawBlockText(block)
+
 
     def scale(self, pos):
         """положение на холсте -> положение на экране"""
@@ -62,14 +67,20 @@ class Canvas:
             R = 1.3 * r
             self.master.create_oval((x - R), (y - R), (x + R), (y + R), fill='lime')
         self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
-        # self.master.create_text(x, y, text=block.id, font="Consolas 10")
-        self.master.create_text(x + 1.5 * r, y, text=block.data['<desc>'], anchor='w', font="Consolas 10")
+
+    def drawBlockText(self, block):
+        x, y = self.scale(block.pos).tuple()
+        r = blockR * self.viewzoom
+        fontsize = round(10*self.viewzoom/50)
+        text = block.formatStr(getSettingsByLang(self.SF.lang)[block.classname]['build']['prefix'])
+        if fontsize:
+            self.master.create_text(x + 1.5 * r, y - fontsize, text=text, anchor='w', font="Consolas "+str(fontsize))
 
 
     def drawLink(self, block, child):
         """Рисует линк"""
         x1, y1 = self.scale(block.pos).tuple()
-
+        w = 3 * self.viewzoom/50
         if isinstance(child, Point):
             x2, y2 = child.x, child.y
             color = linkColores['_']
@@ -88,7 +99,7 @@ class Canvas:
             else:
                 color = linkColores['_']
 
-        self.master.create_line(x1, y1, x2, y2, fill=color)
+        self.master.create_line(x1, y1, x2, y2, fill=color, width=w)
 
 
 if __name__ == "__main__":

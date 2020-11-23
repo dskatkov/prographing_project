@@ -78,7 +78,8 @@ class TextEditor:
                 pass
             elif type == 1:
                 lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=val['header'])
-                lbl.pack(fill='x', expand=0)
+                if val['header']:
+                    lbl.pack(fill='x', expand=0)
 
                 ta = tk.Entry(master=self.editFrame, bg=textBG, fg=textFG)
                 ta.insert(0, block.data[key])
@@ -91,7 +92,8 @@ class TextEditor:
                     focused = 1
             elif type == 2:
                 lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=val['header'])
-                lbl.pack(fill='x', expand=0)
+                if val['header']:
+                    lbl.pack(fill='x', expand=0)
 
                 ta = tk.Text(master=self.editFrame, height=1, bg=textBG, fg=textFG, wrap='word')
                 ta.insert('1.0', block.data[key])
@@ -115,7 +117,7 @@ class TextEditor:
         placeButtons(self.stateFrame, stateFrameButtons, side='right')
 
         self.root.protocol("WM_DELETE_WINDOW", lambda: self.close(-1))
-        self.root.title(block.classname + ' ' + block.data['<desc>'])
+        self.root.title(block.getSub)
 
 # def dialogOpenFile(root, textArea):
 

@@ -89,6 +89,7 @@ def placeButtons(master, buttons, side='left', fg=btnFG, bg=btnBG):
         b.pack(side=side, padx=3, pady=3)
 
 def getSettingsByLang(lang):
+    raise Exception
     res = {}
     for type in allTypes:
         res = dictMerge(
@@ -139,7 +140,7 @@ def dictMerge(*dicts, f=lambda x,y: normalMerge(x,y,f=takeFirst)):
 
     return res
 
-def getDictValByPath(d, path):
+def getDictValByPath(d, path, err=0):
     """Возвращает значение элемента в словаре по пути к элементу"""
     val = d
     spl = path.split('.')
@@ -147,8 +148,7 @@ def getDictValByPath(d, path):
         if key in val:
             val = val[key]
         else:
-            val = {}
-            break
+            return err
     return val
 
 def createDictByPath(path, val):
@@ -166,8 +166,30 @@ def setDictValByPath(d, path, val):
     """Устанавливает значение во вложенном словаре по пути"""
     return dictMerge(d, createDictByPath(path, val), f=takeSecond)
 
-# Словарь всех типов блоков
-allTypes = dictMerge(t_default, t_op, t_if, t_for, t_class, t_function)
+# hasPrefix = (
+#             getDictValByPath(allTypes, f'{self.classname}.build.{self.SF.lang}.hasPrefix', err='') or 
+#             getDictValByPath(allTypes, f'{self.classname}.build.*.hasPrefix', err='') or 
+#             getDictValByPath(allTypes, f'*.build.{self.SF.lang}.hasPrefix', err='') or 
+#             getDictValByPath(allTypes, f'*.build.*.hasPrefix', err='')
+# )
+
+def getDictValByPathDef(d, form, *args):
+    n = 0
+    res = 0
+    #print(f'args: {args}')
+    while not res and n < 2 ** len(args):
+        s = form
+        for j in range(0, len(args)):
+            i = len(args) - j
+            #print(f'i: {i}')
+            if not(n & (1 << i)):
+                s = s.replace(f'<{i}>', args[i-1])
+            else:
+                s = s.replace(f'<{i}>', '*')
+        res = res or getDictValByPath(d, s, err='')
+        n += 1
+    print(f'res: {res}   format: {form}')
+    return res
 
 
 
@@ -182,8 +204,5 @@ allTypes = dictMerge(t_default, t_op, t_if, t_for, t_class, t_function)
 e = 2.718281828459045
 
 if __name__ == '__main__':
-    p1 = Point(1, 2)
-    p2 = Point(-5, -7)
-    print(p1<p2)
-    print(p1*10)
+    print(allTypes)
     print('This module is not for direct call!')

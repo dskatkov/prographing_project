@@ -72,7 +72,7 @@ class Canvas:
         x, y = self.scale(block.pos).tuple()
         r = blockR * self.viewzoom
         fontsize = round(10*self.viewzoom/50)
-        text = block.formatStr(getSettingsByLang(self.SF.lang)[block.classname]['build']['prefix'])
+        text = block.getSub()
         if fontsize:
             self.master.create_text(x + 1.5 * r, y - fontsize, text=text, anchor='w', font="Consolas "+str(fontsize))
 

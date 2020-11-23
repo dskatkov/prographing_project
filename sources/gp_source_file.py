@@ -111,7 +111,7 @@ class Block:
     data - словарь данных блока для подстановок
     """
     #__slots__ = "classname", "id", "childs", "pos", "text"
-    def __init__(self, SF, str='', type='_', creating_type=0, chosen=False):
+    def __init__(self, SF, str='', type='*', creating_type=0, chosen=False):
         self.SF = SF
         self.text_editor = None
         self.chosen = chosen
@@ -195,34 +195,57 @@ class Block:
         """Возвращает строку: текст программы, которую описывает данный блок"""
         self.sortChilds()
 
-        behavior = getSettingsByLang(self.SF.lang)[self.classname]['build']
-       
+        #behavior = getSettingsByLang(self.SF.lang)[self.classname]['build']
+        # behavior = (
+        #     getDictValByPath(allTypes, f'{self.classname}.build.{self.SF.lang}', err='') or 
+        #     getDictValByPath(allTypes, f'{self.classname}.build.*', err='') or 
+        #     getDictValByPath(allTypes, f'*.build.{self.SF.lang}', err='') or 
+        #     getDictValByPath(allTypes, f'*.build.*', err='')
+        # )
+
+        # hasPrefix = (
+        #     getDictValByPath(allTypes, f'{self.classname}.build.{self.SF.lang}.hasPrefix', err='') or 
+        #     getDictValByPath(allTypes, f'{self.classname}.build.*.hasPrefix', err='') or 
+        #     getDictValByPath(allTypes, f'*.build.{self.SF.lang}.hasPrefix', err='') or 
+        #     getDictValByPath(allTypes, f'*.build.*.hasPrefix', err='')
+        # )
+        hasPrefix = getDictValByPathDef(allTypes, '<1>.build.<2>.hasPrefix', self.classname, self.SF.lang)
+        prefix = getDictValByPathDef(allTypes, '<1>.build.<2>.prefix', self.classname, self.SF.lang)
+        hasPostfix = getDictValByPathDef(allTypes, '<1>.build.<2>.hasPostfix', self.classname, self.SF.lang)
+        postfix = getDictValByPathDef(allTypes, '<1>.build.<2>.postfix', self.classname, self.SF.lang)
+        multiline = getDictValByPathDef(allTypes, '<1>.build.<2>.multiline', self.classname, self.SF.lang)
+        incTab = getDictValByPathDef(allTypes, '<1>.build.<2>.incTab', self.classname, self.SF.lang)
+
+        
         repl = self.formatStrOp()
 
-        prefix = repl(behavior["prefix"])
-        if behavior["hasPostfix"]:
-            postfix = repl(behavior["postfix"])
-        
-        if behavior["multiline"]:
-            for line in prefix.split('\n'):
-                s += tab + line + '\n'
-        else:
-            s += tab + prefix + '\n'
+        if hasPrefix:
+            prefix = repl(prefix)
+            if multiline:
+                for line in prefix.split('\n'):
+                    s += tab + line + '\n'
+            else:
+                s += tab + prefix + '\n'
 
-        if behavior["incTab"]:
+        if incTab:
             tab += '    '
 
         for child_id in self.childs:
             child = self.SF.object_ids[child_id]
             s, tab = child.build(s, tab)
-        if behavior["incTab"]:
+
+        if incTab:
             tab = tab[:-4]
-        if behavior["hasPostfix"]:
-            if behavior["multiline"]:
+
+        if hasPostfix:
+            print(f'classname: {self.classname}')
+            postfix = repl(postfix)
+            if multiline:
                 for line in postfix.split('\n'):
                     s += tab + line + '\n'
             else:
                 s += tab + postfix + '\n'
+
         return s, tab
 
     def sortChilds(self):
@@ -252,6 +275,22 @@ class Block:
                 self.shift_id = shift_id
                 for child in self.childs:
                     self.SF.object_ids[child].shift(shift, desc, shift_id)
+    def getTooltip(self):
+        return self.formatStr(
+            getDictValByPath(allTypes, f'{self.classname}.canvas.tooltip', err='') or 
+            #getDictValByPath(allTypes, f'{self.classname}.build.*.desc', err='') or 
+            getDictValByPath(allTypes, f'*.canvas.tooltip', err='')# or 
+            #getDictValByPath(allTypes, f'*.build.*.desc', err='')
+        )
+
+    def getSub(self):
+        return self.formatStr(
+            getDictValByPath(allTypes, f'{self.classname}.canvas.desc', err='') or 
+            #getDictValByPath(allTypes, f'{self.classname}.build.*.desc', err='') or 
+            getDictValByPath(allTypes, f'*.canvas.desc', err='')# or 
+            #getDictValByPath(allTypes, f'*.build.*.desc', err='')
+        )
+
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

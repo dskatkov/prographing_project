@@ -89,195 +89,278 @@ languagePrePostfix = {
 
 
 # Описания типов блоков
-t_default = {"_": {
+allTypes = {}
+
+t_empty = {"*": {
     "canvas": {
-        "image": "undef.bmp",
-        "tooltip": "UNDEF TYPE",
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"<desc>",
+        },
     },
     "edit": {
-        "<desc>": {
-            "header": "name",
-            "type": "invisible"
+        '*': {
+            "<desc>": {
+                "header": "",
+                "type": "invisible",
+            },
         },
-        "<class>": {
-            "header": "TYPE",
-            "type": "singleline",
-        },
+
     },
     "build": {
         "*": {
             "incTab": 0,
-            "hasPostfix": 0,
+            "hasPrefix": 0,
             "prefix": "",
+            "hasPostfix": 0,
             "postfix": "",
             "multiline": 0,
         },
     },
+    'langs': ['*'],
 }}
+allTypes.update(t_empty)
+
+t_undefined = {"?": {
+    "canvas": {
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"Undefined type",
+        },
+    },
+    "edit": {
+        '*': {
+            '<class>': {
+                'header': 'type',
+                'type': 'singleline',
+            },
+            "<desc>": {
+                "header": "",
+                "type": "invisible",
+            },
+        },
+
+    },
+    "build": {
+        "*": {
+            "incTab": 0,
+            "hasPrefix": 0,
+            "prefix": "",
+            "hasPostfix": 0,
+            "postfix": "",
+            "multiline": 0,
+        },
+    },
+    'langs': ['*'],
+}}
+allTypes.update(t_undefined)
 
 t_op = {"op": {
     "canvas": {
-        "image": "Op.bmp",
-        "tooltip": "<1>",
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"<desc>",
+        },
     },
     "edit": {
-        "<desc>": {
-            "header": "name",
-            "type": "singleline",
+        '*': {
+            "<desc>": {
+                "header": "",
+                "type": "invisible",
+            },
+            '<1>': {
+                "header": '',
+                'type': 'multiline',
+            },
         },
-        "<1>": {
-            "header": "code",
-            "type": "multiline",
-        },
+
     },
     "build": {
         "*": {
             "incTab": 0,
+            "hasPrefix": 0,
+            "prefix": "",
             "hasPostfix": 0,
-            "prefix": "<1>",
             "postfix": "",
             "multiline": 1,
         },
-        "py": {
-        },
     },
+    'langs': ['*'],
 }}
+allTypes.update(t_op)
 
 t_if = {"if": {
     "canvas": {
-        "image": "If.bmp",
-        "tooltip": "if (<1>)",
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"<desc>",
+        },
     },
     "edit": {
-        "<desc>": {
-            "header": "name",
-            "type": "singleline",
+        '*': {
+            "<desc>": {
+                "header": "",
+                "type": "invisible",
+            },
+            '<1>': {
+                "header": 'condition',
+                'type': 'singleline',
+            },
         },
-        "<1>": {
-            "header": "condition",
-            "type": "singleline",
-        },
+
     },
     "build": {
         "*": {
             "incTab": 1,
-            "hasPostfix": 1,
+            "hasPrefix": 1,
             "prefix": "if (<1>) {",
+            "hasPostfix": 1,
             "postfix": "}",
             "multiline": 0,
         },
-        "py": {
-            "hasPostfix": 0,
-            "prefix": "if <1>:",
-            "postfix": "",
-        },
+        'py': {
+            'prefix': 'if <1>:',
+            'hasPostfix': 0,
+        }
     },
+    'langs': ['py'],
 }}
+allTypes.update(t_if)
 
-t_for =  {"for": {
+t_for = {"for": {
     "canvas": {
-        "image": "For.bmp",
-        "tooltip": "for (<1>; <2>; <3>)",
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"<desc>",
+        },
     },
     "edit": {
-        "<desc>": {
-            "header": "name",
-            "type": "singleline",
+        '*': {
+            "<desc>": {
+                "header": "",
+                "type": "invisible",
+            },
+            '<1>': {
+                "header": 'var',
+                'type': 'singleline',
+            },
+            '<2>': {
+                'header': 'range',
+                'type': 'singleline'
+            },
         },
-        "<1>": {
-            "header": "init",
-            "type": "singleline",
-        },
-        "<2>": {
-            "header": "condition",
-            "type": "singleline",
-        },
-        "<3>": {
-            "header": "iter",
-            "type": "singleline",
-        },
+
     },
     "build": {
         "*": {
             "incTab": 1,
-            "hasPostfix": 1,
+            "hasPrefix": 1,
             "prefix": "for (<1>; <2>; <3>) {",
+            "hasPostfix": 1,
             "postfix": "}",
             "multiline": 0,
         },
-        "py": {
-            "hasPostfix": 0,
-            "prefix": "for <1> in <2>:",
-            "postfix": "",
-        },
+        'py': {
+            'prefix': 'for <1> in <2>',
+            'hasPostfix': 0,
+        }
     },
+    'langs': ['py'],
 }}
+allTypes.update(t_for)
 
-t_class =  {"class": {
+t_fun = {"fun": {
     "canvas": {
-        "image": "class.bmp",
-        "tooltip": "class <1>",
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"<desc>",
+        },
     },
     "edit": {
-        "<desc>": {
-            "header": "name",
-            "type": "singleline",
+        '*': {
+            "<desc>": {
+                "header": "",
+                "type": "invisible",
+            },
+            '<1>': {
+                "header": 'name',
+                'type': 'singleline',
+            },
+            '<2>': {
+                'header': 'params',
+                'type': 'singleline'
+            },
         },
-        "<1>": {
-            "header": "class name",
-            "type": "singleline",
-        },
+
     },
     "build": {
         "*": {
             "incTab": 1,
-            "hasPostfix": 1,
-            "prefix": "class <1> {",
-            "postfix": "}",
-            "multiline": 0,
-        },
-        "py": {
-            "hasPostfix": 0,
-            "prefix": "class <1>:",
-            "postfix": "",
-        },
-    },
-}}
-
-t_function =  {"function": {
-    "canvas": {
-        "image": "function.bmp",
-        "tooltip": "function <1>(<2>)",
-    },
-    "edit": {
-        "<desc>": {
-            "header": "name",
-            "type": "singleline",
-        },
-        "<1>": {
-            "header": "fn name",
-            "type": "singleline",
-        },
-        "<2>": {
-            "header": "fn params",
-            "type": "singleline",
-        },
-    },
-    "build": {
-        "*": {
-            "incTab": 1,
-            "hasPostfix": 1,
+            "hasPrefix": 1,
             "prefix": "function <1>(<2>) {",
+            "hasPostfix": 1,
             "postfix": "}",
             "multiline": 0,
         },
-        "py": {
-            "hasPostfix": 0,
-            "prefix": "def <1>(<2>):",
-            "postfix": "",
+        'py': {
+            'prefix': 'def <1>(<2>):',
+            'hasPostfix': 0,
+        }
+    },
+    'langs': ['py'],
+}}
+allTypes.update(t_fun)
+
+t_class = {"class": {
+    "canvas": {
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"<desc>",
         },
     },
+    "edit": {
+        '*': {
+            "<desc>": {
+                "header": "",
+                "type": "invisible",
+            },
+            '<1>': {
+                "header": 'name',
+                'type': 'singleline',
+            },
+            '<2>': {
+                'header': 'supers',
+                'type': 'singleline'
+            },
+        },
+
+    },
+    "build": {
+        "*": {
+            "incTab": 1,
+            "hasPrefix": 1,
+            "prefix": "class <1>(<2>) {",
+            "hasPostfix": 1,
+            "postfix": "}",
+            "multiline": 0,
+        },
+        'py': {
+            'prefix': 'class <1>(<2>):',
+            'hasPostfix': 0,
+        }
+    },
+    'langs': ['py'],
 }}
+allTypes.update(t_class)
+
+
 
 # Радиус блока (1 - размер клетки)
 blockR = 0.4

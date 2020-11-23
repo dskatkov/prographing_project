@@ -109,6 +109,9 @@ def ui_init(root):
         ('build', lambda: build(root)),
         ('build as', lambda: buildAs(root)),
         ('canvas redraw', lambda: gp_canvas.canvas.draw(gp_source_file.SF)),
+    ]
+    if debug_flag:
+        panelFrameButtons += [
         ('build log', lambda: gp_source_file.SF.build('', 0)),
         ('save log', lambda: gp_source_file.SF.save('', 0)),
         ('console', lambda: openConsole(root)),

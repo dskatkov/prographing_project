@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.font
 import time
+from random import uniform
 
 from gp_mouse_binding import *
 from settings import *
@@ -8,6 +9,8 @@ from utils import *
 import gp_source_file as gp_source_file
 import gp_canvas as gp_canvas
 
+scale = lambda pos: gp_canvas.canvas.scale(pos)
+unscale = lambda pos: gp_canvas.canvas.unscale(pos)
 
 def assign_canvasFrame(canvasframe):
     """Что это???"""
@@ -65,9 +68,9 @@ def cycle_checkout(SF, block):
 def find_block(click):
     """Находит блок по позиции клика"""
     debug_return(f'handling click: ({click.x},{click.y})')
-    sfclick = gp_canvas.canvas.unscale(Point(click.x, click.y))
+    sfclick = unscale(Point(click.x, click.y))
     for _, block in gp_source_file.SF.object_ids.items():
-        debug_return('checking block: '+block.convertToStr())
+        debug_return('checking block: ' + block.convertToStr())
         distance = (block.pos - sfclick).abs()
         if distance <= blockR:
             debug_return('check ok')
@@ -111,15 +114,18 @@ def b3(click):
 def b1_double(click):
     b1_state = 'd'
     debug_return (f'left double click: ({click.x},{click.y})')
-
-    block = find_block(click)
+    clickpos = Point(click.x, click.y)
+    block = find_block(clickpos)
+    block_round = find_block(scale(unscale(clickpos).round()))
     if block:
         if not block.text_editor:
             block.edit(tk.Toplevel(canvasFrame), gp_canvas.canvas)
     else:
-        block = gp_source_file.Block(gp_source_file.SF)
-        block.pos = gp_canvas.canvas.unscale(Point(click.x, click.y)).round()
-        block.edit(tk.Toplevel(canvasFrame), gp_canvas.canvas)
+        if not block_round:
+            block = gp_source_file.Block(gp_source_file.SF)
+            block.pos = unscale(clickpos).round()
+            if openEditorAfterCreating:
+                block.edit(tk.Toplevel(canvasFrame), gp_canvas.canvas)
 
     redraw()
 
@@ -137,10 +143,10 @@ def b3_double(click):
 
     for p in gp_source_file.SF.object_ids:
         parent = gp_source_file.SF.object_ids[p]
+        begin = parent.pos
         for child in parent.childs:
-            begin = parent.pos
             end = gp_source_file.SF.object_ids[child].pos
-            point = Point(click.x, click.y)
+            point = unscale(Point(click.x, click.y))
             if near_to_line(begin, end, point):
                 parent.delLink(child)
 
@@ -156,9 +162,9 @@ def b1_motion(click):
     descend_moving = 1 # TODO: descend_moving = isCTRLPressed()
     clickpos = Point(click.x, click.y)
     if gp_canvas.canvas.handling:
-        newpos = gp_canvas.canvas.unscale(clickpos).round()
+        newpos = unscale(clickpos).round()
         shift = newpos - gp_canvas.canvas.handling.pos
-        gp_canvas.canvas.handling.shift(shift, desc=descend_moving, shift_id=id(shift))
+        gp_canvas.canvas.handling.shift(shift, desc=descend_moving, shift_id=uniform(0,1))
         gp_canvas.canvas.touch = clickpos
     redraw()
 
@@ -214,8 +220,6 @@ def b3_release(click):
 def wheel(click):
     debug_return (f'wheel:({click.x},{click.y}) {click.delta}')
     k = e ** (zoomSpeed*click.delta/120)
-    scale = gp_canvas.canvas.scale
-    unscale = gp_canvas.canvas.unscale
 
     clickpos = Point(click.x, click.y)
     SF_pos_old = unscale(clickpos)

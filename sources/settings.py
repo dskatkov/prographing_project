@@ -282,7 +282,7 @@ t_function =  {"function": {
 # Радиус блока (1 - размер клетки)
 blockR = 0.4
 # Что-то связанное с проверкой принадлежности линии
-nearToLine = 0.1
+nearToLine = 0.5
 # Скорость зума колесом мыши
 zoomSpeed = 0.1
 
@@ -290,6 +290,8 @@ zoomSpeed = 0.1
 debug_flag = 1
 # Флаг профилирования
 profile = 0
+
+openEditorAfterCreating = 1
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

@@ -1,8 +1,7 @@
 import tkinter as tk
 import tkinter.ttk
 from os import getcwd
-#import math as m
-from PIL import Image, ImageTk
+from ast import literal_eval
 
 import text_editor
 from settings import *
@@ -61,7 +60,7 @@ class SourceFile:
         for line in file:
             if len(line.strip()) == 0 or line.strip()[0] == ';':
                 continue  # пустые строки и строки-комментарии пропускаем
-            type = eval(line)["type"]
+            type = literal_eval(line)["type"]
             if type in allTypes:
                 Block(self, line.strip(), creating_type=1)
             else:
@@ -167,7 +166,7 @@ class Block:
 
     def parseFromStr(self, s):
         """Распаковывает блок из строки-словаря"""
-        dct = eval(s)
+        dct = literal_eval(s)
         self.classname = dct["type"]
         self.id = dct["id"]
         self.childs = dct["childs"]

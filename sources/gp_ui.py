@@ -67,6 +67,19 @@ def newFile(root=None):
     gp_canvas.canvas.draw(gp_source_file.SF)
     mainWindow.title('new file')
 
+consoleWindow = None
+def openConsole(root):
+    def close(window, entry):
+        eval(str(entry.get()))
+        window.destroy()
+    global consoleWindow
+    if not consoleWindow:
+        consoleWindow = tk.Toplevel(root)
+        entry = tk.Entry(master=consoleWindow)
+        entry.pack()
+        entry.focus()
+        consoleWindow.title('console')
+        consoleWindow.protocol("WM_DELETE_WINDOW", lambda: close(consoleWindow, entry))
 
 
 def ui_init(root):
@@ -98,6 +111,7 @@ def ui_init(root):
         ('canvas redraw', lambda: gp_canvas.canvas.draw(gp_source_file.SF)),
         ('build log', lambda: gp_source_file.SF.build('', 0)),
         ('save log', lambda: gp_source_file.SF.save('', 0)),
+        ('console', lambda: openConsole(root)),
     ]
 
     placeButtons(panelFrame, panelFrameButtons)
@@ -152,4 +166,4 @@ def ui_init(root):
 
 
 if __name__ == "__main__":
-    debug_return("This module is not for direct call!")
+    print("This module is not for direct call!")

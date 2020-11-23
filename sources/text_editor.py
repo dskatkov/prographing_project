@@ -169,3 +169,6 @@ class TextEditor:
             self.block.text_editor = None
 
         self.canvas.draw(self.block.SF)
+
+if __name__ == "__main__":
+    print("This module is not for direct call!")

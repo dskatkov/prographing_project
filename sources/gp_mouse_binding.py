@@ -152,11 +152,12 @@ def b3_double(click):
 def b1_motion(click):
     b1_state = 'm'
     debug_return (f'left motion: ({click.x},{click.y})')
+    descend_moving = 1 # TODO: descend_moving = isCTRLPressed()
     clickpos = Point(click.x, click.y)
     if gp_canvas.canvas.handling:
-        shift = clickpos - gp_canvas.canvas.touch
-        #gp_canvas.canvas.handling.move(shift*(1/gp_canvas.canvas.viewzoom))
-        gp_canvas.canvas.handling.pos = gp_canvas.canvas.unscale(clickpos).round()
+        newpos = gp_canvas.canvas.unscale(clickpos).round()
+        shift = newpos - gp_canvas.canvas.handling.pos
+        gp_canvas.canvas.handling.shift(shift, desc=descend_moving, shift_id=id(shift))
         gp_canvas.canvas.touch = clickpos
     redraw()
 
@@ -223,3 +224,9 @@ def wheel(click):
     gp_canvas.canvas.viewpos -= SF_shift
 
     redraw()
+
+# def ctrl(click):
+#     print('ctrl')
+
+# def ctrl_release(click):
+#     print('ctrl_release')

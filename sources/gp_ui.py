@@ -146,6 +146,10 @@ def ui_init(root):
     canvas.bind("<MouseWheel>", wheel)
 
 
+    # canvas.bind("<Control_L>", ctrl)
+    # canvas.bind("<Control-Up>", ctrl_release)
+
+
 
 if __name__ == "__main__":
     debug_return("This module is not for direct call!")

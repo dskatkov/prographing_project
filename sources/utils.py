@@ -35,10 +35,9 @@ class Point:
         """a < b"""
         if a.y < b.y:
             return True
-        elif a.y == b.y and a.x < b.x:
-            return True
-        else:
+        if a.y > b.y:
             return False
+        return a.x < b.x
 
     def abs(self):
         """Длина вектора"""

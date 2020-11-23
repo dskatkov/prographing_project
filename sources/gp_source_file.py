@@ -116,6 +116,7 @@ class Block:
         self.SF = SF
         self.text_editor = None
         self.chosen = chosen
+        self.shift_id = None
         # creating_type == 0 - создание нового элемента
         # creating_type == 1 - парсинг элемента из файла
         if creating_type == 1:
@@ -242,6 +243,16 @@ class Block:
     def parents(self):
         """Возвращает id всех блоков, для которых данный является дочерним"""
         return self.SF.parents(self.id)
+
+    def shift(self, shift, desc=0, shift_id=0):
+        if not desc:
+            self.pos += shift
+        else:
+            if shift_id != self.shift_id:
+                self.pos += shift
+                self.shift_id = shift_id
+                for child in self.childs:
+                    self.SF.object_ids[child].shift(shift, desc, shift_id)
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

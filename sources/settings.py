@@ -22,15 +22,39 @@ stateFG = '#ffffff'
 linkColores = {
     "_": "#000000",
 
-    "op_":"#000000",
-    "_op":"#000000",
+    # "op_":"#000000",
+    # "_op":"#000000",
     "op_op": "#ffffff",
-    "op_if": "#ff0000",
 
-    "if_":"#000000",
-    "_if":"#000000",
-    "if_if": "#0000ff",
-    "if_op": "#00ff00",
+
+    # "if_":"#000000",
+    # "_if":"#000000",
+    "if_if": "#ffffff",
+
+    # "for_" :"",
+    # "_for" :"",
+    "for_for" :"#ffffff",
+
+    # "function_" :"",
+    # "_function" :"",
+    "function_function" :"#ffffff",
+
+    "class_" :"#0000ff",
+    # "_class" :"",
+    "class_class" :"#ffffff",
+
+    # "op_if": "#ff0000",
+    # "if_op": "#00ff00",
+    "class_function" :"#8080ff",
+    "class_op" :"#80ff80",
+    # "_" :"",
+    # "_" :"",
+    # "_" :"",
+    # "_" :"",
+    # "_" :"",
+    # "_" :"",
+    # "_" :"",
+
 }
 
 # Цвета кружков блоков разного типа

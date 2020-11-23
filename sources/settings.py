@@ -293,5 +293,7 @@ profile = 0
 
 openEditorAfterCreating = 1
 
+descend_moving = 1
+
 if __name__ == "__main__":
     print("This module is not for direct call!")

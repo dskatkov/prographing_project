@@ -165,7 +165,7 @@ def ui_init(root):
     canvas.bind("<MouseWheel>", wheel)
 
 
-    # canvas.bind("<Control_L>", ctrl)
+    canvas.bind("<Control-1>", b1_ctrl)
     # canvas.bind("<Control-Up>", ctrl_release)
 
 

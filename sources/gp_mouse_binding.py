@@ -133,7 +133,10 @@ def b1_double(click):
 def b2_double(click):
     b2_state = 'd'
     debug_return (f'wheel double click: ({click.x},{click.y})')
-    ...
+
+    global descend_moving
+    descend_moving = 1 - descend_moving
+
     redraw()
 
 def b3_double(click):
@@ -166,7 +169,6 @@ def b3_double(click):
 def b1_motion(click):
     b1_state = 'm'
     debug_return (f'left motion: ({click.x},{click.y})')
-    descend_moving = 1 # TODO: descend_moving = isCTRLPressed()
     clickpos = Point(click.x, click.y)
     if gp_canvas.canvas.handling:
         newpos = unscale(clickpos).round()
@@ -237,10 +239,10 @@ def wheel(click):
 
     redraw()
 
-# def ctrl(click):
-#     print('ctrl')
+def b1_ctrl(click):
+    debug_return('left click + ctrl')
 
-# def ctrl_release(click):
-#     print('ctrl_release')
+
+
 if __name__ == "__main__":
     print("This module is not for direct call!")

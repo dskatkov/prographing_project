@@ -1,3 +1,10 @@
-This project is about graphical representation of highly-branched program.
-It used to ease navigation through complicated code by visual representation.
-Denis Ballakh and Denis Katkov, DGAP MIPT 2020
+# Pro**graph**ing project
+Проект для визуализации исходных текстов разветвленных программ
+
+Преимущества визуального редактора перед текстовым:
+- упрощение навигации по большим файлам
+- расположение исходного кода на плоскости, а не в тексте
+- простое редактирование больших алгоритмов
+- отсутствие дублирования кода
+
+Денис Баллах и Денис Катков, ЛФИ МФТИ 2020

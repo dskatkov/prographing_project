@@ -28,16 +28,13 @@ def distance_to_line(begin, end, point):
     x2, y2 = end.tuple()
     x, y = point.tuple()
     if begin == end:
-        dist = (begin-end).abs()
+        dist = (begin - end).abs()
     else:
-        # #a, b, c are factors of ax+by+c=0 equation
-        # a = 1 / (x2 - x1 + 0.001)
-        # b = 1 / (y1 - y2 + 0.001)
-        # c = -x1*a -y1*b
-        # dist = (a*x + b*y + c) / (a**2 + b**2)**0.5
-        dx =  x2 - x1
-        dy =  y1 - y2
-        dist = ((x - x1)*dy + (y - y1)*dx) / (dx**2 + dy**2)**0.5
+        #A, B, C are factors of Ax+By+C=0 equation
+        a = (x2 - x1) # 1/A
+        b = (y1 - y2) # 1/B
+        c = -x1*b -y1*a # C/AB
+        dist = (b*x + a*y + c) / (a**2 + b**2)**0.5
         dist = abs(dist)
     return dist
 

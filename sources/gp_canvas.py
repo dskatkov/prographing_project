@@ -80,7 +80,7 @@ class Canvas:
     def drawLink(self, block, child):
         """Рисует линк"""
         x1, y1 = self.scale(block.pos).tuple()
-        w = 3 * self.viewzoom/50
+        thickness = 3 * self.viewzoom/50
         if isinstance(child, Point):
             x2, y2 = child.x, child.y
             color = linkColores['_']
@@ -99,7 +99,23 @@ class Canvas:
             else:
                 color = linkColores['_']
 
-        self.master.create_line(x1, y1, x2, y2, fill=color, width=w)
+        self.master.create_line(x1, y1, x2, y2, fill=color, width=thickness)
+        l = arrow_length
+        dist = ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+        dif = (blockR * self.viewzoom) / dist
+        if not isinstance(child, Point):
+            x2, y2 = dif * x1 + (1 - dif) * x2, dif * y1 + (1 - dif) * y2
+        x3, y3 = (1 - l) * x2 + l * x1, (1 - l) * y2 + l * y1
+        a = (x2 - x1)  # 1/A
+        b = (y1 - y2)  # 1/B
+        w = arrow_with * self.viewzoom
+        # нормирование/normalizing
+        n = 1 / (a ** 2 + b ** 2) ** 0.5
+        w *= n
+        x4, x5 = x3 + w * b, x3 - w * b
+        y4, y5 = y3 + w * a, y3 - w * a
+        self.master.create_line(x2, y2, x4, y4, fill=color, width=thickness)
+        self.master.create_line(x2, y2, x5, y5, fill=color, width=thickness)
 
 
 if __name__ == "__main__":

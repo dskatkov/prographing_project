@@ -20,10 +20,15 @@ blockR = 0.4
 nearToLine = 0.05
 # Скорость зума колесом мыши
 zoomSpeed = 0.1
+# ширина стрелки/ arrow with
+arrow_with = blockR
+# длина стрелки/ arrow length
+arrow_length = 0.2
 
 # Флаг дебага
 debug_flag = 1
 debug_to_console = 1
+
 # Флаг профилирования
 profile = 0
 

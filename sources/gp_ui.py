@@ -144,6 +144,8 @@ def ui_init(root):
 
     assign_canvasFrame(canvasFrame)
 
+    root.state('zoomed')
+
     canvas.bind("<Button-1>", b1)
     canvas.bind("<Button-2>", b2)
     canvas.bind("<Button-3>", b3)

@@ -27,11 +27,18 @@ def distance_to_line(begin, end, point):
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()
-    #a, b, c are factors of ax+by+c=0 equation
-    a = 1 / (x2 - x1 + 0.001)
-    b = 1 / (y1 - y2 + 0.001)
-    c = -x1*a -y1*b
-    dist = (a*x + b*y + c) / (a**2 + b**2)**0.5
+    if begin == end:
+        dist = (begin-end).abs()
+    else:
+        # #a, b, c are factors of ax+by+c=0 equation
+        # a = 1 / (x2 - x1 + 0.001)
+        # b = 1 / (y1 - y2 + 0.001)
+        # c = -x1*a -y1*b
+        # dist = (a*x + b*y + c) / (a**2 + b**2)**0.5
+        dx =  x2 - x1
+        dy =  y1 - y2
+        dist = ((x - x1)*dy + (y - y1)*dx) / (dx**2 + dy**2)**0.5
+        dist = abs(dist)
     return dist
 
 def near_to_line(begin, end, point):
@@ -41,12 +48,9 @@ def near_to_line(begin, end, point):
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()
-    if x2 < x1:
-        x2, x1 = x1, x2
-    if y2 < y1:
-        y2, y1 = y1, y2
+
     if d < eps:
-        if (x1-eps < x < x2+eps) and (y1-eps < y < y2+eps):
+        if (min(x1, x2) - eps < x < max(x1, x2) + eps) and (min(y1, y2) - eps < y < max(y1, y2) + eps):
             return True
     return False
 
@@ -141,18 +145,24 @@ def b3_double(click):
     block = find_block(click)
     gp_canvas.canvas.handling = block
 
-    for p in gp_source_file.SF.object_ids:
-        parent = gp_source_file.SF.object_ids[p]
-        begin = parent.pos
-        for child in parent.childs:
-            end = gp_source_file.SF.object_ids[child].pos
-            point = unscale(Point(click.x, click.y))
-            if near_to_line(begin, end, point):
-                parent.delLink(child)
 
     if block:
         if tk.messagebox.askyesno("Delete?", "Do you want to delete block '" + block.data['<desc>'] + "'?", parent=canvasFrame):
             block.delete()
+    else:
+        stop = 0
+        for p in gp_source_file.SF.object_ids:
+            parent = gp_source_file.SF.object_ids[p]
+            begin = parent.pos
+            for child in parent.childs:
+                end = gp_source_file.SF.object_ids[child].pos
+                point = unscale(Point(click.x, click.y))
+                if near_to_line(begin, end, point):
+                    parent.delLink(child)
+                    stop = 1
+                    break
+            if stop:
+                break
     redraw()
 
 

@@ -60,7 +60,7 @@ class Canvas:
         if ct in drawColores:
             color = drawColores[ct]
         else:
-            color = drawColores['_']
+            color = drawColores['?']
 
 
         if block.chosen:

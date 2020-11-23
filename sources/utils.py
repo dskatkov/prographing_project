@@ -1,5 +1,6 @@
 import tkinter as tk
 from settings import *
+from gp_block_types import *
 
 class Point:
     """Класс точки-вектора"""
@@ -68,6 +69,8 @@ def debug_close():
 
 def debug_return(s):
     """Вывод в дебаговый лог"""
+    if debug_to_console:
+        print(s)
     if debug_flag:
         debug_log.write(str(s) + '\n')
 
@@ -166,43 +169,85 @@ def setDictValByPath(d, path, val):
     """Устанавливает значение во вложенном словаре по пути"""
     return dictMerge(d, createDictByPath(path, val), f=takeSecond)
 
-# hasPrefix = (
-#             getDictValByPath(allTypes, f'{self.classname}.build.{self.SF.lang}.hasPrefix', err='') or 
-#             getDictValByPath(allTypes, f'{self.classname}.build.*.hasPrefix', err='') or 
-#             getDictValByPath(allTypes, f'*.build.{self.SF.lang}.hasPrefix', err='') or 
-#             getDictValByPath(allTypes, f'*.build.*.hasPrefix', err='')
-# )
-
-def getDictValByPathDef(d, form, *args):
+# Страшная вещь)
+def getDictValByPathDef(d, form, *args, braces='<>', default='*'):
+    lb, rb = braces[0], braces[1]
     n = 0
-    res = 0
-    #print(f'args: {args}')
-    while not res and n < 2 ** len(args):
+    res = ...
+    while (res == ...) and n < 2 ** len(args):
         s = form
-        for j in range(0, len(args)):
-            i = len(args) - j
-            #print(f'i: {i}')
-            if not(n & (1 << i)):
-                s = s.replace(f'<{i}>', args[i-1])
+        for i in range(len(args)-1, -1, -1):
+            if not (n & (1 << (len(args) - i - 1))):
+                s = s.replace(f'{lb}{i+1}{rb}', args[i])
             else:
-                s = s.replace(f'<{i}>', '*')
-        res = res or getDictValByPath(d, s, err='')
+                s = s.replace(f'{lb}{i+1}{rb}', default)
+        v = getDictValByPath(d, s, err=...)
+        if v != ...:
+            res = v
         n += 1
-    print(f'res: {res}   format: {form}')
     return res
 
+def distance_to_line(begin, end, point):
+    """Расстояние от прямой (begin, end) до точки point"""
+    x1, y1 = begin.tuple()
+    x2, y2 = end.tuple()
+    x, y = point.tuple()
+    if begin == end:
+        dist = (begin - end).abs()
+    else:
+        #A, B, C are factors of Ax+By+C=0 equation
+        a = (x2 - x1) # 1/A
+        b = (y1 - y2) # 1/B
+        c = -x1*b -y1*a # C/AB
+        dist = (b*x + a*y + c) / (a**2 + b**2)**0.5
+        dist = abs(dist)
+    return dist
+
+def near_to_line(begin, end, point):
+    """Проверяет близость точки прямой"""
+    eps = nearToLine
+    d = distance_to_line(begin, end, point)
+    x1, y1 = begin.tuple()
+    x2, y2 = end.tuple()
+    x, y = point.tuple()
+
+    if d < eps:
+        if (min(x1, x2) - eps < x < max(x1, x2) + eps) and (min(y1, y2) - eps < y < max(y1, y2) + eps):
+            return True
+    return False
+
+def findCycle(SF, block, root):
+    """Проверяет существование цикла ссылок"""
+    for id in block.childs:
+        child = SF.object_ids[id]
+        if child is root:
+            return True
+        elif findCycle(SF, child, root):
+            return True
+    return False
 
 
-# def dictMergeSmall(a, b):
-#     res = {}
-#     for key, val in list(a.items())+list(b.items()):
-#         res[key] = val
-#     return res
-# print(dictMergeSmall({1:2,3:4},{5:6,1:7}))
+def cycle_checkout(SF, block):
+    """Проверяет существование цикла ссылок"""
+    return findCycle(SF, block, block)
+
+def find_block_(click, canvas, SF):
+    """Находит блок по позиции клика"""
+    scale = lambda pos: canvas.scale(pos)
+    unscale = lambda pos: canvas.unscale(pos)
+
+    debug_return(f'handling click: ({click.x},{click.y})')
+    sfclick = unscale(Point(click.x, click.y))
+    for _, block in SF.object_ids.items():
+        #debug_return('checking block: ' + block.convertToStr())
+        distance = (block.pos - sfclick).abs()
+        if distance <= blockR:
+            debug_return(f'block found: {block.convertToStr()}')
+            return block
+
 
 # Число Эйлера
 e = 2.718281828459045
 
 if __name__ == '__main__':
-    print(allTypes)
     print('This module is not for direct call!')

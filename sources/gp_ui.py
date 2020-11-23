@@ -70,7 +70,8 @@ def newFile(root=None):
 consoleWindow = None
 def openConsole(root):
     def close(window, entry):
-        eval(str(entry.get()))
+        if entry.get():
+            eval(str(entry.get()))
         window.destroy()
     global consoleWindow
     if not consoleWindow:
@@ -165,8 +166,8 @@ def ui_init(root):
     canvas.bind("<MouseWheel>", wheel)
 
 
-    canvas.bind("<Control-1>", b1_ctrl)
-    # canvas.bind("<Control-Up>", ctrl_release)
+    canvas.bind("<Control-3>", b3_ctrl)
+    canvas.bind("<Control-ButtonRelease-3>", b3_ctrl_release)
 
 
 

@@ -60,25 +60,18 @@ class TextEditor:
         # Словарь со всеми полями для редактирования
         self.textAreas = {}
 
-        d = allTypes[block.classname]['edit']
-        focused = 0 # TODO: параметр для автофокуса
-        for key, val in d.items():
-            if val['type'] == 'singleline':
-                type = 1
-            elif val['type'] == 'multiline':
-                type = 2
-            elif val['type'] == 'invisible':
-                type = 0
-            else:
-                type = -1
 
-            if type == -1:
-                debug_return ('Unknown type of editing field')
-            elif type == 0:
+        focused = 0 # TODO: параметр для автофокуса
+        print('fields: ' + str(getDictValByPathDef(allTypes, f'<1>.edit.<2>', block.classname, block.SF.lang)))
+        for key, val in getDictValByPathDef(allTypes, f'[1].edit.[2]', block.classname, block.SF.lang, braces='[]').items():
+            editing_type = getDictValByPathDef(allTypes, f'[1].edit.[2].{key}.type', block.classname, block.SF.lang, braces='[]')
+            header = getDictValByPathDef(allTypes, f'[1].edit.[2].{key}.header', block.classname, block.SF.lang, braces='[]')
+
+            if editing_type == 'invisible':
                 pass
-            elif type == 1:
-                lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=val['header'])
-                if val['header']:
+            elif editing_type == 'singleline':
+                if header:
+                    lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=header)
                     lbl.pack(fill='x', expand=0)
 
                 ta = tk.Entry(master=self.editFrame, bg=textBG, fg=textFG)
@@ -90,9 +83,10 @@ class TextEditor:
                 if not focused:
                     ta.focus()
                     focused = 1
-            elif type == 2:
-                lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=val['header'])
-                if val['header']:
+                    #ta.bind("Return", lambda: self.close(-1))
+            elif editing_type == 'multiline':
+                if header:
+                    lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=header)
                     lbl.pack(fill='x', expand=0)
 
                 ta = tk.Text(master=self.editFrame, height=1, bg=textBG, fg=textFG, wrap='word')
@@ -100,6 +94,8 @@ class TextEditor:
                 ta.pack(fill='both', expand=1, side="top")
 
                 self.textAreas[key] = ta
+            else:
+                debug_return ('Unknown type of editing field')
 
 
         #placing buttons to panelFrame
@@ -117,7 +113,7 @@ class TextEditor:
         placeButtons(self.stateFrame, stateFrameButtons, side='right')
 
         self.root.protocol("WM_DELETE_WINDOW", lambda: self.close(-1))
-        self.root.title(block.getSub)
+        self.root.title(block.getSub())
 
 # def dialogOpenFile(root, textArea):
 
@@ -152,16 +148,14 @@ class TextEditor:
             # сохраниить и закрыть
             # self.block.text1 = self.textBox1.get('1.0', 'end')[:-1]
             # print('opening: '+str(self.block.data))
-            d = allTypes[self.block.classname]['edit']
-            for key, val in d.items():
+
+            for key, val in getDictValByPathDef(allTypes, f'<1>.edit.<2>', self.block.classname, self.block.SF.lang).items():
+                print(key)
                 if key == '<class>':
-                    debug_return ('changing type')
                     cn = getText(self.textAreas[key])
+                    debug_return (f'changing type: {cn}')
                     if cn in allTypes:
-                        self.block.classname = cn
-                        self.block.data = {}
-                        for key_, _ in allTypes[self.block.classname]['edit'].items():
-                            self.block.data[key_] = ''
+                        self.block.changeType(cn)
                     else:
                         debug_return ('Unknown type of block')
                     break

@@ -382,14 +382,6 @@ t_dict = {"dict": {
     },
     "edit": {
         '*': {
-            "<desc>": {
-                "header": "",
-                "type": "invisible",
-            },
-            '<1>': {
-                "header": 'key',
-                'type': 'singleline',
-            },
         },
     },
     "build": {

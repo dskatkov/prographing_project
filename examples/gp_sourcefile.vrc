@@ -1,8 +1,8 @@
----
+2
 py
 C:/GitHub/prographing_project/examples/gp_sourcefile.b.py
-{"type":"class", "id":0, "childs":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 70, 86], "pos":(-4,5), "data":{'<desc>': 'class Block', '<1>': 'Block'}}
-{"type":"fun", "id":1, "childs":[35, 36, 38, 89], "pos":(-1,5), "data":{'<desc>': '__init__', '<1>': '__init__', '<2>': "self, SF, str = '', type = '_', creating_type = 0, chosen = False"}}
+{"type":"class", "id":0, "childs":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 70, 86], "pos":(-4,5), "data":{'<desc>': 'class Block', '<1>': 'Block', '<2>': ''}}
+{"type":"fun", "id":1, "childs":[35, 36, 89, 38], "pos":(-1,5), "data":{'<desc>': '__init__', '<1>': '__init__', '<2>': "self, SF, str = '', type = '_', creating_type = 0, chosen = False"}}
 {"type":"fun", "id":2, "childs":[17, 41], "pos":(-1,10), "data":{'<desc>': 'delete', '<1>': 'delete', '<2>': 'self'}}
 {"type":"fun", "id":3, "childs":[28], "pos":(-1,13), "data":{'<desc>': 'move', '<1>': 'move', '<2>': 'self, shift'}}
 {"type":"fun", "id":4, "childs":[18], "pos":(-1,15), "data":{'<desc>': 'edit', '<1>': 'edit', '<2>': 'self, master, canvas'}}

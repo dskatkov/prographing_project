@@ -64,14 +64,14 @@ class Canvas:
 
 
         if block.chosen:
-            R = 1.3 * r
-            self.master.create_oval((x - R), (y - R), (x + R), (y + R), fill='lime')
+            R = chosen_R * r
+            self.master.create_oval((x - R), (y - R), (x + R), (y + R), fill=chosenCol)
         self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
 
     def drawBlockText(self, block):
         x, y = self.scale(block.pos).tuple()
         r = blockR * self.viewzoom
-        fontsize = round(10*self.viewzoom/50)
+        fontsize = round(font_size*self.viewzoom)
         text = block.getSub()
         if fontsize:
             self.master.create_text(x + 1.5 * r, y - fontsize, text=text, anchor='w', font="Consolas "+str(fontsize))
@@ -80,7 +80,7 @@ class Canvas:
     def drawLink(self, block, child):
         """Рисует линк"""
         x1, y1 = self.scale(block.pos).tuple()
-        thickness = 3 * self.viewzoom/50
+        thickness = link_width * self.viewzoom
         if isinstance(child, Point):
             x2, y2 = child.tuple()
             color = linkColores['_']
@@ -101,6 +101,8 @@ class Canvas:
 
         self.master.create_line(x1, y1, x2, y2, fill=color, width=thickness)
         dist = ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+        if dist == 0:
+            return
         l = arrow_length/dist*self.viewzoom
         dif = (blockR * self.viewzoom) / dist
         if not isinstance(child, Point):

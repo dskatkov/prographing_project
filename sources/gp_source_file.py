@@ -16,7 +16,7 @@ class SourceFile:
         object_ids = {} - словарь ссылок на блоки
         fileName = '' - файл для сохранение
         buildName = '' - файл для составления текста программы
-        data = '---' - некоторые данные (пока не используется)
+        data = 0 - subversion
         lang = 'py' - язык составления программы
     """
     def __init__(self):
@@ -24,14 +24,15 @@ class SourceFile:
         self.object_ids = {}
         self.fileName = ''
         self.buildName = ''
-        self.data = '---'
+        self.data = 0
         self.lang = 'py'
 
 
     def save(self, fileName, save=1):
         """Сохраняет в файл"""
+        self.data += 1
         s = ''
-        s += self.data + '\n'
+        s += str(self.data) + '\n'
         s += self.lang + '\n'
         s += self.buildName + '\n'
         for _, block in self.object_ids.items():
@@ -54,7 +55,12 @@ class SourceFile:
         self.fileName = fileName
 
         file = open(fileName, 'rt')
-        self.data = file.readline()[:-1]
+        self.data = int(file.readline()[:-1])
+        try:
+            self.data = int(self.data)
+        except ValueError:
+            debug_return(f'bad subversion: {self.data}; setting subversion to {0}')
+            self.data = 0
         self.lang = file.readline()[:-1]
         self.buildName = file.readline()[:-1]
         for line in file:
@@ -154,7 +160,6 @@ class Block:
         """Открывает редактор блока"""
         self.text_editor = master
         text_editor.TextEditor(master, self, canvas)
-        #self.text = newstr
 
     def convertToStr(self):
         """Конвертирует блок в строку-словарь"""
@@ -170,12 +175,6 @@ class Block:
         self.childs = dct["childs"]
         self.pos = Point().fromTuple(dct["pos"])
         self.data = dct["data"]
-
-        # self.data = None
-        # for _, attr in data.items():
-        #     if attr in dct:
-        #         setattr(self.data, attr, dct[attr])
-
 
     def formatStr(self, s):
         """Применяет к строке s все подстановки из self.data"""
@@ -218,7 +217,11 @@ class Block:
         ch_s = ''
         for child_id in self.childs:
             child = self.SF.object_ids[child_id]
-            ch_s = child.build(ch_s)
+            try:
+                ch_s = child.build(ch_s)
+            except Exception:
+                print(f'Exception gp_source_file.py Block.build')
+
 
         for line in ch_s.split('\n'):
             if line:
@@ -263,7 +266,10 @@ class Block:
                 self.pos += shift
                 self.shift_id = shift_id
                 for child in self.childs:
-                    self.SF.object_ids[child].shift(shift, desc, shift_id)
+                    try:
+                        self.SF.object_ids[child].shift(shift, desc, shift_id)
+                    except Exception:
+                        print(f'Exception gp_source_file.py Block.shift')
     def getTooltip(self):
         return self.formatStr(
             getDictValByPathDef(allTypes, f'<1>.canvas.<2>.tooltip', self.classname, self.SF.lang)

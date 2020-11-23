@@ -14,8 +14,13 @@ spaceFG = '#ffffff'
 stateBG = '#404040'
 stateFG = '#ffffff'
 
+chosenCol = '#00ff00'
+
 # Радиус блока (1 - размер клетки)
 blockR = 0.4
+chosen_R = 1.4
+link_width = 0.06
+font_size = 0.20
 # Что-то связанное с проверкой принадлежности линии
 nearToLine = 0.05
 # Скорость зума колесом мыши

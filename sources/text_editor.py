@@ -36,11 +36,11 @@ class TextEditor:
         self.canvas = canvas
 
         #configuring main window
-        root.minsize(400, 200)
+        #root.minsize(400, 200)
 
-        root.columnconfigure(0, weight=1, minsize=200)
-        root.rowconfigure(0, weight=0, minsize=0)
-        root.rowconfigure(1, weight=1, minsize=100)
+        root.columnconfigure(0, weight=1, minsize=0)
+        root.rowconfigure(0, weight=0, minsize=20)
+        root.rowconfigure(1, weight=1, minsize=0)
         root.rowconfigure(2, weight=0, minsize=20)
 
         #creating menu
@@ -62,7 +62,7 @@ class TextEditor:
 
 
         focused = 0 # TODO: параметр для автофокуса
-        print('fields: ' + str(getDictValByPathDef(allTypes, f'<1>.edit.<2>', block.classname, block.SF.lang)))
+        debug_return('block fields: ' + str(getDictValByPathDef(allTypes, f'<1>.edit.<2>', block.classname, block.SF.lang)))
         for key, val in getDictValByPathDef(allTypes, f'[1].edit.[2]', block.classname, block.SF.lang, braces='[]').items():
             editing_type = getDictValByPathDef(allTypes, f'[1].edit.[2].{key}.type', block.classname, block.SF.lang, braces='[]')
             header = getDictValByPathDef(allTypes, f'[1].edit.[2].{key}.header', block.classname, block.SF.lang, braces='[]')
@@ -75,7 +75,10 @@ class TextEditor:
                     lbl.pack(fill='x', expand=0)
 
                 ta = tk.Entry(master=self.editFrame, bg=textBG, fg=textFG)
-                ta.insert(0, block.data[key])
+                if key in block.data:
+                    ta.insert(0, block.data[key])
+                else:
+                    debug_return (f'Wrong format of block: {block.convertToStr()}')
                 ta.pack(fill='x', expand=0, side="top")
 
                 self.textAreas[key] = ta
@@ -89,7 +92,8 @@ class TextEditor:
                     lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=header)
                     lbl.pack(fill='x', expand=0)
 
-                ta = tk.Text(master=self.editFrame, height=1, bg=textBG, fg=textFG, wrap='word')
+                ln = len(block.data[key].split('\n'))
+                ta = tk.Text(master=self.editFrame, height=ln+2, bg=textBG, fg=textFG, wrap='word')
                 ta.insert('1.0', block.data[key])
                 ta.pack(fill='both', expand=1, side="top")
 
@@ -150,7 +154,7 @@ class TextEditor:
             # print('opening: '+str(self.block.data))
 
             for key, val in getDictValByPathDef(allTypes, f'<1>.edit.<2>', self.block.classname, self.block.SF.lang).items():
-                print(key)
+                debug_return(f'saving key: {key}')
                 if key == '<class>':
                     cn = getText(self.textAreas[key])
                     debug_return (f'changing type: {cn}')

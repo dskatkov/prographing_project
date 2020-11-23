@@ -61,6 +61,7 @@ class TextEditor:
         self.textAreas = {}
 
         d = allTypes[block.classname]['edit']
+        focused = 0 # TODO: параметр для автофокуса
         for key, val in d.items():
             if val['type'] == 'singleline':
                 type = 1
@@ -84,6 +85,10 @@ class TextEditor:
                 ta.pack(fill='x', expand=0, side="top")
 
                 self.textAreas[key] = ta
+
+                if not focused:
+                    ta.focus()
+                    focused = 1
             elif type == 2:
                 lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=val['header'])
                 lbl.pack(fill='x', expand=0)

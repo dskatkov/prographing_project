@@ -119,6 +119,7 @@ def b1_double(click):
     else:
         block = gp_source_file.Block(gp_source_file.SF)
         block.pos = gp_canvas.canvas.unscale(Point(click.x, click.y)).round()
+        block.edit(tk.Toplevel(canvasFrame), gp_canvas.canvas)
 
     redraw()
 

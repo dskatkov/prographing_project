@@ -82,7 +82,7 @@ class Canvas:
         x1, y1 = self.scale(block.pos).tuple()
         thickness = 3 * self.viewzoom/50
         if isinstance(child, Point):
-            x2, y2 = child.x, child.y
+            x2, y2 = child.tuple()
             color = linkColores['_']
         else:
             x2, y2 = self.scale(child.pos).tuple()
@@ -100,15 +100,15 @@ class Canvas:
                 color = linkColores['_']
 
         self.master.create_line(x1, y1, x2, y2, fill=color, width=thickness)
-        l = arrow_length
         dist = ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+        l = arrow_length/dist*self.viewzoom
         dif = (blockR * self.viewzoom) / dist
         if not isinstance(child, Point):
             x2, y2 = dif * x1 + (1 - dif) * x2, dif * y1 + (1 - dif) * y2
         x3, y3 = (1 - l) * x2 + l * x1, (1 - l) * y2 + l * y1
         a = (x2 - x1)  # 1/A
         b = (y1 - y2)  # 1/B
-        w = arrow_with * self.viewzoom
+        w = arrow_width * self.viewzoom
         # нормирование/normalizing
         n = 1 / (a ** 2 + b ** 2) ** 0.5
         w *= n

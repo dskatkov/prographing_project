@@ -26,7 +26,7 @@ arrow_width = blockR*0.4
 arrow_length = blockR*0.7
 
 # Флаг дебага
-debug_flag = 0
+debug_flag = 1
 debug_to_console = 0
 
 # Флаг профилирования

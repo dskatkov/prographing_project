@@ -3,7 +3,7 @@ from settings import *
 from gp_block_types import *
 
 class Point:
-    """Класс точки-вектора"""
+    """Класс точки-вектора/ class of a point-vector"""
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
@@ -41,41 +41,41 @@ class Point:
         return a.x < b.x
 
     def abs(self):
-        """Длина вектора"""
+        """Длина вектора/vector length"""
         return (self.x ** 2 + self.y ** 2) ** (1/2)
 
     def fromTuple(self, tup):
-        """Создает Point из кортежа"""
+        """Создает Point из кортежа/ create point out of tuple"""
         return Point(tup[0], tup[1])
 
     def tuple(self):
-        """Создает кортеж из Point"""
+        """Создает кортеж из Point/ create tuple out of point"""
         return self.x, self.y
 
     def round(self, s=1):
-        """Округляет координаты до требуемой точности"""
+        """Округляет координаты до требуемой точности/ round to the necessary accuracy"""
         return Point(round(self.x/s)*s, round(self.y/s)*s)
 
 debug_log = ...
 def debug_init(file):
-    """Установка файла для дебагового лога"""
+    """Установка файла для дебагового лога/ set file for debug log"""
     global debug_log
     debug_log = file
 
 def debug_close():
-    """Закрытие файла лога"""
+    """Закрытие файла лога/ Closing log file"""
     global debug_log
     debug_log.close()
 
 def debug_return(s):
-    """Вывод в дебаговый лог"""
+    """Вывод в дебаговый лог/ output to debug log"""
     if debug_to_console:
         print(s)
     if debug_flag:
         debug_log.write(str(s) + '\n')
 
 def createMenu(master, tree):
-    """Создает меню и прикрепляет его к master"""
+    """Создает меню и прикрепляет его к master/ create menu and assign it to master"""
     for key, val in tree.items():
         m = tk.Menu(master=master, tearoff=0)
         if type(val)==type({}):
@@ -86,12 +86,13 @@ def createMenu(master, tree):
         master.add_cascade(label=key, menu=m)
 
 def placeButtons(master, buttons, side='left', fg=btnFG, bg=btnBG):
-    """Располагает кнопки на фрейме"""
+    """Располагает кнопки на фрейме/ place buttons on frame"""
     for btn in buttons:
         b = tk.Button(master=master, text=btn[0], command=btn[1], fg=btnFG, bg=btnBG)
         b.pack(side=side, padx=3, pady=3)
 
 def getSettingsByLang(lang):
+    """Устанавливает настройки в связи с языком программирования/Set setting associated with programming language"""
     raise Exception
     res = {}
     for type in allTypes:
@@ -114,13 +115,13 @@ takeFirst = lambda x, y: x
 takeSecond = lambda x, y: y
 
 def normalMerge(a, b, f=takeFirst):
-    """Функция слияния двух элементов"""
+    """Функция слияния двух элементов/ Function of merging two elements"""
     if type(a) != dict or type(b) != dict:
         return f(a, b)
     return dictMerge(a, b)
 
 def dictMerge(*dicts, f=lambda x,y: normalMerge(x,y,f=takeFirst)):
-    """Соединяет несколько словарей в один"""
+    """Соединяет несколько словарей в один/ merge s number of dictionaries into one"""
     res = {}
 
     if len(dicts) == 2:
@@ -144,7 +145,7 @@ def dictMerge(*dicts, f=lambda x,y: normalMerge(x,y,f=takeFirst)):
     return res
 
 def getDictValByPath(d, path, err=0):
-    """Возвращает значение элемента в словаре по пути к элементу"""
+    """Возвращает значение элемента в словаре по пути к элементу/ return element value in dictionary by path to the element"""
     val = d
     spl = path.split('.')
     for key in spl:
@@ -155,7 +156,7 @@ def getDictValByPath(d, path, err=0):
     return val
 
 def createDictByPath(path, val):
-    """Создает вложенный словарь с одним элементом по пути"""
+    """Создает вложенный словарь с одним элементом по пути/ create inserted dictionary with one element by path"""
     spl = path.split('.')
     spl.reverse()
 
@@ -166,10 +167,10 @@ def createDictByPath(path, val):
     return d
 
 def setDictValByPath(d, path, val):
-    """Устанавливает значение во вложенном словаре по пути"""
+    """Устанавливает значение во вложенном словаре по пути/ Set value in inserted dictionary by path"""
     return dictMerge(d, createDictByPath(path, val), f=takeSecond)
 
-# Страшная вещь)
+# Страшная вещь)/ Scary thing)
 def getDictValByPathDef(d, form, *args, braces='<>', default='*'):
     lb, rb = braces[0], braces[1]
     n = 0
@@ -188,7 +189,7 @@ def getDictValByPathDef(d, form, *args, braces='<>', default='*'):
     return res
 
 def distance_to_line(begin, end, point):
-    """Расстояние от прямой (begin, end) до точки point"""
+    """Расстояние от отрезка (begin, end) до точки point/ distance from the segment (begin, end) to the point"""
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()
@@ -204,7 +205,7 @@ def distance_to_line(begin, end, point):
     return dist
 
 def near_to_line(begin, end, point):
-    """Проверяет близость точки прямой"""
+    """Проверяет близость точки прямой/ Check whether point is near to the line"""
     eps = nearToLine
     d = distance_to_line(begin, end, point)
     x1, y1 = begin.tuple()
@@ -217,7 +218,7 @@ def near_to_line(begin, end, point):
     return False
 
 def findCycle(SF, block, root):
-    """Проверяет существование цикла ссылок"""
+    """Проверяет существование цикла ссылок/ checking existance of cycle links"""
     for id in block.childs:
         child = SF.object_ids[id]
         if child is root:
@@ -228,11 +229,11 @@ def findCycle(SF, block, root):
 
 
 def cycle_checkout(SF, block):
-    """Проверяет существование цикла ссылок"""
+    """Проверяет существование цикла ссылок/ checking existance of cycle links"""
     return findCycle(SF, block, block)
 
 def find_block_(click, canvas, SF):
-    """Находит блок по позиции клика"""
+    """Находит блок по позиции клика/ Find block by its position"""
     scale = lambda pos: canvas.scale(pos)
     unscale = lambda pos: canvas.unscale(pos)
 
@@ -246,7 +247,7 @@ def find_block_(click, canvas, SF):
             return block
 
 
-# Число Эйлера
+# Число Эйлера/ Eiler's number
 e = 2.718281828459045
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-# Цвета различных элементов
+# Цвета различных элементов?Colors of different elements
 btnBG = '#202020'
 btnFG = '#ffffff'
 
@@ -16,25 +16,25 @@ stateFG = '#ffffff'
 
 chosenCol = '#00ff00'
 
-# Радиус блока (1 - размер клетки)
+# Радиус блока (1 - размер клетки)/Block radius, 1 is a cell size
 blockR = 0.4
 chosen_R = 1.4
 link_width = 0.06
 font_size = 0.20
-# Что-то связанное с проверкой принадлежности линии
+# Расстояние на котором нажатие мышью удаляет линию/Distance on which mouse click deletes the link
 nearToLine = 0.05
-# Скорость зума колесом мыши
+# Чуствительность зума колесом мыши/Sensetiveness of zoom by wheel
 zoomSpeed = 0.1
 # ширина стрелки/ arrow width
 arrow_width = blockR*0.4
 # длина стрелки/ arrow length
 arrow_length = blockR*0.7
 
-# Флаг дебага
-debug_flag = 1
+# Флаг дебага/Debug flag
+debug_flag = 0
 debug_to_console = 0
 
-# Флаг профилирования
+# Флаг профилирования/Profiling flag
 profile = 0
 
 openEditorAfterCreating = 1

@@ -12,7 +12,7 @@ from utils import *
 canvasFrame = panelFrame = stateFrame = canvas = mainWindow = ...
 
 def saveAs(root):
-    """Обработчик кнопки save as"""
+    """Обработчик кнопки save as handler of save as button"""
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Visual script", ".vrc")]).show()
     if fileName == '':
         return
@@ -23,14 +23,14 @@ def saveAs(root):
         mainWindow.title(fileName)
 
 def save(root):
-    """Обработчик кнопки save"""
+    """Обработчик кнопки save/ handler of save button"""
     if gp_source_file.SF.fileName == '':
         saveAs(root)
     else:
         gp_source_file.SF.save(gp_source_file.SF.fileName)
 
 def open(root):
-    """Обработчик кнопки open"""
+    """Обработчик кнопки open/ handler of open button"""
     fileName = tk.filedialog.Open(root, filetypes = [("Visual script", ".vrc")]).show()
     if fileName == '':
         return
@@ -43,14 +43,14 @@ def open(root):
 
 def build(root):
 
-    """Обработчик кнопки build"""
+    """Обработчик кнопки build/ handler of build button"""
     if gp_source_file.SF.buildName == '':
         buildAs(root)
     else:
         gp_source_file.SF.build(gp_source_file.SF.buildName)
 
 def buildAs(root):
-    """Обработчик кнопки build as"""
+    """Обработчик кнопки build as/ handler of build as button"""
     ext = '.b.'+gp_source_file.SF.lang
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ext)]).show()
     if fileName == '':
@@ -62,7 +62,7 @@ def buildAs(root):
         gp_source_file.SF.build(fileName)
 
 def newFile(root=None):
-    """Обработчик кнопки new file"""
+    """Обработчик кнопки new file/ handler of new file button"""
     gp_source_file.SF = gp_source_file.SourceFile()
     gp_canvas.canvas.draw(gp_source_file.SF)
     mainWindow.title('new file')
@@ -84,7 +84,7 @@ def openConsole(root):
 
 
 def ui_init(root):
-    """Инициализирует UI: кнопки + обработчики"""
+    """Инициализирует UI: кнопки + обработчики/ initialize user interface: buttons + handlers"""
     global canvasFrame, panelFrame, stateFrame, canvas, mainWindow, chosen
     root.minsize(200, 200)
 

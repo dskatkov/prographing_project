@@ -8,7 +8,7 @@ from utils import *
 import gp_canvas as gp_canvas
 
 def getText(textArea):
-    """Возвращает содержимое поля"""
+    """Возвращает содержимое поля/ Return ffield containment"""
     if isinstance(textArea, tk.Entry):
         return textArea.get()
     elif isinstance(textArea, tk.Text):
@@ -20,14 +20,14 @@ def getText(textArea):
 
 class TextEditor:
     """
-    Класс редактора блока
-    block - редактируемый блок
-    canvas - холст, отрисовка которого произойдет при закрытии редактора
-    root - окно редактора
-    panelFrame - фрейм панели кнопок
-    editFrame - фрейм всех полей для редактирования
-    stateFrame - фрейм нижней строки
-    textAreas - словарь {<название поля>:<tk объект для редактирования>}
+    Класс редактора блока/ class of the block redactor
+    block - редактируемый блок/redacted block
+    canvas - холст, отрисовка которого произойдет при закрытии редактора/ canvas to draw after closing redactor
+    root - окно редактора/ redactor window
+    panelFrame - фрейм панели кнопок/ button panel frame
+    editFrame - фрейм всех полей для редактирования/ frame of redacting fields
+    stateFrame - фрейм нижней строки/ frame of the lower string
+    textAreas - словарь {<название поля>:<tk объект для редактирования>}/ dictionary {<field name>:<tk object>}
 
     """
     def __init__(self, root, block, canvas):
@@ -130,10 +130,10 @@ class TextEditor:
 #     open(fileName, 'wt').write(textArea.get('1.0', 'end'))
 
     def close(self, state=-1):
-        """Закрывает редактор"""
-        # state == -1 - спросить о закрытии и о сохранении
-        # state == 0 - закрыть без сохранения
-        # state == 1 - закрыть с сохранением
+        """Закрывает редактор/closing redactor"""
+        # state == -1 - спросить о закрытии и о сохранении/ ask about closing and saving
+        # state == 0 - закрыть без сохранения/ close without saving
+        # state == 1 - закрыть с сохранением/ close with saving
         if state == -1:
             if tk.messagebox.askyesno("close?", "Close window?", parent=self.root):
                 if tk.messagebox.askyesno("save?", "Save changes?", parent=self.root):
@@ -144,12 +144,12 @@ class TextEditor:
                 state = -1
 
         if state == 0:
-            # не сохранить и закрыть
+            # не сохранить и закрыть/ don't save and close
             self.root.destroy()
             self.block.text_editor = None
 
         if state == 1:
-            # сохраниить и закрыть
+            # сохраниить и закрыть/ save and close
             # self.block.text1 = self.textBox1.get('1.0', 'end')[:-1]
             # print('opening: '+str(self.block.data))
 

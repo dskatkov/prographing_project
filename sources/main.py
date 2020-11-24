@@ -10,36 +10,36 @@ import gp_canvas as gp_canvas
 from settings import *
 from utils import *
 
-# Профилирование памяти (из консоли)
+# Профилирование памяти (из консоли)/Profiling from memory
     # pip install memory_profiler 
-    # Рисование графика
+    # Рисование графика/graph drawing
         # pip install matplotlib
-# Профилирование памяти
+# Профилирование памяти/Memory profiling
 # pip install pympler
-# Граф ссылок
+# Граф ссылок/ link graph
     # pip install objgraph
-    # Для рисования графа
+    # Для рисования графа/drawing graph
         # pip install xdot
         # pip install graphvix
 
 def main():
-    # Создаем единственный экземпляр исходника, далее работать будем с ним
+    # Создаем единственный экземпляр исходника, далее работать будем с ним/ create the only source to work with it
     gp_source_file.SF = gp_source_file.SourceFile()
-    # Главное окно
+    # Главное окно/main window
     gp_ui.mainWindow = tk.Tk()
-    # Объект, умеющий рисовать наше поле
+    # Объект, умеющий рисовать наше поле/ object to draw the field
     gp_canvas.canvas = gp_canvas.Canvas()
-    # Инициализация UI (создание и расположение фреймов + обработчики мыши)
+    # Инициализация UI (создание и расположение фреймов + обработчики мыши)/ UI initialization (creation and placement of frames + handlers)
     gp_ui.ui_init(gp_ui.mainWindow)
-    # Указываем нашему холсту на tk.Canvas, на котором он будет рисовать
+    # Указываем нашему холсту на tk.Canvas, на котором он будет рисовать/ assign canvas to tk.canvas to draw on
     gp_canvas.canvas.master = gp_ui.canvas
-    # Цикл событий tkinter
+    # Цикл событий tkinter/ tkinter event loop
     gp_ui.mainWindow.mainloop()
 
 
 
 if __name__ == "__main__":
-    # Профилирование
+    # Профилирование/Profiling
     if profile:
         # from heartrate import trace, files
         # trace(files=files.all)
@@ -52,7 +52,7 @@ if __name__ == "__main__":
         from pympler import tracker
         memory_tracker = tracker.SummaryTracker()
         
-    # Лог дебага
+    # Лог дебага/ Debug log
     if debug_flag:
         debug_file = open('logs/########.log', 'wt')
         debug_init(debug_file)
@@ -60,13 +60,13 @@ if __name__ == "__main__":
 
     main()
 
-    # Лог дебага
+    # Лог дебага/ Debug log
     if debug_flag:
         debug_close()
 
-    # Профилирование
+    # Профилирование/profiling
     if profile:
-        # Граф ссылок (.dot создает, но не находит рендерер (хотя я его ставил))
+        # Граф ссылок (.dot создает, но не находит рендерер (хотя я его ставил))/graph of links
         # import objgraph
         # objgraph.show_refs(
         #     [
@@ -77,10 +77,10 @@ if __name__ == "__main__":
         #     filename='logs/refs-graph.png'
         # )
 
-        # Вывод количества новых бъектов
+        # Вывод количества новых бъектов/ output of the number of new objects
         memory_tracker.print_diff()
 
-        # Вывод в лог профилирование времени выполнения
+        # Вывод в лог профилирование времени выполнения/ output to profiling log worktime
         pr.disable()
         s = io.StringIO()
         sortby = SortKey.TIME # CALLS CUMULATIVE FILENAME LINE NAME NFL PCALLS STDNAME TIME

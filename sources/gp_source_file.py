@@ -11,13 +11,13 @@ SF = ...
 
 class SourceFile:
     """
-    Класс графической программы
-        max_id = 0 - максимальный id блоков
-        object_ids = {} - словарь ссылок на блоки
-        fileName = '' - файл для сохранение
-        buildName = '' - файл для составления текста программы
+    Класс графической программы/ class of grafical program
+        max_id = 0 - максимальный id блоков/ max block id
+        object_ids = {} - словарь ссылок на блоки {<id>:<блок>}/ dictionary of links to blocks {<id>:<block>}
+        fileName = '' - файл для сохранение/ File for saving
+        buildName = '' - файл для составления текста программы/ file for experting program
         data = 0 - subversion
-        lang = 'py' - язык составления программы
+        lang = 'py' - язык составления программы/language of export
     """
     def __init__(self):
         self.max_id = 0
@@ -29,7 +29,7 @@ class SourceFile:
 
 
     def save(self, fileName, save=1):
-        """Сохраняет в файл"""
+        """Сохраняет в файл/save into file"""
         self.data += 1
         s = ''
         s += str(self.data) + '\n'
@@ -49,7 +49,7 @@ class SourceFile:
 
 
     def open(self, fileName):
-        """Загружает из файла"""
+        """Загружает из файла/ load from file"""
         self.max_id = 0
         self.object_ids = {}
         self.fileName = fileName
@@ -65,7 +65,7 @@ class SourceFile:
         self.buildName = file.readline()[:-1]
         for line in file:
             if len(line.strip()) == 0 or line.strip()[0] == ';':
-                continue  # пустые строки и строки-комментарии пропускаем
+                continue  # пустые строки и строки-комментарии пропускаем/ leave empty and comment strings
             type = literal_eval(line)["type"]
             if type in allTypes:
                 Block(self, line.strip(), creating_type=1)
@@ -73,7 +73,7 @@ class SourceFile:
                 print(f'Unknown type of block! Line: "{line}"')
 
     def parents(self, id):
-        """Возвращает id всех блоков, для которых данный является дочерним"""
+        """Возвращает id всех блоков, для которых данный является дочерним/ return ids of all child blocks"""
         res = []
         for i, obj in self.object_ids.items():
             if id in obj.childs:
@@ -82,7 +82,7 @@ class SourceFile:
 
 
     def build(self, fileName, save=1):
-        """Составляет текст программы и сохраняет его в файл"""
+        """Составляет текст программы и сохраняет его в файл/ create program text and save it to file"""
 
         rootBlock = Block(self, type='op')
         for i, _ in self.object_ids.items():
@@ -104,15 +104,15 @@ class SourceFile:
 
 class Block:
     """
-    Класс блока
-    SF - SourceFile, в котором находится данный блок
-    text_editor - tk окно редактора данного блока
-    chosen - является ли блок выбран мышью для перетаскивания
+    Класс блока/ Block class
+    SF - SourceFile, в котором находится данный блок/ SourceFile of this block
+    text_editor - tk окно редактора данного блока/ tk redactor window of this block
+    chosen - является ли блок выбран мышью для перетаскивания/ is this block chosen by mose for movement?
     id - id
-    childs - список id дочерних блоков
-    pos - Point позиция блока на холсте
-    classname - тип блока строкой
-    data - словарь данных блока для подстановок
+    childs - список id дочерних блоков/ list of child's ids
+    pos - Point позиция блока на холсте/ position on the canvas in Point format
+    classname - тип блока строкой/ string of block type
+    data - словарь данных блока для подстановок/ dictionary of block data for inserting
     """
     #__slots__ = "classname", "id", "childs", "pos", "text"
     def __init__(self, SF, str='', type='?', creating_type=0, chosen=False):
@@ -120,8 +120,8 @@ class Block:
         self.text_editor = None
         self.chosen = chosen
         self.shift_id = None
-        # creating_type == 0 - создание нового элемента
-        # creating_type == 1 - парсинг элемента из файла
+        # creating_type == 0 - создание нового элемента/creation of new element
+        # creating_type == 1 - парсинг элемента из файла/ parcing from file
         if creating_type == 1:
             self.parseFromStr(str)
             self.SF.object_ids[self.id] = self
@@ -146,29 +146,29 @@ class Block:
 
 
     def delete(self):
-        """Удаляет ссылку на себя из SF и свой id из всех блоков"""
+        """Удаляет ссылку на себя из SF и свой id из всех блоков/ delete link to itself from SF and its id"""
         SF.object_ids.pop(self.id)
         for _, block in SF.object_ids.items():
             if self.id in block.childs:
                 block.childs.remove(self.id)
 
     def move(self, shift):
-        """Сдвигает блок на холсте"""
+        """Сдвигает блок на холсте/ move block on canvas"""
         self.pos = (self.pos + shift).round()
 
     def edit(self, master, canvas):
-        """Открывает редактор блока"""
+        """Открывает редактор блока/ open block redactor"""
         self.text_editor = master
         text_editor.TextEditor(master, self, canvas)
 
     def convertToStr(self):
-        """Конвертирует блок в строку-словарь"""
+        """Конвертирует блок в строку-словарь/ convert block into dictionary"""
         result = '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "data":'+str(self.data)+'}'
         result = result.replace('\n', '\\n')
         return result
 
     def parseFromStr(self, s):
-        """Распаковывает блок из строки-словаря"""
+        """Распаковывает блок из строки-словаря/ parce block from dictionary - string"""
         dct = literal_eval(s)
         self.classname = dct["type"]
         self.id = dct["id"]
@@ -177,7 +177,7 @@ class Block:
         self.data = dct["data"]
 
     def formatStr(self, s):
-        """Применяет к строке s все подстановки из self.data"""
+        """Применяет к строке s все подстановки из self.data/ implement all implements of self.data to the string"""
         res = s
         for key, val in self.data.items():
             if key in res:
@@ -185,11 +185,11 @@ class Block:
         return res
 
     def formatStrOp(self):
-        """Операторная форма formatStr"""
+        """Операторная форма formatStr/ operator form"""
         return lambda s: self.formatStr(s)
 
     def build(self, s, t='    '):
-        """Возвращает строку: текст программы, которую описывает данный блок"""
+        """Возвращает строку: текст программы, которую описывает данный блок/ return string: text of the program which block describe"""
         self.sortChilds()
 
         tab = 0
@@ -241,21 +241,21 @@ class Block:
         return s
 
     def sortChilds(self):
-        """Сортирует дочерние элементы блока по положению на холсте"""
+        """Сортирует дочерние элементы блока по положению на холсте/ sort child elements by placement on the canvas"""
         self.childs.sort(key=lambda id: self.SF.object_ids[id].pos)
 
     def addLink(self, child):
-        """Добавляет дочерний элемент"""
+        """Добавляет дочерний элемент/ add child"""
         if not (child in self.childs) and (child != self.id):
             self.childs.append(child)
 
     def delLink(self, child):
-        """Удаляет дочерний элемент"""
+        """Удаляет дочерний элемент/ delete child"""
         if child in self.childs:
             self.childs.remove(child)
 
     def parents(self):
-        """Возвращает id всех блоков, для которых данный является дочерним"""
+        """Возвращает id всех блоков, для которых данный является дочерним/Retern all parent blocks"""
         return self.SF.parents(self.id)
 
     def shift(self, shift, desc=0, shift_id=0):

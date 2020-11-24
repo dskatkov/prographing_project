@@ -14,38 +14,38 @@ class Canvas:
         self.link_creation = None
 
     def draw(self, SF):
-        """Рисует холст (блоки + линки)"""
-        # Очистка
+        """Рисует холст (блоки + линки)/ drawing canvas (blocks + links)"""
+        # Очистка/Cleaning
         self.SF = SF
         self.master.delete("all")
         self.master.create_rectangle(0, 0, 2000, 2000, fill=textBG)
 
-        # Линки
+        # Линки/ Links
         for _, block in SF.object_ids.items():
             for child in block.childs:
                 self.drawLink(block, SF.object_ids[child])
         if self.link_creation:
             self.drawLink(self.handling, self.link_creation)
 
-        # Блоки
+        # Блоки/Blocks
         for _, block in SF.object_ids.items():
             self.drawBlock(block)
 
-        # Подписи
+        # Подписи/Subscription
         for _, block in SF.object_ids.items():
             self.drawBlockText(block)
 
 
     def scale(self, pos):
-        """положение на холсте -> положение на экране"""
+        """положение на холсте -> положение на экране/ Placement on canvas -> placement on screen"""
         return (pos - self.viewpos) * self.viewzoom # vecMul(vecSum(pos, vecMul(self.viewpos, -1)), self.viewzoom) # (pos-viewpos)*zoom
 
     def unscale(self, pos):
-        """положение на экране -> положение на холсте"""
+        """положение на экране -> положение на холсте/ placement on screen -> placement on canvas"""
         return pos * (1 / self.viewzoom) + self.viewpos # vecSum(self.viewpos, vecMul(pos, 1/self.viewzoom)) # pos/zoom+viewpos
 
     def drawBlock(self, block):
-        """Рисует блок"""
+        """Рисует блок/ Drawing block"""
         x, y = self.scale(block.pos).tuple()
         r = blockR * self.viewzoom
 
@@ -69,6 +69,7 @@ class Canvas:
         self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
 
     def drawBlockText(self, block):
+        """делает подпись блока/Making block subscription"""
         x, y = self.scale(block.pos).tuple()
         r = blockR * self.viewzoom
         fontsize = round(font_size*self.viewzoom)
@@ -78,7 +79,7 @@ class Canvas:
 
 
     def drawLink(self, block, child):
-        """Рисует линк"""
+        """Рисует линк/ Drawing link"""
         x1, y1 = self.scale(block.pos).tuple()
         thickness = link_width * self.viewzoom
         if isinstance(child, Point):
@@ -86,7 +87,7 @@ class Canvas:
             color = linkColores['_']
         else:
             x2, y2 = self.scale(child.pos).tuple()
-            # Поиск наиболее подходящего цвета из списка
+            # Поиск наиболее подходящего цвета из списка/Search for appliable color from the list in settings module
             pair = block.classname + '_' + child.classname
             left = block.classname + '_'
             right = '_' + child.classname

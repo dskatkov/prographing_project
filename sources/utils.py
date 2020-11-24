@@ -24,6 +24,13 @@ class Point:
         """a - b"""
         return a + (-b)
 
+    def __truediv__(a, k):
+        """a * k"""
+        if k:
+            return Point(a.x/k, a.y/k)
+        else:
+            return Point(0, 0)
+
     def __str__(self):
         """str(self)"""
         return f'({self.x},{self.y})'
@@ -55,6 +62,14 @@ class Point:
     def round(self, s=1):
         """Округляет координаты до требуемой точности/ round to the necessary accuracy"""
         return Point(round(self.x/s)*s, round(self.y/s)*s)
+
+    def swap(self):
+        return Point(self.y, self.x)
+
+    def norm(self):
+        return self/self.abs()
+
+
 
 debug_log = ...
 def debug_init(file):

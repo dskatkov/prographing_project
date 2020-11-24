@@ -6,6 +6,8 @@
 linkColores = {
     "_": "#000000",
 
+	"creating_": "#ffff00",
+
     # "op_":"#000000",
     # "_op":"#000000",
     "op_op": "#ffffff",
@@ -43,6 +45,7 @@ linkColores = {
 
 # Цвета кружков блоков разного типа
 drawColores = {
+	'chosen': '#00ff00',
     "?": "#00ff00",
     '*': '#000000',
     "op": "#FFFFFF",

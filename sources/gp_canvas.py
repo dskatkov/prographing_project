@@ -19,12 +19,16 @@ class Canvas:
         self.master.delete("all")
         self.master.create_rectangle(0, 0, 2000, 2000, fill=textBG)
 
+        # Выбранный блок / Chosen block
+        if self.handling:
+            self.drawBlock(self.handling, chosen=1)
+
         # Линки/ Links
         for _, block in SF.object_ids.items():
             for child in block.childs:
                 self.drawLink(block, SF.object_ids[child])
         if self.link_creation:
-            self.drawLink(self.handling, self.link_creation)
+            self.drawLink(self.handling, self.link_creation, creating=1)
 
         # Блоки/Blocks
         for _, block in SF.object_ids.items():
@@ -43,7 +47,7 @@ class Canvas:
         """положение на экране -> положение на холсте/ placement on screen -> placement on canvas"""
         return pos * (1 / self.viewzoom) + self.viewpos # vecSum(self.viewpos, vecMul(pos, 1/self.viewzoom)) # pos/zoom+viewpos
 
-    def drawBlock(self, block):
+    def drawBlock(self, block, chosen=0):
         """Рисует блок/ Drawing block"""
         x, y = self.scale(block.pos).tuple()
         r = blockR * self.viewzoom
@@ -61,11 +65,12 @@ class Canvas:
         else:
             color = drawColores['?']
 
-
-        if block.chosen:
-            R = chosen_R * r
-            self.master.create_oval((x - R), (y - R), (x + R), (y + R), fill=chosenCol)
-        self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
+        if chosen:
+            chosen_color = drawColores['chosen']
+            R = chosen_R * self.viewzoom
+            self.master.create_oval((x - R), (y - R), (x + R), (y + R), fill=chosen_color)
+        else:
+            self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
 
     def drawBlockText(self, block):
         """делает подпись блока/Making block subscription"""
@@ -77,47 +82,49 @@ class Canvas:
             self.master.create_text(x + 1.5 * r, y - fontsize, text=text, anchor='w', font="Consolas "+str(fontsize))
 
 
-    def drawLink(self, block, child):
+    def drawLink(self, block, child, creating=0):
         """Рисует линк/ Drawing link"""
-        x1, y1 = self.scale(block.pos).tuple()
-        thickness = link_width * self.viewzoom
-        if isinstance(child, Point):
-            x2, y2 = child.tuple()
-            color = linkColores['_']
-        else:
-            x2, y2 = self.scale(child.pos).tuple()
-            # Поиск наиболее подходящего цвета из списка/Search for appliable color from the list in settings module
-            pair = block.classname + '_' + child.classname
-            left = block.classname + '_'
-            right = '_' + child.classname
-            if pair in linkColores:
-                color = linkColores[pair]
-            elif left in linkColores:
-                color = linkColores[left]
-            elif right in linkColores:
-                color = linkColores[right]
-            else:
-                color = linkColores['_']
 
-        self.master.create_line(x1, y1, x2, y2, fill=color, width=thickness)
-        dist = ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
-        if dist == 0:
+        p1 = self.scale(block.pos)
+        thickness = link_width * self.viewzoom
+        if creating:
+            p2 = child
+            color = getDictValByPathDef(linkColores, '<1>_',  'creating', default='')
+        else:
+            p2 = self.scale(child.pos)
+            color = getDictValByPathDef(linkColores, '<1>_<2>',  block.classname, child.classname, default='')
+
+        if p1 == p2:
             return
-        l = arrow_length/dist*self.viewzoom
+
+        dist = (p1 - p2).abs()
+
+        l = arrow_length * self.viewzoom / dist
+        if not creating:
+            l *= dist / (dist - blockR * self.viewzoom)
+
         dif = (blockR * self.viewzoom) / dist
-        if not isinstance(child, Point):
-            x2, y2 = dif * x1 + (1 - dif) * x2, dif * y1 + (1 - dif) * y2
-        x3, y3 = (1 - l) * x2 + l * x1, (1 - l) * y2 + l * y1
-        a = (x2 - x1)  # 1/A
-        b = (y1 - y2)  # 1/B
+        if not creating:
+            p2 = p2  + (p1 - p2) * dif
+
+        p3 = p2  - (p2 - p1) * l
+
+        delta = p2 - p1
+        delta.y *= -1
+        delta = delta.swap()
+
         w = arrow_width * self.viewzoom
         # нормирование/normalizing
-        n = 1 / (a ** 2 + b ** 2) ** 0.5
-        w *= n
-        x4, x5 = x3 + w * b, x3 - w * b
-        y4, y5 = y3 + w * a, y3 - w * a
-        self.master.create_line(x2, y2, x4, y4, fill=color, width=thickness)
-        self.master.create_line(x2, y2, x5, y5, fill=color, width=thickness)
+        p4 = p3 + delta.norm() * w
+        p5 = p3 - delta.norm() * w
+
+        line_end = (p4 + p5) / 2
+        line_end += (line_end - p1).norm() # костыль для отсутствия просвета
+
+        self.master.create_line(*p1.tuple(), *line_end.tuple(), fill=color, width=thickness)
+        self.master.create_polygon([*p2.tuple(), *p4.tuple(), *p5.tuple()], fill=color)
+
+
 
 
 if __name__ == "__main__":

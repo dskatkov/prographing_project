@@ -14,11 +14,9 @@ spaceFG = '#ffffff'
 stateBG = '#404040'
 stateFG = '#ffffff'
 
-chosenCol = '#00ff00'
-
 # Радиус блока (1 - размер клетки)/Block radius, 1 is a cell size
 blockR = 0.4
-chosen_R = 1.4
+chosen_R = 0.6
 link_width = 0.06
 font_size = 0.20
 # Расстояние на котором нажатие мышью удаляет линию/Distance on which mouse click deletes the link
@@ -26,9 +24,9 @@ nearToLine = 0.05
 # Чуствительность зума колесом мыши/Sensetiveness of zoom by wheel
 zoomSpeed = 0.1
 # ширина стрелки/ arrow width
-arrow_width = blockR*0.4
+arrow_width = 0.15
 # длина стрелки/ arrow length
-arrow_length = blockR*0.7
+arrow_length = 0.2
 
 # Флаг дебага/Debug flag
 debug_flag = 1

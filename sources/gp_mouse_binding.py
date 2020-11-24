@@ -140,13 +140,15 @@ def b3_motion(click):
     """движение с зажатой правой клавишей/ movement with pressed right button"""
     b3_state = 'm'
     debug_return (f'right motion:({click.x},{click.y})')
-    clickpos = Point(click.x, click.y)
     # сдвиг блоков/block movement
     if canvas.canvas.handling:
-        newpos = unscale(clickpos).round()
-        shift = newpos - canvas.canvas.handling.pos
-        canvas.canvas.handling.shift(shift, desc=descend_moving, shift_id=uniform(0,1))
-        canvas.canvas.touch = clickpos
+        clickpos = Point(click.x, click.y)
+        block = find_block(scale(unscale(clickpos).round()))
+        if not block:
+            newpos = unscale(clickpos).round()
+            shift = newpos - canvas.canvas.handling.pos
+            canvas.canvas.handling.shift(shift, desc=descend_moving, shift_id=uniform(0,1))
+            canvas.canvas.touch = clickpos
     redraw()
 
 def b1_release(click):

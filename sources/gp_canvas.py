@@ -1,4 +1,3 @@
-import gp_source_file as source_file
 from settings import *
 from utils import *
 

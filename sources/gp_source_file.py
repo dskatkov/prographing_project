@@ -1,6 +1,3 @@
-import tkinter as tk
-import tkinter.ttk
-from os import getcwd
 from ast import literal_eval
 
 import text_editor

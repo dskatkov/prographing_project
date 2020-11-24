@@ -5,7 +5,7 @@ import tkinter.font
 
 from settings import *
 from utils import *
-import gp_canvas as gp_canvas
+import gp_canvas as canvas
 
 def getText(textArea):
     """Возвращает содержимое поля/ Return ffield containment"""

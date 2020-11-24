@@ -1,8 +1,8 @@
 import tkinter as tk
-import tkinter.font
+#import tkinter.font
 import time
 
-import gp_source_file as gp_source_file
+import gp_source_file as source_file
 import gp_canvas as gp_canvas
 from gp_mouse_binding import *
 from settings import *
@@ -19,15 +19,15 @@ def saveAs(root):
     else:
         if not fileName.endswith('.vrc'):
             fileName += '.vrc'
-        gp_source_file.SF.save(fileName)
+        source_file.SF.save(fileName)
         mainWindow.title(fileName)
 
 def save(root):
     """Обработчик кнопки save/ handler of save button"""
-    if gp_source_file.SF.fileName == '':
+    if source_file.SF.fileName == '':
         saveAs(root)
     else:
-        gp_source_file.SF.save(gp_source_file.SF.fileName)
+        source_file.SF.save(source_file.SF.fileName)
 
 def open(root):
     """Обработчик кнопки open/ handler of open button"""
@@ -37,21 +37,21 @@ def open(root):
     else:
         if not fileName.endswith('.vrc'):
             fileName += '.vrc'
-        gp_source_file.SF.open(fileName)
-        gp_canvas.canvas.draw(gp_source_file.SF)
+        source_file.SF.open(fileName)
+        gp_canvas.canvas.draw(source_file.SF)
         mainWindow.title(fileName)
 
 def build(root):
 
     """Обработчик кнопки build/ handler of build button"""
-    if gp_source_file.SF.buildName == '':
+    if source_file.SF.buildName == '':
         buildAs(root)
     else:
-        gp_source_file.SF.build(gp_source_file.SF.buildName)
+        source_file.SF.build(source_file.SF.buildName)
 
 def buildAs(root):
     """Обработчик кнопки build as/ handler of build as button"""
-    ext = '.b.'+gp_source_file.SF.lang
+    ext = '.b.'+source_file.SF.lang
     fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ext)]).show()
     if fileName == '':
         return
@@ -59,12 +59,12 @@ def buildAs(root):
         debug_return ('Building to '+fileName)
         if not fileName.endswith(ext):
             fileName += ext
-        gp_source_file.SF.build(fileName)
+        source_file.SF.build(fileName)
 
 def newFile(root=None):
     """Обработчик кнопки new file/ handler of new file button"""
-    gp_source_file.SF = gp_source_file.SourceFile()
-    gp_canvas.canvas.draw(gp_source_file.SF)
+    source_file.SF = source_file.SourceFile()
+    gp_canvas.canvas.draw(source_file.SF)
     mainWindow.title('new file')
 
 consoleWindow = None
@@ -86,6 +86,9 @@ def openConsole(root):
 def ui_init(root):
     """Инициализирует UI: кнопки + обработчики/ initialize user interface: buttons + handlers"""
     global canvasFrame, panelFrame, stateFrame, canvas, mainWindow, chosen
+    # Объект, умеющий рисовать наше поле/ object to draw the field
+    gp_canvas.canvas = gp_canvas.Canvas()
+
     root.minsize(200, 200)
 
     root.columnconfigure(0, weight=1, minsize=200)
@@ -109,12 +112,12 @@ def ui_init(root):
         ('save as', lambda: saveAs(root)),
         ('build', lambda: build(root)),
         ('build as', lambda: buildAs(root)),
-        ('canvas redraw', lambda: gp_canvas.canvas.draw(gp_source_file.SF)),
     ]
     if debug_flag:
         panelFrameButtons += [
-        ('build log', lambda: gp_source_file.SF.build('', 0)),
-        ('save log', lambda: gp_source_file.SF.save('', 0)),
+        ('canvas redraw', lambda: gp_canvas.canvas.draw(source_file.SF)),
+        ('build log', lambda: source_file.SF.build('', 0)),
+        ('save log', lambda: source_file.SF.save('', 0)),
         ('console', lambda: openConsole(root)),
     ]
 
@@ -144,6 +147,8 @@ def ui_init(root):
     root.config(menu=mainMenu)
 
     assign_canvasFrame(canvasFrame)
+    # Указываем нашему холсту на tk.Canvas, на котором он будет рисовать/ assign canvas to tk.canvas to draw on
+    gp_canvas.canvas.master = canvas
 
     root.state('zoomed')
 

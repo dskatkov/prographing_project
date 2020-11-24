@@ -4,12 +4,13 @@ import tkinter.messagebox
 import tkinter.font
 import os
 
-import gp_source_file as gp_source_file
-import gp_ui as gp_ui
-import gp_canvas as gp_canvas
+import gp_source_file as source_file
+import gp_ui as ui
+import gp_canvas as canvas
 from settings import *
 from utils import *
 
+# Используемые библиотеки: # TODO: вынести в отдельный файл
 # Профилирование памяти (из консоли)/Profiling from memory
     # pip install memory_profiler 
     # Рисование графика/graph drawing
@@ -23,20 +24,14 @@ from utils import *
         # pip install graphvix
 
 def main():
-    # Создаем единственный экземпляр исходника, далее работать будем с ним/ create the only source to work with it
-    gp_source_file.SF = gp_source_file.SourceFile()
     # Главное окно/main window
-    gp_ui.mainWindow = tk.Tk()
-    # Объект, умеющий рисовать наше поле/ object to draw the field
-    gp_canvas.canvas = gp_canvas.Canvas()
+    ui.mainWindow = tk.Tk()
     # Инициализация UI (создание и расположение фреймов + обработчики мыши)/ UI initialization (creation and placement of frames + handlers)
-    gp_ui.ui_init(gp_ui.mainWindow)
-    # Указываем нашему холсту на tk.Canvas, на котором он будет рисовать/ assign canvas to tk.canvas to draw on
-    gp_canvas.canvas.master = gp_ui.canvas
+    ui.ui_init(ui.mainWindow)
+    # Создание нового файла (инициализация source_file.SF)
+    ui.newFile()
     # Цикл событий tkinter/ tkinter event loop
-    gp_ui.mainWindow.mainloop()
-
-
+    ui.mainWindow.mainloop()
 
 if __name__ == "__main__":
     # Профилирование/Profiling
@@ -70,9 +65,9 @@ if __name__ == "__main__":
         # import objgraph
         # objgraph.show_refs(
         #     [
-        #         gp_source_file.SF, 
-        #         gp_ui.mainWindow, 
-        #         gp_canvas.canvas,
+        #         source_file.SF, 
+        #         ui.mainWindow, 
+        #         canvas.canvas,
         #     ], 
         #     filename='logs/refs-graph.png'
         # )

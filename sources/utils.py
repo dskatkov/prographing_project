@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from settings import *
-from gp_block_types import *
+from gp_block_manager import *
 
 class Point:
     """Класс точки-вектора/ class of a point-vector"""

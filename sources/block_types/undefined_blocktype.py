@@ -1,0 +1,28 @@
+t_undefined = {"?": {
+    "canvas": {
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"Undefined type",
+        },
+    },
+    "edit": {
+        '*': {
+            '<class>': {
+                'header': 'type',
+                'type': 'singleline',
+            },
+        },
+    },
+    "build": {
+        "*": {
+            "incTab": 0,
+            "hasPrefix": 0,
+            "prefix": "",
+            "hasPostfix": 0,
+            "postfix": "",
+            "multiline": 0,
+        },
+    },
+    'langs': ['*'],
+}}

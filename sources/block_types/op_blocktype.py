@@ -1,0 +1,32 @@
+t_op = {"op": {
+    "canvas": {
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"<desc>",
+        },
+    },
+    "edit": {
+        '*': {
+            "<desc>": {
+                "header": "",
+                "type": "invisible",
+            },
+            '<1>': {
+                "header": '',
+                'type': 'multiline',
+            },
+        },
+    },
+    "build": {
+        "*": {
+            "incTab": 0,
+            "hasPrefix": 1,
+            "prefix": "<1>",
+            "hasPostfix": 0,
+            "postfix": "",
+            "multiline": 1,
+        },
+    },
+    'langs': ['*'],
+}}

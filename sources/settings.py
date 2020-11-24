@@ -33,7 +33,7 @@ debug_flag = 1
 debug_to_console = 0
 
 # Флаг профилирования/Profiling flag
-profile = 0
+profile = 1
 
 openEditorAfterCreating = 1
 

@@ -8,6 +8,7 @@ from settings import *
 from utils import *
 import gp_source_file as source_file
 import gp_canvas as canvas
+from gp_block_manager import *
 
 scale = lambda pos: canvas.canvas.scale(pos)
 unscale = lambda pos: canvas.canvas.unscale(pos)

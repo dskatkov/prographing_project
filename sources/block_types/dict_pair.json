@@ -1,22 +1,22 @@
-t_dict_long_pair = {"dict_long_pair": {
+{"dict_long_pair": {
     "canvas": {
-        '*': {
+        "*": {
             "image": "",
             "tooltip": "dict_long_pair",
-            "desc":"dict_long_pair",
-        },
+            "desc":"dict_long_pair"
+        }
     },
     "edit": {
-        '*': {
+        "*": {
             "<desc>": {
                 "header": "",
-                "type": "invisible",
+                "type": "invisible"
             },
-            '<1>': {
-                "header": 'key',
-                'type': 'singleline',
-            },
-        },
+            "<1>": {
+                "header": "key",
+                "type": "singleline"
+            }
+        }
     },
     "build": {
         "*": {
@@ -25,8 +25,8 @@ t_dict_long_pair = {"dict_long_pair": {
             "prefix": "<1>: ",
             "hasPostfix": 1,
             "postfix": ",",
-            "multiline": 0,
-        },
+            "multiline": 0
+        }
     },
-    'langs': ['py'],
+    "langs": ["py"]
 }}

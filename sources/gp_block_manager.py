@@ -1,3 +1,8 @@
+import json
+import os
+
+from utils import dictMerge
+
 # Цвета соединяющих линий
 # A_B = A-->B
 # A_  = A-->*
@@ -6,7 +11,7 @@
 linkColores = {
     "_": "#000000",
 
-	"creating_": "#ffff00",
+    "creating_": "#ffff00",
 
     # "op_":"#000000",
     # "_op":"#000000",
@@ -45,7 +50,7 @@ linkColores = {
 
 # Цвета кружков блоков разного типа
 drawColores = {
-	'chosen': '#00ff00',
+    'chosen': '#00ff00',
     "?": "#00ff00",
     '*': '#000000',
     "op": "#FFFFFF",
@@ -80,32 +85,34 @@ languagePrePostfix = {
     },
 }
 
+type_list = [
+    'undefined',
+    'empty', 
+    'op', 
 
+    'if', 
+    'else', 
+    'elif',
+
+    'for', 
+    'class', 
+    'fun', 
+
+    'dict', 
+    'dict_long_pair', 
+    'dict_pair', 
+]
 # Описания типов блоков
-allTypes = {}
+def json_load():
+    allTypes = {}
+    for type in type_list:
+        fp = open(f'block_types/{type}.json', 'rt')
+        obj = json.load(fp)
+        fp.close()
+        allTypes = dictMerge(allTypes, obj)
+    return allTypes
 
-from sources.block_types.empty_blocktype import *
-allTypes.update(t_empty)
-from sources.block_types.undefined_blocktype import *
-allTypes.update(t_undefined)
-from sources.block_types.op_blocktype import *
-allTypes.update(t_op)
-from sources.block_types.if_blocktype import *
-allTypes.update(t_if)
-from sources.block_types.elif_blocktype import *
-allTypes.update(t_elif)
-from sources.block_types.else_blocktype import *
-allTypes.update(t_else)
-from sources.block_types.for_blocktype import *
-allTypes.update(t_for)
-from sources.block_types.fun_blocktype import *
-allTypes.update(t_fun)
-from sources.block_types.class_blocktype import *
-allTypes.update(t_class)
-from sources.block_types.dict_blocktype import *
-allTypes.update(t_dict)
-from sources.block_types.dict_pair_blocktype import *
-allTypes.update(t_dict_pair)
-from sources.block_types.dict_long_pair_blocktype import *
-allTypes.update(t_dict_long_pair)
+allTypes = json_load()
+
+# print(json.dumps(allTypes, indent=4))
 

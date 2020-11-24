@@ -1,18 +1,18 @@
-t_else = {"else": {
+{"else": {
     "canvas": {
-        '*': {
+        "*": {
             "image": "",
             "tooltip": "",
-            "desc":"else",
-        },
+            "desc":"else"
+        }
     },
     "edit": {
-        '*': {
+        "*": {
             "<desc>": {
                 "header": "",
-                "type": "invisible",
-            },
-        },
+                "type": "invisible"
+            }
+        }
     },
     "build": {
         "*": {
@@ -21,12 +21,12 @@ t_else = {"else": {
             "prefix": "else {",
             "hasPostfix": 1,
             "postfix": "}",
-            "multiline": 0,
+            "multiline": 0
         },
-        'py': {
-            'prefix': 'else:',
-            'hasPostfix': 0,
+        "py": {
+            "prefix": "else:",
+            "hasPostfix": 0
         }
     },
-    'langs': ['py'],
+    "langs": ["py"]
 }}

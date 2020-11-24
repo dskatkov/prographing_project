@@ -1,14 +1,15 @@
-t_empty = {"*": {
+{"*": 
+{
     "canvas": {
-        '*': {
+        "*": {
             "image": "",
             "tooltip": "",
-            "desc":"",
-        },
+            "desc":""
+        }
     },
     "edit": {
-        '*': {
-        },
+        "*": {
+        }
     },
     "build": {
         "*": {
@@ -17,8 +18,9 @@ t_empty = {"*": {
             "prefix": "",
             "hasPostfix": 0,
             "postfix": "",
-            "multiline": 0,
-        },
+            "multiline": 0
+        }
     },
-    'langs': ['*'],
-}}
+    "langs": ["*"]
+}
+}

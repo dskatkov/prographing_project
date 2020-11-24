@@ -1,22 +1,23 @@
-t_op = {"op": {
+{
+	"op": {
     "canvas": {
-        '*': {
+        "*": {
             "image": "",
             "tooltip": "",
-            "desc":"<desc>",
-        },
+            "desc":"<desc>"
+        }
     },
     "edit": {
-        '*': {
+        "*": {
             "<desc>": {
                 "header": "",
-                "type": "invisible",
+                "type": "invisible"
             },
-            '<1>': {
-                "header": '',
-                'type': 'multiline',
-            },
-        },
+            "<1>": {
+                "header": "",
+                "type": "multiline"
+            }
+        }
     },
     "build": {
         "*": {
@@ -25,8 +26,9 @@ t_op = {"op": {
             "prefix": "<1>",
             "hasPostfix": 0,
             "postfix": "",
-            "multiline": 1,
-        },
+            "multiline": 1
+        }
     },
-    'langs': ['*'],
-}}
+    "langs": ["*"]
+	}
+}

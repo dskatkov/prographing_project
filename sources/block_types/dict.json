@@ -1,14 +1,14 @@
-t_dict = {"dict": {
+{"dict": {
     "canvas": {
-        '*': {
+        "*": {
             "image": "",
             "tooltip": "dict",
-            "desc":"dict",
-        },
+            "desc":"dict"
+        }
     },
     "edit": {
-        '*': {
-        },
+        "*": {
+        }
     },
     "build": {
         "*": {
@@ -17,8 +17,8 @@ t_dict = {"dict": {
             "prefix": "{",
             "hasPostfix": 1,
             "postfix": "}",
-            "multiline": 0,
-        },
+            "multiline": 0
+        }
     },
-    'langs': ['py'],
+    "langs": ["py"]
 }}

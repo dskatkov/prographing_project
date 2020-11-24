@@ -78,7 +78,7 @@ if __name__ == "__main__":
         # Вывод в лог профилирование времени выполнения/ output to profiling log worktime
         pr.disable()
         s = io.StringIO()
-        sortby = SortKey.CUMULATIVE # CALLS CUMULATIVE FILENAME LINE NAME NFL PCALLS STDNAME TIME
+        sortby = SortKey.FILENAME # CALLS CUMULATIVE FILENAME LINE NAME NFL PCALLS STDNAME TIME
         ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
         ps.print_stats()
         file = open('logs/time_profiling.log', 'wt')

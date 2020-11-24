@@ -1,5 +1,6 @@
 from settings import *
 from utils import *
+from gp_block_manager import *
 
 canvas = ...
 

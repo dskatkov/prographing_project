@@ -3,6 +3,7 @@ from ast import literal_eval
 import text_editor
 from settings import *
 from utils import *
+from gp_block_manager import *
 
 SF = ...
 
@@ -68,6 +69,9 @@ class SourceFile:
                 Block(self, line.strip(), creating_type=1)
             else:
                 print(f'Unknown type of block! Line: "{line}"')
+                raise Exception
+                print(allTypes)
+                # allTypes = {}
 
     def parents(self, id):
         """Возвращает id всех блоков, для которых данный является дочерним/ return ids of all child blocks"""
@@ -81,7 +85,7 @@ class SourceFile:
     def build(self, fileName, save=1):
         """Составляет текст программы и сохраняет его в файл/ create program text and save it to file"""
 
-        rootBlock = Block(self, type='op')
+        rootBlock = Block(self, type='*')
         for i, _ in self.object_ids.items():
             if not self.parents(i):
                 rootBlock.addLink(i)

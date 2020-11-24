@@ -1,7 +1,6 @@
 import tkinter as tk
 
 from settings import *
-from gp_block_manager import *
 
 class Point:
     """Класс точки-вектора/ class of a point-vector"""
@@ -293,6 +292,10 @@ def getDictValByPathDef(d, form, *args, braces='<>', default='*'):
         if v != ...:
             res = v
         n += 1
+    if res == ...:
+        print(f'dict: {d} form: {form} args: {args}')
+        raise Exception
+        return None
     return res
 
 def distance_to_line(begin, end, point):

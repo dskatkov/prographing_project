@@ -7,6 +7,7 @@ import gp_canvas as gp_canvas
 from gp_mouse_binding import *
 from settings import *
 from utils import *
+from gp_block_manager import *
 
 # canvas - tk.Canvas
 canvasFrame = panelFrame = stateFrame = canvas = mainWindow = ...

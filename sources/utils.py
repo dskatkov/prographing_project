@@ -1,7 +1,5 @@
 import tkinter as tk
 
-from numba import jit
-
 from settings import *
 from gp_block_types import *
 

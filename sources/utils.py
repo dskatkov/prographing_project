@@ -1,4 +1,7 @@
 import tkinter as tk
+
+from numba import jit
+
 from settings import *
 from gp_block_types import *
 
@@ -15,10 +18,39 @@ class Point:
     def __mul__(a, k):
         """a * k"""
         return Point(a.x*k, a.y*k)
+    
+    def __imul__(self, k):
+        self.x *= k
+        self.y *= k
+        return self
+
+    def __iadd__(self, other):
+        self.x += other.x
+        self.y += other.y
+        return self
+
+    # def __ineg__(self):
+    #     self.x *= -1
+    #     self.y *= -1
+
+    def __isub__(self, other):
+        self.x -= other.x
+        self.y -= other.y
+        return self
+
+    def __idiv__(self, k):
+        """a * k"""
+        if k:
+            self.x /= k
+            self.y /= k
+        else:
+            self.x = 0
+            self.y = 0
+        return self
 
     def __neg__(a):
         """-a"""
-        return a*(-1)
+        return a * (-1)
 
     def __sub__(a, b):
         """a - b"""
@@ -49,11 +81,16 @@ class Point:
 
     def abs(self):
         """Длина вектора/vector length"""
-        return (self.x ** 2 + self.y ** 2) ** (1/2)
+        return (self.x ** 2 + self.y ** 2) ** 0.5
 
     def fromTuple(self, tup):
         """Создает Point из кортежа/ create point out of tuple"""
-        return Point(tup[0], tup[1])
+        return Point(*tup)
+
+    def set(self, x, y):
+        self.x = x
+        self.y = y
+        return self
 
     def tuple(self):
         """Создает кортеж из Point/ create tuple out of point"""
@@ -66,8 +103,65 @@ class Point:
     def swap(self):
         return Point(self.y, self.x)
 
-    def norm(self):
-        return self/self.abs()
+    def norm(self, k=1):
+        return self / (self.abs()/k)
+
+    def dist(self, other):
+        return ((self.x-other.x)**2+(self.y-other.y)**2)**0.5
+
+    def setInPlace(self, x, y):
+        self.x = x
+        self.y = y
+        return self
+
+    def sumInPlace(self, other):
+        self.x += other.x
+        self.y += other.y
+        return self
+
+    def mulInPlace(self, k):
+        self.x *= k
+        self.y *= k
+        return self
+
+    def negInPlace(self, other):
+        self.x *= -1
+        self.y *= -1
+        return self
+
+    def subInPlace(self, other):
+        self.x -= other.x
+        self.y -= other.y
+        return self
+
+    def divInPlace(self, k):
+        """a * k"""
+        if k:
+            self.x /= k
+            self.y /= k
+        else:
+            self.x = 0
+            self.y = 0
+        return self
+
+    def roundInPlace(self, s=1):
+        """Округляет координаты до требуемой точности/ round to the necessary accuracy"""
+        self.x = round(self.x/s)*s,
+        self.y = round(self.y/s)*s
+        return self
+
+    def swapInPlace(self):
+        self.x, self.y = self.y, self.x
+        return self
+
+
+    def normInPlace(self):
+        self.divInPlace(self.abs())
+        return self
+
+    def copy(self):
+        return Point(self.x, self.y)
+
 
 
 

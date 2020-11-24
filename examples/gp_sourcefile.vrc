@@ -1,77 +1,77 @@
-2
+3
 py
 C:/GitHub/prographing_project/examples/gp_sourcefile.b.py
-{"type":"class", "id":0, "childs":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 70, 86], "pos":(-4,5), "data":{'<desc>': 'class Block', '<1>': 'Block', '<2>': ''}}
-{"type":"fun", "id":1, "childs":[35, 36, 89, 38], "pos":(-1,5), "data":{'<desc>': '__init__', '<1>': '__init__', '<2>': "self, SF, str = '', type = '_', creating_type = 0, chosen = False"}}
-{"type":"fun", "id":2, "childs":[17, 41], "pos":(-1,10), "data":{'<desc>': 'delete', '<1>': 'delete', '<2>': 'self'}}
-{"type":"fun", "id":3, "childs":[28], "pos":(-1,13), "data":{'<desc>': 'move', '<1>': 'move', '<2>': 'self, shift'}}
-{"type":"fun", "id":4, "childs":[18], "pos":(-1,15), "data":{'<desc>': 'edit', '<1>': 'edit', '<2>': 'self, master, canvas'}}
-{"type":"fun", "id":5, "childs":[26], "pos":(-1,17), "data":{'<desc>': 'convertToStr', '<1>': 'convertToStr', '<2>': 'self'}}
-{"type":"fun", "id":6, "childs":[27], "pos":(-1,19), "data":{'<desc>': 'parseFromStr', '<1>': 'parseFromStr', '<2>': 'self, s'}}
-{"type":"fun", "id":7, "childs":[19], "pos":(-1,21), "data":{'<desc>': 'formatStrOp', '<1>': 'formatStrOp', '<2>': 'self'}}
-{"type":"fun", "id":8, "childs":[20], "pos":(-1,23), "data":{'<desc>': 'formatStr', '<1>': 'formatStr', '<2>': 'self, s'}}
-{"type":"fun", "id":9, "childs":[90], "pos":(-1,25), "data":{'<desc>': 'build', '<1>': 'build', '<2>': 'self, s, tab'}}
-{"type":"fun", "id":10, "childs":[24], "pos":(-1,27), "data":{'<desc>': 'sortChilds', '<1>': 'sortChilds', '<2>': 'self'}}
-{"type":"fun", "id":11, "childs":[45], "pos":(-1,29), "data":{'<desc>': 'addLink', '<1>': 'addLink', '<2>': 'self, child'}}
-{"type":"fun", "id":12, "childs":[47], "pos":(-1,31), "data":{'<desc>': 'delLink', '<1>': 'delLink', '<2>': 'self, child'}}
-{"type":"fun", "id":13, "childs":[23], "pos":(-1,33), "data":{'<desc>': 'parents', '<1>': 'parents', '<2>': 'self'}}
-{"type":"op", "id":17, "childs":[], "pos":(2,10), "data":{'<desc>': '', '<1>': 'SF.object_ids.pop(self.id)'}}
-{"type":"op", "id":18, "childs":[], "pos":(2,15), "data":{'<desc>': '', '<1>': 'self.text_editor = master\ntext_editor.TextEditor(master, self, canvas)'}}
-{"type":"op", "id":19, "childs":[], "pos":(2,21), "data":{'<desc>': '', '<1>': 'return lambda s: self.formatStr(s)'}}
-{"type":"op", "id":20, "childs":[], "pos":(2,23), "data":{'<desc>': '', '<1>': 'res = s\nfor key, val in self.data.items():\n    if key in res:\n         res = res.replace(key, val)\nreturn res'}}
-{"type":"op", "id":23, "childs":[], "pos":(2,33), "data":{'<desc>': '', '<1>': 'return self.SF.parents(self.id)'}}
-{"type":"op", "id":24, "childs":[], "pos":(2,27), "data":{'<desc>': '', '<1>': 'self.childs.sort(key=lambda id: self.SF.object_ids[id].pos)'}}
-{"type":"op", "id":26, "childs":[], "pos":(2,17), "data":{'<desc>': '', '<1>': 'result = \'{"type":"\'+str(self.classname)+\'", "id":\'+str(self.id)+\', "childs":\'+str(self.childs)+\', "pos":\'+str(self.pos)+\', "data":\'+str(self.data)+\'}\'\nresult = result.replace(\'\\n\', \'\\\\n\')\nreturn result'}}
-{"type":"op", "id":27, "childs":[], "pos":(2,19), "data":{'<desc>': '', '<1>': 'dct = eval(s)\nself.classname = dct["type"]\nself.id = dct["id"]\nself.childs = dct["childs"]\nself.pos = Point().fromTuple(dct["pos"])\nself.data = dct["data"]'}}
-{"type":"op", "id":28, "childs":[], "pos":(2,13), "data":{'<desc>': '', '<1>': 'self.pos = (self.pos + shift).round()'}}
-{"type":"op", "id":35, "childs":[], "pos":(2,5), "data":{'<desc>': '', '<1>': 'self.SF = SF\nself.text_editor = None\nself.chosen = chosen'}}
-{"type":"if", "id":36, "childs":[39], "pos":(2,6), "data":{'<desc>': '', '<1>': 'creating_type == 1'}}
-{"type":"op", "id":38, "childs":[], "pos":(2,8), "data":{'<desc>': '', '<1>': 'self.SF.object_ids[self.id] = self'}}
-{"type":"op", "id":39, "childs":[], "pos":(5,6), "data":{'<desc>': '', '<1>': 'self.parseFromStr(str)\nself.SF.object_ids[self.id] = self\nself.SF.max_id = max(self.SF.max_id, self.id + 1)'}}
-{"type":"op", "id":40, "childs":[], "pos":(5,7), "data":{'<desc>': '', '<1>': 'max_id = len(SF.object_ids)\n\nself.id = SF.max_id\nself.childs = []\nself.pos = Point(0, 0)\nself.data = {}\nself.classname = type'}}
-{"type":"for", "id":41, "childs":[43], "pos":(2,11), "data":{'<desc>': '', '<1>': '_, block', '<2>': 'SF.object_ids.items()', '<3>': ''}}
-{"type":"if", "id":43, "childs":[44], "pos":(5,11), "data":{'<desc>': '', '<1>': 'self.id in block.childs'}}
-{"type":"op", "id":44, "childs":[], "pos":(8,11), "data":{'<desc>': '', '<1>': 'block.childs.remove(self.id)'}}
-{"type":"if", "id":45, "childs":[46], "pos":(2,29), "data":{'<desc>': '', '<1>': 'not (child in self.childs) and (child != self.id)'}}
-{"type":"op", "id":46, "childs":[], "pos":(5,29), "data":{'<desc>': '', '<1>': 'self.childs.append(child)'}}
-{"type":"if", "id":47, "childs":[48], "pos":(2,31), "data":{'<desc>': '', '<1>': 'child in self.childs'}}
-{"type":"op", "id":48, "childs":[], "pos":(5,31), "data":{'<desc>': '', '<1>': 'self.childs.remove(child)'}}
-{"type":"op", "id":49, "childs":[], "pos":(8,26), "data":{'<desc>': '', '<1>': 'self.sortChilds()\nbehavior = getSettingsByLang(self.SF.lang)[self.classname][\'build\']\nrepl = self.formatStrOp()\nprefix = repl(behavior["prefix"])'}}
-{"type":"if", "id":50, "childs":[56], "pos":(8,27), "data":{'<desc>': '', '<1>': 'behavior["hasPostfix"]'}}
-{"type":"if", "id":51, "childs":[55], "pos":(8,28), "data":{'<desc>': '', '<1>': 'behavior["multiline"]'}}
-{"type":"op", "id":52, "childs":[], "pos":(12,28), "data":{'<desc>': '', '<1>': "s += tab + line + '\\n'"}}
-{"type":"if", "id":53, "childs":[54], "pos":(8,29), "data":{'<desc>': '', '<1>': 'not behavior["multiline"]'}}
-{"type":"op", "id":54, "childs":[], "pos":(10,29), "data":{'<desc>': '', '<1>': "s += tab + prefix + '\\n'"}}
-{"type":"for", "id":55, "childs":[52], "pos":(10,28), "data":{'<desc>': '', '<1>': 'line', '<2>': "prefix.split('\\n')", '<3>': ''}}
-{"type":"op", "id":56, "childs":[], "pos":(10,27), "data":{'<desc>': '', '<1>': 'postfix = repl(behavior["postfix"])'}}
-{"type":"if", "id":57, "childs":[60], "pos":(8,30), "data":{'<desc>': '', '<1>': 'behavior["incTab"]'}}
-{"type":"for", "id":58, "childs":[59], "pos":(8,31), "data":{'<desc>': '', '<1>': 'child_id', '<2>': 'self.childs', '<3>': ''}}
-{"type":"op", "id":59, "childs":[], "pos":(10,31), "data":{'<desc>': '', '<1>': 'child = self.SF.object_ids[child_id]\ns, tab = child.build(s, tab)'}}
-{"type":"op", "id":60, "childs":[], "pos":(10,30), "data":{'<desc>': '', '<1>': "tab += '    '"}}
-{"type":"if", "id":61, "childs":[62], "pos":(8,32), "data":{'<desc>': '', '<1>': 'behavior["incTab"]'}}
-{"type":"op", "id":62, "childs":[], "pos":(10,32), "data":{'<desc>': '', '<1>': 'tab = tab[:-4]'}}
-{"type":"if", "id":63, "childs":[64, 88], "pos":(8,33), "data":{'<desc>': '', '<1>': 'behavior["hasPostfix"]'}}
-{"type":"if", "id":64, "childs":[66], "pos":(10,33), "data":{'<desc>': '', '<1>': 'behavior["multiline"]'}}
-{"type":"for", "id":66, "childs":[68], "pos":(12,33), "data":{'<desc>': '', '<1>': 'line', '<2>': "postfix.split('\\n')", '<3>': ''}}
-{"type":"op", "id":67, "childs":[], "pos":(12,34), "data":{'<desc>': '', '<1>': "s += tab + postfix + '\\n'"}}
-{"type":"op", "id":68, "childs":[], "pos":(14,33), "data":{'<desc>': '', '<1>': "s += tab + line + '\\n'"}}
-{"type":"op", "id":69, "childs":[], "pos":(8,34), "data":{'<desc>': '', '<1>': 'return s, tab'}}
-{"type":"fun", "id":70, "childs":[71, 87], "pos":(-1,35), "data":{'<desc>': '', '<1>': 'shift', '<2>': 'self, shift, desc=0, shift_id=0'}}
-{"type":"if", "id":71, "childs":[73], "pos":(1,35), "data":{'<desc>': '', '<1>': 'not desc'}}
-{"type":"op", "id":73, "childs":[], "pos":(5,35), "data":{'<desc>': '', '<1>': 'self.pos += shift'}}
-{"type":"if", "id":74, "childs":[73, 75, 76], "pos":(3,36), "data":{'<desc>': '', '<1>': 'shift_id != self.shift_id'}}
-{"type":"op", "id":75, "childs":[], "pos":(5,36), "data":{'<desc>': '', '<1>': 'self.shift_id = shift_id'}}
-{"type":"for", "id":76, "childs":[77], "pos":(5,37), "data":{'<desc>': '', '<1>': 'child', '<2>': 'self.childs', '<3>': ''}}
-{"type":"op", "id":77, "childs":[], "pos":(7,37), "data":{'<desc>': '', '<1>': 'self.SF.object_ids[child].shift(shift, desc, shift_id)'}}
-{"type":"op", "id":78, "childs":[], "pos":(5,9), "data":{'<desc>': '', '<1>': 'SF.object_ids[self.id] = self\nSF.max_id += 1\n# self.title = ""\n# self.tooltip = ""'}}
-{"type":"for", "id":79, "childs":[80], "pos":(5,8), "data":{'<desc>': '', '<1>': 'key, val', '<2>': "allTypes[self.classname]['edit'].items()", '<3>': ''}}
-{"type":"op", "id":80, "childs":[], "pos":(8,8), "data":{'<desc>': '', '<1>': "self.data[key] = ''"}}
-{"type":"op", "id":82, "childs":[], "pos":(1,39), "data":{'<desc>': '', '<1>': 'self.pos += shift'}}
-{"type":"if", "id":83, "childs":[84], "pos":(1,40), "data":{'<desc>': '', '<1>': 'desc'}}
-{"type":"for", "id":84, "childs":[85], "pos":(3,40), "data":{'<desc>': '', '<1>': 'child', '<2>': 'self.childs', '<3>': ''}}
-{"type":"op", "id":85, "childs":[], "pos":(5,40), "data":{'<desc>': '', '<1>': 'self.SF.object_ids[child].shift(shift, desc, shift_id)'}}
-{"type":"fun", "id":86, "childs":[82, 83], "pos":(-1,39), "data":{'<desc>': '', '<1>': 'shift_old', '<2>': 'self, shift, desc=0'}}
-{"type":"else", "id":87, "childs":[74], "pos":(1,36), "data":{'<desc>': ''}}
-{"type":"else", "id":88, "childs":[67], "pos":(10,34), "data":{'<desc>': ''}}
-{"type":"else", "id":89, "childs":[40, 79, 78], "pos":(2,7), "data":{'<desc>': ''}}
-{"type":"*", "id":90, "childs":[49, 50, 51, 53, 57, 58, 61, 63, 69], "pos":(8,25), "data":{}}
+{"type":"class", "id":0, "childs":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 70, 86], "pos":(3,3), "data":{'<desc>': 'class Block', '<1>': 'Block', '<2>': ''}}
+{"type":"fun", "id":1, "childs":[35, 36, 89, 38], "pos":(6,3), "data":{'<desc>': '__init__', '<1>': '__init__', '<2>': "self, SF, str = '', type = '_', creating_type = 0, chosen = False"}}
+{"type":"fun", "id":2, "childs":[17, 41], "pos":(6,8), "data":{'<desc>': 'delete', '<1>': 'delete', '<2>': 'self'}}
+{"type":"fun", "id":3, "childs":[28], "pos":(6,11), "data":{'<desc>': 'move', '<1>': 'move', '<2>': 'self, shift'}}
+{"type":"fun", "id":4, "childs":[18], "pos":(6,13), "data":{'<desc>': 'edit', '<1>': 'edit', '<2>': 'self, master, canvas'}}
+{"type":"fun", "id":5, "childs":[26], "pos":(6,15), "data":{'<desc>': 'convertToStr', '<1>': 'convertToStr', '<2>': 'self'}}
+{"type":"fun", "id":6, "childs":[27], "pos":(6,17), "data":{'<desc>': 'parseFromStr', '<1>': 'parseFromStr', '<2>': 'self, s'}}
+{"type":"fun", "id":7, "childs":[19], "pos":(6,19), "data":{'<desc>': 'formatStrOp', '<1>': 'formatStrOp', '<2>': 'self'}}
+{"type":"fun", "id":8, "childs":[20], "pos":(6,21), "data":{'<desc>': 'formatStr', '<1>': 'formatStr', '<2>': 'self, s'}}
+{"type":"fun", "id":9, "childs":[90], "pos":(6,23), "data":{'<desc>': 'build', '<1>': 'build', '<2>': 'self, s, tab'}}
+{"type":"fun", "id":10, "childs":[24], "pos":(6,25), "data":{'<desc>': 'sortChilds', '<1>': 'sortChilds', '<2>': 'self'}}
+{"type":"fun", "id":11, "childs":[45], "pos":(6,27), "data":{'<desc>': 'addLink', '<1>': 'addLink', '<2>': 'self, child'}}
+{"type":"fun", "id":12, "childs":[47], "pos":(6,29), "data":{'<desc>': 'delLink', '<1>': 'delLink', '<2>': 'self, child'}}
+{"type":"fun", "id":13, "childs":[23], "pos":(6,31), "data":{'<desc>': 'parents', '<1>': 'parents', '<2>': 'self'}}
+{"type":"op", "id":17, "childs":[], "pos":(9,8), "data":{'<desc>': '', '<1>': 'SF.object_ids.pop(self.id)'}}
+{"type":"op", "id":18, "childs":[], "pos":(9,13), "data":{'<desc>': '', '<1>': 'self.text_editor = master\ntext_editor.TextEditor(master, self, canvas)'}}
+{"type":"op", "id":19, "childs":[], "pos":(9,19), "data":{'<desc>': '', '<1>': 'return lambda s: self.formatStr(s)'}}
+{"type":"op", "id":20, "childs":[], "pos":(9,21), "data":{'<desc>': '', '<1>': 'res = s\nfor key, val in self.data.items():\n    if key in res:\n         res = res.replace(key, val)\nreturn res'}}
+{"type":"op", "id":23, "childs":[], "pos":(9,31), "data":{'<desc>': '', '<1>': 'return self.SF.parents(self.id)'}}
+{"type":"op", "id":24, "childs":[], "pos":(9,25), "data":{'<desc>': '', '<1>': 'self.childs.sort(key=lambda id: self.SF.object_ids[id].pos)'}}
+{"type":"op", "id":26, "childs":[], "pos":(9,15), "data":{'<desc>': '', '<1>': 'result = \'{"type":"\'+str(self.classname)+\'", "id":\'+str(self.id)+\', "childs":\'+str(self.childs)+\', "pos":\'+str(self.pos)+\', "data":\'+str(self.data)+\'}\'\nresult = result.replace(\'\\n\', \'\\\\n\')\nreturn result'}}
+{"type":"op", "id":27, "childs":[], "pos":(9,17), "data":{'<desc>': '', '<1>': 'dct = eval(s)\nself.classname = dct["type"]\nself.id = dct["id"]\nself.childs = dct["childs"]\nself.pos = Point().fromTuple(dct["pos"])\nself.data = dct["data"]'}}
+{"type":"op", "id":28, "childs":[], "pos":(9,11), "data":{'<desc>': '', '<1>': 'self.pos = (self.pos + shift).round()'}}
+{"type":"op", "id":35, "childs":[], "pos":(9,3), "data":{'<desc>': '', '<1>': 'self.SF = SF\nself.text_editor = None\nself.chosen = chosen'}}
+{"type":"if", "id":36, "childs":[39], "pos":(9,4), "data":{'<desc>': '', '<1>': 'creating_type == 1'}}
+{"type":"op", "id":38, "childs":[], "pos":(9,6), "data":{'<desc>': '', '<1>': 'self.SF.object_ids[self.id] = self'}}
+{"type":"op", "id":39, "childs":[], "pos":(12,4), "data":{'<desc>': '', '<1>': 'self.parseFromStr(str)\nself.SF.object_ids[self.id] = self\nself.SF.max_id = max(self.SF.max_id, self.id + 1)'}}
+{"type":"op", "id":40, "childs":[], "pos":(12,5), "data":{'<desc>': '', '<1>': 'max_id = len(SF.object_ids)\n\nself.id = SF.max_id\nself.childs = []\nself.pos = Point(0, 0)\nself.data = {}\nself.classname = type'}}
+{"type":"for", "id":41, "childs":[43], "pos":(9,9), "data":{'<desc>': '', '<1>': '_, block', '<2>': 'SF.object_ids.items()', '<3>': ''}}
+{"type":"if", "id":43, "childs":[44], "pos":(12,9), "data":{'<desc>': '', '<1>': 'self.id in block.childs'}}
+{"type":"op", "id":44, "childs":[], "pos":(15,9), "data":{'<desc>': '', '<1>': 'block.childs.remove(self.id)'}}
+{"type":"if", "id":45, "childs":[46], "pos":(9,27), "data":{'<desc>': '', '<1>': 'not (child in self.childs) and (child != self.id)'}}
+{"type":"op", "id":46, "childs":[], "pos":(12,27), "data":{'<desc>': '', '<1>': 'self.childs.append(child)'}}
+{"type":"if", "id":47, "childs":[48], "pos":(9,29), "data":{'<desc>': '', '<1>': 'child in self.childs'}}
+{"type":"op", "id":48, "childs":[], "pos":(12,29), "data":{'<desc>': '', '<1>': 'self.childs.remove(child)'}}
+{"type":"op", "id":49, "childs":[], "pos":(15,24), "data":{'<desc>': '', '<1>': 'self.sortChilds()\nbehavior = getSettingsByLang(self.SF.lang)[self.classname][\'build\']\nrepl = self.formatStrOp()\nprefix = repl(behavior["prefix"])'}}
+{"type":"if", "id":50, "childs":[56], "pos":(15,25), "data":{'<desc>': '', '<1>': 'behavior["hasPostfix"]'}}
+{"type":"if", "id":51, "childs":[55], "pos":(15,26), "data":{'<desc>': '', '<1>': 'behavior["multiline"]'}}
+{"type":"op", "id":52, "childs":[], "pos":(19,26), "data":{'<desc>': '', '<1>': "s += tab + line + '\\n'"}}
+{"type":"if", "id":53, "childs":[54], "pos":(15,27), "data":{'<desc>': '', '<1>': 'not behavior["multiline"]'}}
+{"type":"op", "id":54, "childs":[], "pos":(17,27), "data":{'<desc>': '', '<1>': "s += tab + prefix + '\\n'"}}
+{"type":"for", "id":55, "childs":[52], "pos":(17,26), "data":{'<desc>': '', '<1>': 'line', '<2>': "prefix.split('\\n')", '<3>': ''}}
+{"type":"op", "id":56, "childs":[], "pos":(17,25), "data":{'<desc>': '', '<1>': 'postfix = repl(behavior["postfix"])'}}
+{"type":"if", "id":57, "childs":[60], "pos":(15,28), "data":{'<desc>': '', '<1>': 'behavior["incTab"]'}}
+{"type":"for", "id":58, "childs":[59], "pos":(15,29), "data":{'<desc>': '', '<1>': 'child_id', '<2>': 'self.childs', '<3>': ''}}
+{"type":"op", "id":59, "childs":[], "pos":(17,29), "data":{'<desc>': '', '<1>': 'child = self.SF.object_ids[child_id]\ns, tab = child.build(s, tab)'}}
+{"type":"op", "id":60, "childs":[], "pos":(17,28), "data":{'<desc>': '', '<1>': "tab += '    '"}}
+{"type":"if", "id":61, "childs":[62], "pos":(15,30), "data":{'<desc>': '', '<1>': 'behavior["incTab"]'}}
+{"type":"op", "id":62, "childs":[], "pos":(17,30), "data":{'<desc>': '', '<1>': 'tab = tab[:-4]'}}
+{"type":"if", "id":63, "childs":[64, 88], "pos":(15,31), "data":{'<desc>': '', '<1>': 'behavior["hasPostfix"]'}}
+{"type":"if", "id":64, "childs":[66], "pos":(17,31), "data":{'<desc>': '', '<1>': 'behavior["multiline"]'}}
+{"type":"for", "id":66, "childs":[68], "pos":(19,31), "data":{'<desc>': '', '<1>': 'line', '<2>': "postfix.split('\\n')", '<3>': ''}}
+{"type":"op", "id":67, "childs":[], "pos":(19,32), "data":{'<desc>': '', '<1>': "s += tab + postfix + '\\n'"}}
+{"type":"op", "id":68, "childs":[], "pos":(21,31), "data":{'<desc>': '', '<1>': "s += tab + line + '\\n'"}}
+{"type":"op", "id":69, "childs":[], "pos":(15,32), "data":{'<desc>': '', '<1>': 'return s, tab'}}
+{"type":"fun", "id":70, "childs":[71, 87], "pos":(6,33), "data":{'<desc>': '', '<1>': 'shift', '<2>': 'self, shift, desc=0, shift_id=0'}}
+{"type":"if", "id":71, "childs":[73], "pos":(8,33), "data":{'<desc>': '', '<1>': 'not desc'}}
+{"type":"op", "id":73, "childs":[], "pos":(12,33), "data":{'<desc>': '', '<1>': 'self.pos += shift'}}
+{"type":"if", "id":74, "childs":[73, 75, 76], "pos":(10,34), "data":{'<desc>': '', '<1>': 'shift_id != self.shift_id'}}
+{"type":"op", "id":75, "childs":[], "pos":(12,34), "data":{'<desc>': '', '<1>': 'self.shift_id = shift_id'}}
+{"type":"for", "id":76, "childs":[77], "pos":(12,35), "data":{'<desc>': '', '<1>': 'child', '<2>': 'self.childs', '<3>': ''}}
+{"type":"op", "id":77, "childs":[], "pos":(14,35), "data":{'<desc>': '', '<1>': 'self.SF.object_ids[child].shift(shift, desc, shift_id)'}}
+{"type":"op", "id":78, "childs":[], "pos":(12,7), "data":{'<desc>': '', '<1>': 'SF.object_ids[self.id] = self\nSF.max_id += 1\n# self.title = ""\n# self.tooltip = ""'}}
+{"type":"for", "id":79, "childs":[80], "pos":(12,6), "data":{'<desc>': '', '<1>': 'key, val', '<2>': "allTypes[self.classname]['edit'].items()", '<3>': ''}}
+{"type":"op", "id":80, "childs":[], "pos":(15,6), "data":{'<desc>': '', '<1>': "self.data[key] = ''"}}
+{"type":"op", "id":82, "childs":[], "pos":(8,37), "data":{'<desc>': '', '<1>': 'self.pos += shift'}}
+{"type":"if", "id":83, "childs":[84], "pos":(8,38), "data":{'<desc>': '', '<1>': 'desc'}}
+{"type":"for", "id":84, "childs":[85], "pos":(10,38), "data":{'<desc>': '', '<1>': 'child', '<2>': 'self.childs', '<3>': ''}}
+{"type":"op", "id":85, "childs":[], "pos":(12,38), "data":{'<desc>': '', '<1>': 'self.SF.object_ids[child].shift(shift, desc, shift_id)'}}
+{"type":"fun", "id":86, "childs":[82, 83], "pos":(6,37), "data":{'<desc>': '', '<1>': 'shift_old', '<2>': 'self, shift, desc=0'}}
+{"type":"else", "id":87, "childs":[74], "pos":(8,34), "data":{'<desc>': ''}}
+{"type":"else", "id":88, "childs":[67], "pos":(17,32), "data":{'<desc>': ''}}
+{"type":"else", "id":89, "childs":[40, 79, 78], "pos":(9,5), "data":{'<desc>': ''}}
+{"type":"*", "id":90, "childs":[49, 50, 51, 53, 57, 58, 61, 63, 69], "pos":(15,23), "data":{}}

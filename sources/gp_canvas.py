@@ -41,11 +41,11 @@ class Canvas:
 
     def scale(self, pos):
         """положение на холсте -> положение на экране/ Placement on canvas -> placement on screen"""
-        return (pos - self.viewpos) * self.viewzoom # vecMul(vecSum(pos, vecMul(self.viewpos, -1)), self.viewzoom) # (pos-viewpos)*zoom
+        return (pos - self.viewpos) * self.viewzoom
 
     def unscale(self, pos):
         """положение на экране -> положение на холсте/ placement on screen -> placement on canvas"""
-        return pos * (1 / self.viewzoom) + self.viewpos # vecSum(self.viewpos, vecMul(pos, 1/self.viewzoom)) # pos/zoom+viewpos
+        return pos * (1 / self.viewzoom) + self.viewpos
 
     def drawBlock(self, block, chosen=0):
         """Рисует блок/ Drawing block"""
@@ -84,7 +84,6 @@ class Canvas:
 
     def drawLink(self, block, child, creating=0):
         """Рисует линк/ Drawing link"""
-
         p1 = self.scale(block.pos)
         thickness = link_width * self.viewzoom
         if creating:
@@ -97,28 +96,31 @@ class Canvas:
         if p1 == p2:
             return
 
-        dist = (p1 - p2).abs()
+        dist = p1.dist(p2)
 
         l = arrow_length * self.viewzoom / dist
         if not creating:
             l *= dist / (dist - blockR * self.viewzoom)
 
-        dif = (blockR * self.viewzoom) / dist
         if not creating:
-            p2 = p2  + (p1 - p2) * dif
+            dif = (blockR * self.viewzoom) / dist
+            p2 += (p1 - p2) * dif
 
-        p3 = p2  - (p2 - p1) * l
+        p3 = p2 - (p2 - p1) * l
 
-        delta = p2 - p1
+        delta = p2.copy()
+        delta -= p1
         delta.y *= -1
-        delta = delta.swap()
+        delta.swapInPlace()
 
         w = arrow_width * self.viewzoom
         # нормирование/normalizing
-        p4 = p3 + delta.norm() * w
-        p5 = p3 - delta.norm() * w
+        n = delta.norm() * w
+        p4 = p3 + n
+        p5 = p3 - n
 
-        line_end = (p4 + p5) / 2
+        line_end = (p4 + p5)
+        line_end /= 2
         line_end += (line_end - p1).norm() # костыль для отсутствия просвета
 
         self.master.create_line(*p1.tuple(), *line_end.tuple(), fill=color, width=thickness)

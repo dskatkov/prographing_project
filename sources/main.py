@@ -44,8 +44,8 @@ if __name__ == "__main__":
         pr = cProfile.Profile()
         pr.enable()
 
-        from pympler import tracker
-        memory_tracker = tracker.SummaryTracker()
+        # from pympler import tracker
+        # memory_tracker = tracker.SummaryTracker()
         
     # Лог дебага/ Debug log
     if debug_flag:
@@ -73,12 +73,12 @@ if __name__ == "__main__":
         # )
 
         # Вывод количества новых бъектов/ output of the number of new objects
-        memory_tracker.print_diff()
+        #memory_tracker.print_diff()
 
         # Вывод в лог профилирование времени выполнения/ output to profiling log worktime
         pr.disable()
         s = io.StringIO()
-        sortby = SortKey.TIME # CALLS CUMULATIVE FILENAME LINE NAME NFL PCALLS STDNAME TIME
+        sortby = SortKey.CUMULATIVE # CALLS CUMULATIVE FILENAME LINE NAME NFL PCALLS STDNAME TIME
         ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
         ps.print_stats()
         file = open('logs/time_profiling.log', 'wt')

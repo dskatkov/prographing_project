@@ -21,8 +21,8 @@ def redraw():
     """Перерисовывает холст/ Redrawing canvas"""
     canvas.canvas.draw(source_file.SF)
 
-def find_block(click):
-    return find_block_(click, canvas.canvas, source_file.SF)
+def find_block(click, mode=1):
+    return find_block_(click, canvas.canvas, source_file.SF, mode=mode)
 
 """Обработчики нажатия клавиш/ Mouse and keys handlers"""
 

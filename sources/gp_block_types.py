@@ -212,6 +212,44 @@ t_if = {"if": {
 }}
 allTypes.update(t_if)
 
+t_elif = {"elif": {
+    "canvas": {
+        '*': {
+            "image": "",
+            "tooltip": "",
+            "desc":"elif",
+        },
+    },
+    "edit": {
+        '*': {
+            "<desc>": {
+                "header": "",
+                "type": "invisible",
+            },
+            '<1>': {
+                "header": 'condition',
+                'type': 'singleline',
+            },
+        },
+    },
+    "build": {
+        "*": {
+            "incTab": 1,
+            "hasPrefix": 1,
+            "prefix": "else if (<1>) {",
+            "hasPostfix": 1,
+            "postfix": "}",
+            "multiline": 0,
+        },
+        'py': {
+            'prefix': 'elif <1>:',
+            'hasPostfix': 0,
+        }
+    },
+    'langs': ['py'],
+}}
+allTypes.update(t_elif)
+
 t_else = {"else": {
     "canvas": {
         '*': {
@@ -245,8 +283,6 @@ t_else = {"else": {
     'langs': ['py'],
 }}
 allTypes.update(t_else)
-
-
 
 t_for = {"for": {
     "canvas": {

@@ -339,19 +339,27 @@ def cycle_checkout(SF, block):
     """Проверяет существование цикла ссылок/ checking existance of cycle links"""
     return findCycle(SF, block, block)
 
-def find_block_(click, canvas, SF):
+def find_block_(click, canvas, SF, mode=1):
     """Находит блок по позиции клика/ Find block by its position"""
     scale = lambda pos: canvas.scale(pos)
     unscale = lambda pos: canvas.unscale(pos)
 
     debug_return(f'handling click: ({click.x},{click.y})')
     sfclick = unscale(Point(click.x, click.y))
-    for _, block in SF.object_ids.items():
-        #debug_return('checking block: ' + block.convertToStr())
-        distance = (block.pos - sfclick).abs()
-        if distance <= blockR:
-            debug_return(f'block found: {block.convertToStr()}')
-            return block
+    if mode == 0:
+        for _, block in SF.object_ids.items():
+            #debug_return('checking block: ' + block.convertToStr())
+            distance = (block.pos - sfclick).abs()
+            if distance <= blockR:
+                debug_return(f'block found: {block.convertToStr()}')
+                return block
+    elif mode == 1:
+        for _, block in SF.object_ids.items():
+            #debug_return('checking block: ' + block.convertToStr())
+            d = block.pos - sfclick
+            if abs(d.x) < 0.5 and abs(d.y) < 0.5:
+                debug_return(f'block found: {block.convertToStr()}')
+                return block
 
 
 # Число Эйлера/ Eiler's number

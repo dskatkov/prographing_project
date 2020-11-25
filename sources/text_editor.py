@@ -40,7 +40,7 @@ class TextEditor:
         #root.minsize(400, 200)
 
         root.columnconfigure(0, weight=1, minsize=0)
-        root.rowconfigure(0, weight=0, minsize=20)
+        root.rowconfigure(0, weight=0, minsize=0)#20)
         root.rowconfigure(1, weight=1, minsize=0)
         root.rowconfigure(2, weight=0, minsize=20)
 
@@ -94,7 +94,7 @@ class TextEditor:
                     lbl.pack(fill='x', expand=0)
 
                 ln = len(block.data[key].split('\n'))
-                ta = tk.Text(master=self.editFrame, height=ln+2, bg=textBG, fg=textFG, wrap='word')
+                ta = tk.Text(master=self.editFrame, height=ln+10, width=50, bg=textBG, fg=textFG, wrap='word')
                 ta.insert('1.0', block.data[key])
                 ta.pack(fill='both', expand=1, side="top")
 

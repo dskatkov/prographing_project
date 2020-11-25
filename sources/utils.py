@@ -313,7 +313,7 @@ def distance_to_line(begin, end, point):
     assert isinstance(begin, Point)
     assert isinstance(end, Point)
     assert isinstance(point, Point)
-    
+
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()

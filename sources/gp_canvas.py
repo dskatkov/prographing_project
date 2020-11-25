@@ -17,7 +17,10 @@ class Canvas:
         """Рисует холст (блоки + линки)/ drawing canvas (blocks + links)"""
         # Очистка/Cleaning
         self.SF = SF
-        self.master.delete("all")
+        try:
+            self.master.delete("all")
+        except Exception:
+            print('Cannot delete all figures')
         self.master.create_rectangle(0, 0, 2000, 2000, fill=textBG)
 
         # Выбранный блок / Chosen block

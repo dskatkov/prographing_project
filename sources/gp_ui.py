@@ -151,7 +151,10 @@ def ui_init(root):
     # Указываем нашему холсту на tk.Canvas, на котором он будет рисовать/ assign canvas to tk.canvas to draw on
     gp_canvas.canvas.master = canvas
 
-    root.state('zoomed')
+    try:
+        root.state('zoomed')
+    except Exception:
+        print('Cannot zoom window')
 
     canvas.bind("<Button-1>", b1)
     canvas.bind("<Button-2>", b2)

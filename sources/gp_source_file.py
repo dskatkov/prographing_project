@@ -53,7 +53,7 @@ class SourceFile:
         self.fileName = fileName
 
         file = open(fileName, 'rt')
-        self.data = int(file.readline()[:-1])
+        self.data = file.readline()[:-1]
         try:
             self.data = int(self.data)
         except ValueError:

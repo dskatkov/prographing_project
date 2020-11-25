@@ -126,7 +126,7 @@ def highlight(code):
                     break
                 
             
-            if (len(word) > 0 and not word in keywords):
+            if (len(word) > 0 and not (word in keywords)):
                 isRegex = False
             if (isRegex):
                 state = states.REGEX_LITERAL
@@ -182,8 +182,6 @@ def highlight(code):
     #.replace(/^\s+|\s{2,}/g, (a) => new Array(a.length+1).join('&nbsp'))
 
 code = r'''
-
-
 (function () {
 
 const states = {
@@ -360,4 +358,4 @@ document.getElementById('code').addEventListener('input', function () {
 
 highlighted_code = highlight(code)
 print(highlighted_code)
-print(f'Copy this text to {'https://codebeautify.org/htmlviewer/'} and click "Run"')
+print(f'\nCopy this text to "https://codebeautify.org/htmlviewer/" and click "Run"')

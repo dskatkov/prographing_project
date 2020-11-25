@@ -220,35 +220,46 @@ def getSettingsByLang(lang):
 takeFirst = lambda x, y: x
 takeSecond = lambda x, y: y
 
-def normalMerge(a, b, f=takeFirst):
+def normalMerge(a, b, f=None):
     """Функция слияния двух элементов/ Function of merging two elements"""
     if type(a) != dict or type(b) != dict:
-        return f(a, b)
-    return dictMerge(a, b)
+        if a == b:
+            return a
+        elif f is not None:
+            return f(a, b)
+        else:
+            raise Exception(f'Merge conflict: {a} and {b}')
+            return a
+    else:
+        return dictMerge(a, b)
 
-def dictMerge(*dicts, f=lambda x,y: normalMerge(x,y,f=takeFirst)):
+def dictMerge(*dicts, f=None):
     """Соединяет несколько словарей в один/ merge s number of dictionaries into one"""
-    res = {}
-
     if len(dicts) == 2:
         a, b = dicts
-
-        for key, val in a.items():
-            if not key in b:
-                res[key] = val
-
+        res = a
         for key, val in b.items():
-            if not key in a:
+            if key in a:
+                val2 = a[key]
+                if val == val2:
+                    res[key] = val
+                else:
+                    if isinstance(val, dict) and isinstance(val2, dict):
+                        res[key] = dictMerge(val, val2)
+                    elif f is not None:
+                        res[key] = f(val2, val)
+                    else:
+                        raise Exception(f'Merge conflict: {a} and {b}')
+            else:
                 res[key] = val
+        return res
+    elif len(dicts) > 2:
+        return dictMerge(dictMerge(dicts[0:2]), dicts[2:])
+    elif len(dicts) == 0:
+        return {}
+    elif len(dicts) == 1:
+        return dicts[0]
 
-        for key, val in a.items():
-            if key in b:
-                res[key] = f(val, b[key])
-    else:
-        for d in dicts:
-            res = dictMerge(res, d, f=f)
-
-    return res
 
 def getDictValByPath(d, path, err=0):
     """Возвращает значение элемента в словаре по пути к элементу/ return element value in dictionary by path to the element"""
@@ -263,6 +274,7 @@ def getDictValByPath(d, path, err=0):
 
 def createDictByPath(path, val):
     """Создает вложенный словарь с одним элементом по пути/ create inserted dictionary with one element by path"""
+    raise Exception('Warning')
     spl = path.split('.')
     spl.reverse()
 
@@ -293,13 +305,15 @@ def getDictValByPathDef(d, form, *args, braces='<>', default='*'):
             res = v
         n += 1
     if res == ...:
-        print(f'dict: {d} form: {form} args: {args}')
-        raise Exception
-        return None
+        raise Exception(f'Cannot get dict value by path: \ndict:{d} \npath:{form} \nargs: {args}')
     return res
 
 def distance_to_line(begin, end, point):
     """Расстояние от отрезка (begin, end) до точки point/ distance from the segment (begin, end) to the point"""
+    assert isinstance(begin, Point)
+    assert isinstance(end, Point)
+    assert isinstance(point, Point)
+    
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()
@@ -316,16 +330,17 @@ def distance_to_line(begin, end, point):
 
 def near_to_line(begin, end, point):
     """Проверяет близость точки прямой/ Check whether point is near to the line"""
+    assert isinstance(begin, Point)
+    assert isinstance(end, Point)
+    assert isinstance(point, Point)
+
     eps = nearToLine
     d = distance_to_line(begin, end, point)
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()
 
-    if d < eps:
-        if (min(x1, x2) - eps < x < max(x1, x2) + eps) and (min(y1, y2) - eps < y < max(y1, y2) + eps):
-            return True
-    return False
+    return (d < eps) and (min(x1, x2) - eps < x < max(x1, x2) + eps) and (min(y1, y2) - eps < y < max(y1, y2) + eps)
 
 def findCycle(SF, block, root):
     """Проверяет существование цикла ссылок/ checking existance of cycle links"""
@@ -346,17 +361,17 @@ def find_block_(click, canvas, SF, mode=1):
     """Находит блок по позиции клика/ Find block by its position"""
     scale = lambda pos: canvas.scale(pos)
     unscale = lambda pos: canvas.unscale(pos)
-
-    debug_return(f'handling click: ({click.x},{click.y})')
-    sfclick = unscale(Point(click.x, click.y))
-    if mode == 0:
+    clickpos = Point(click.x, click.y)
+    sfclick = unscale(clickpos)
+    debug_return(f'handling click: {clickpos}')
+    if mode == 0: # находжение по радиусу блока
         for _, block in SF.object_ids.items():
             #debug_return('checking block: ' + block.convertToStr())
             distance = (block.pos - sfclick).abs()
             if distance <= blockR:
                 debug_return(f'block found: {block.convertToStr()}')
                 return block
-    elif mode == 1:
+    elif mode == 1: # нахождение по клетке клика
         for _, block in SF.object_ids.items():
             #debug_return('checking block: ' + block.convertToStr())
             d = block.pos - sfclick
@@ -367,6 +382,7 @@ def find_block_(click, canvas, SF, mode=1):
 
 # Число Эйлера/ Eiler's number
 e = 2.718281828459045
+pi = 3.1415926535
 
 if __name__ == '__main__':
     print('This module is not for direct call!')

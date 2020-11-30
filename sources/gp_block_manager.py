@@ -1,7 +1,7 @@
 import json
 import os
 
-from utils import dictMerge
+from utils import *
 
 # Цвета соединяющих линий
 # A_B = A==>B
@@ -51,8 +51,8 @@ linkColores = {
 # Цвета кружков блоков разного типа
 drawColores = {
     'chosen': '#00ff00',
-    "?": "#00ff00",
-    '*': '#000000',
+    "undefined": "#00ff00",
+    'empty': '#000000',
     "op": "#FFFFFF",
     "if": "#F92472",
     "else": "#C90452",
@@ -82,8 +82,9 @@ def load_lang_blocks(lang):
     return res
 
 def change_lang(lang):
-    print(f'changing lang to {lang}')
     global allTypes
+    debug_return(allTypes)
+    debug_return(f'changing lang to {lang}')
     while allTypes != {}:
         for key in allTypes:
             allTypes.pop(key)
@@ -93,6 +94,7 @@ def change_lang(lang):
     new = dictMerge(lng, df)
     for key, val in new.items():
         allTypes[key] = val
+    debug_return(allTypes)
 
 
 langs = json_load('block_types/LANGS.json')

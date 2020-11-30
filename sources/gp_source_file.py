@@ -30,9 +30,7 @@ class SourceFile:
 
     def changeLang(self, lang):
         self.lang = lang
-        print(allTypes)
         change_lang(lang)
-        print(allTypes)
 
     def save(self, fileName='', save=1):
         """Сохраняет в файл/save into file"""
@@ -60,20 +58,24 @@ class SourceFile:
         """Загружает из файла/ load from file"""
         self.wasEdited = False
 
+        obj = json_load(fileName)
+
         self.max_id = 0
         self.object_ids = {}
         self.fileName = fileName
 
-        file = open(fileName, 'rt')
-        self.data = file.readline()[:-1]
+        self.data = obj["subversion"]
         try:
             self.data = int(self.data)
         except ValueError:
             debug_return(f'bad subversion: {self.data}; setting subversion to {0}')
             self.data = 0
-        self.changeLang(file.readline()[:-1])
-        self.buildName = file.readline()[:-1]
-        for line in file:
+
+        self.changeLang(obj["lang"])
+        self.buildName = obj["build_path"]
+        blocks = obj["blocks"]
+        for b in blocks:
+            line = str(b)
             if len(line.strip()) == 0 or line.strip()[0] == ';':
                 continue  # пустые строки и строки-комментарии пропускаем/ leave empty and comment strings
             type = literal_eval(line)["type"]
@@ -165,8 +167,8 @@ class Block:
     def __del__(self):
         """Удаляет ссылку на себя из SF и свой id из всех блоков/ delete link to itself from SF and its id"""
         self.SF.wasEdited = True
-        if self.id in SF.object_ids:
-            SF.object_ids.pop(self.id)
+        if self.id in self.SF.object_ids:
+            self.SF.object_ids.pop(self.id)
         for _, block in SF.object_ids.items():
             if self.id in block.childs:
                 block.childs.remove(self.id)

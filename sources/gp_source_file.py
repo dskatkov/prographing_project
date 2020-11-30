@@ -7,6 +7,7 @@ from gp_block_manager import *
 
 SF = ...
 
+
 class SourceFile:
     """
     Класс графической программы/ class of grafical program
@@ -17,17 +18,26 @@ class SourceFile:
         data = 0 - subversion
         lang = 'py' - язык составления программы/language of export
     """
+
     def __init__(self):
         self.max_id = 0
         self.object_ids = {}
         self.fileName = ''
         self.buildName = ''
         self.data = 0
-        self.lang = 'py'
+        self.lang = 'default'
+        self.wasEdited = False
 
+    def changeLang(self, lang):
+        self.lang = lang
+        print(allTypes)
+        change_lang(lang)
+        print(allTypes)
 
-    def save(self, fileName, save=1):
+    def save(self, fileName='', save=1):
         """Сохраняет в файл/save into file"""
+        self.wasEdited = False
+
         self.data += 1
         s = ''
         s += str(self.data) + '\n'
@@ -37,17 +47,19 @@ class SourceFile:
             s += block.convertToStr() + '\n'
 
         if save:
-            self.fileName = fileName
-            file = open(fileName, 'wt')
-            file.write(s)
-            file.close()
+            if fileName:
+                self.fileName = fileName
+                file = open(self.fileName, 'wt')
+                file.write(s)
+                file.close()
         else:
             print('Save log:')
             print(s)
 
-
     def open(self, fileName):
         """Загружает из файла/ load from file"""
+        self.wasEdited = False
+
         self.max_id = 0
         self.object_ids = {}
         self.fileName = fileName
@@ -59,7 +71,7 @@ class SourceFile:
         except ValueError:
             debug_return(f'bad subversion: {self.data}; setting subversion to {0}')
             self.data = 0
-        self.lang = file.readline()[:-1]
+        self.changeLang(file.readline()[:-1])
         self.buildName = file.readline()[:-1]
         for line in file:
             if len(line.strip()) == 0 or line.strip()[0] == ';':
@@ -68,10 +80,7 @@ class SourceFile:
             if type in allTypes:
                 Block(self, line.strip(), creating_type=1)
             else:
-                print(f'Unknown type of block! Line: "{line}"')
-                raise Exception
-                print(allTypes)
-                # allTypes = {}
+                raise Exception(f'Unknown type of block! Line: "{line}\nallTypes: {allTypes}"')
 
     def parents(self, id):
         """Возвращает id всех блоков, для которых данный является дочерним/ return ids of all child blocks"""
@@ -81,17 +90,16 @@ class SourceFile:
                 res = res + [i]
         return res
 
-
     def build(self, fileName, save=1):
         """Составляет текст программы и сохраняет его в файл/ create program text and save it to file"""
 
-        rootBlock = Block(self, type='*')
+        rootBlock = Block(self, type='empty')
         for i, _ in self.object_ids.items():
             if not self.parents(i):
                 rootBlock.addLink(i)
         rootBlock.sortChilds()
         s = rootBlock.build('')
-        rootBlock.delete()
+        del rootBlock
 
         if save:
             self.buildName = fileName
@@ -101,6 +109,14 @@ class SourceFile:
         else:
             print('Build log:')
             print(s)
+
+    def closeQ(self):
+        return not self.wasEdited
+
+    def __del__(self):
+        for _, block in self.object_ids.items():
+            del block
+        self.object_ids = {}
 
 
 class Block:
@@ -116,7 +132,8 @@ class Block:
     data - словарь данных блока для подстановок/ dictionary of block data for inserting
     """
     #__slots__ = "classname", "id", "childs", "pos", "text"
-    def __init__(self, SF, str='', type='?', creating_type=0, chosen=False):
+
+    def __init__(self, SF, str='', type='undefined', creating_type=0, chosen=False):
         self.SF = SF
         self.text_editor = None
         self.chosen = chosen
@@ -136,7 +153,7 @@ class Block:
             self.data = {}
             self.classname = type
 
-            for key, val in getDictValByPathDef(allTypes, f'<1>.edit.<2>', self.classname, self.SF.lang).items():
+            for key, val in getDictValByPath(allTypes, f'{self.classname}.edit').items():
                 self.data[key] = ''
 
             SF.object_ids[self.id] = self
@@ -145,26 +162,32 @@ class Block:
             # self.tooltip = ""
         self.SF.object_ids[self.id] = self
 
-
-    def delete(self):
+    def __del__(self):
         """Удаляет ссылку на себя из SF и свой id из всех блоков/ delete link to itself from SF and its id"""
-        SF.object_ids.pop(self.id)
+        self.SF.wasEdited = True
+        if self.id in SF.object_ids:
+            SF.object_ids.pop(self.id)
         for _, block in SF.object_ids.items():
             if self.id in block.childs:
                 block.childs.remove(self.id)
+        if self.text_editor:
+            self.text_editor.destroy()
 
     def move(self, shift):
         """Сдвигает блок на холсте/ move block on canvas"""
+        self.SF.wasEdited = True
         self.pos = (self.pos + shift).round()
 
     def edit(self, master, canvas):
         """Открывает редактор блока/ open block redactor"""
+        self.SF.wasEdited = True
         self.text_editor = master
         text_editor.TextEditor(master, self, canvas)
 
     def convertToStr(self):
         """Конвертирует блок в строку-словарь/ convert block into dictionary"""
-        result = '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(self.childs)+', "pos":'+str(self.pos)+', "data":'+str(self.data)+'}'
+        result = '{"type":"'+str(self.classname)+'", "id":'+str(self.id)+', "childs":'+str(
+            self.childs)+', "pos":'+str(self.pos)+', "data":'+str(self.data)+'}'
         result = result.replace('\n', '\\n')
         return result
 
@@ -195,12 +218,24 @@ class Block:
 
         tab = 0
 
-        hasPrefix  = getDictValByPathDef(allTypes, '<1>.build.<2>.hasPrefix',  self.classname, self.SF.lang)
-        prefix     = getDictValByPathDef(allTypes, '<1>.build.<2>.prefix',     self.classname, self.SF.lang)
-        hasPostfix = getDictValByPathDef(allTypes, '<1>.build.<2>.hasPostfix', self.classname, self.SF.lang)
-        postfix    = getDictValByPathDef(allTypes, '<1>.build.<2>.postfix',    self.classname, self.SF.lang)
-        multiline  = getDictValByPathDef(allTypes, '<1>.build.<2>.multiline',  self.classname, self.SF.lang)
-        incTab     = getDictValByPathDef(allTypes, '<1>.build.<2>.incTab',     self.classname, self.SF.lang)
+        hasPrefix = getDictValByPath(
+            allTypes, f'{self.classname}.build.hasPrefix'
+        )
+        prefix = getDictValByPath(
+            allTypes, f'{self.classname}.build.prefix'
+        )
+        hasPostfix = getDictValByPath(
+            allTypes, f'{self.classname}.build.hasPostfix'
+        )
+        postfix = getDictValByPath(
+            allTypes, f'{self.classname}.build.postfix'
+        )
+        multiline = getDictValByPath(
+            allTypes, f'{self.classname}.build.multiline'
+        )
+        incTab = getDictValByPath(
+            allTypes, f'{self.classname}.build.incTab'
+        )
 
         repl = self.formatStrOp()
 
@@ -222,7 +257,6 @@ class Block:
                 ch_s = child.build(ch_s)
             except Exception:
                 print(f'Exception gp_source_file.py Block.build')
-
 
         for line in ch_s.split('\n'):
             if line:
@@ -247,11 +281,13 @@ class Block:
 
     def addLink(self, child):
         """Добавляет дочерний элемент/ add child"""
+        self.SF.wasEdited = True
         if not (child in self.childs) and (child != self.id):
             self.childs.append(child)
 
     def delLink(self, child):
         """Удаляет дочерний элемент/ delete child"""
+        self.SF.wasEdited = True
         if child in self.childs:
             self.childs.remove(child)
 
@@ -260,6 +296,7 @@ class Block:
         return self.SF.parents(self.id)
 
     def shift(self, shift, desc=0, shift_id=0):
+        self.SF.wasEdited = True
         if not desc:
             self.pos += shift
         else:
@@ -271,20 +308,22 @@ class Block:
                         self.SF.object_ids[child].shift(shift, desc, shift_id)
                     except Exception:
                         print(f'Exception gp_source_file.py Block.shift')
+
     def getTooltip(self):
         return self.formatStr(
-            getDictValByPathDef(allTypes, f'<1>.canvas.<2>.tooltip', self.classname, self.SF.lang)
+            getDictValByPath(allTypes, f'{self.classname}.canvas.tooltip')
         )
 
     def getSub(self):
         return self.formatStr(
-            getDictValByPathDef(allTypes, f'<1>.canvas.<2>.desc', self.classname, self.SF.lang)
+            getDictValByPath(allTypes, f'{self.classname}.canvas.desc')
         )
 
     def changeType(self, newType):
+        self.SF.wasEdited = True
         self.classname = newType
         self.data = {}
-        for key_, _ in getDictValByPathDef(allTypes, f'<1>.edit.<2>', self.classname, self.SF.lang).items():
+        for key_, _ in getDictValByPath(allTypes, f'{self.classname}.edit').items():
             self.data[key_] = ''
 
 

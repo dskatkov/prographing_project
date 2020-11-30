@@ -8,6 +8,7 @@ from utils import *
 import gp_canvas as canvas
 from gp_block_manager import *
 
+
 def getText(textArea):
     """Возвращает содержимое поля/ Return ffield containment"""
     if isinstance(textArea, tk.Entry):
@@ -15,7 +16,7 @@ def getText(textArea):
     elif isinstance(textArea, tk.Text):
         return textArea.get('1.0', 'end')[:-1]
     else:
-        debug_return ('Unknown type of textarea')
+        debug_return('Unknown type of textarea')
         return ''
 
 
@@ -31,25 +32,26 @@ class TextEditor:
     textAreas - словарь {<название поля>:<tk объект для редактирования>}/ dictionary {<field name>:<tk object>}
 
     """
+
     def __init__(self, root, block, canvas):
         self.block = block
         self.root = root
         self.canvas = canvas
 
-        #configuring main window
+        # configuring main window
         #root.minsize(400, 200)
 
         root.columnconfigure(0, weight=1, minsize=0)
-        root.rowconfigure(0, weight=0, minsize=0)#20)
+        root.rowconfigure(0, weight=0, minsize=0)  # 20)
         root.rowconfigure(1, weight=1, minsize=0)
         root.rowconfigure(2, weight=0, minsize=20)
 
-        #creating menu
+        # creating menu
         # mainMenu = tk.Menu(master=root)
         # createMenu(mainMenu, textEditorMenu_tree)
         # root.config(menu=mainMenu)
 
-        #creating and placing frames
+        # creating and placing frames
         self.panelFrame = tk.Frame(master=root, bg=panelBG)
         self.editFrame = tk.Frame(master=root)
         self.stateFrame = tk.Frame(master=root, bg=stateBG)
@@ -61,25 +63,27 @@ class TextEditor:
         # Словарь со всеми полями для редактирования
         self.textAreas = {}
 
-
-        focused = 0 # TODO: параметр для автофокуса
-        debug_return('block fields: ' + str(getDictValByPathDef(allTypes, f'<1>.edit.<2>', block.classname, block.SF.lang)))
-        for key, val in getDictValByPathDef(allTypes, f'[1].edit.[2]', block.classname, block.SF.lang, braces='[]').items():
-            editing_type = getDictValByPathDef(allTypes, f'[1].edit.[2].{key}.type', block.classname, block.SF.lang, braces='[]')
-            header = getDictValByPathDef(allTypes, f'[1].edit.[2].{key}.header', block.classname, block.SF.lang, braces='[]')
-
+        focused = 0  # TODO: параметр для автофокуса
+        debug_return('block fields: ' + str(getDictValByPath(allTypes, f'{block.classname}.edit')))
+        for key, val in getDictValByPath(allTypes, f'{block.classname}.edit').items():
+            # editing_type = getDictValByPath(allTypes, f'{block.classname}.edit.{key}.type')
+            # header = getDictValByPath(allTypes, f'{block.classname}.edit.{key}.header')
+            editing_type = val['type']
+            header = val['header']
+            
             if editing_type == 'invisible':
                 pass
             elif editing_type == 'singleline':
                 if header:
-                    lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=header)
+                    lbl = tk.Label(master=self.editFrame,
+                                   bg=textBG, fg=textFG, text=header)
                     lbl.pack(fill='x', expand=0)
 
                 ta = tk.Entry(master=self.editFrame, bg=textBG, fg=textFG)
                 if key in block.data:
                     ta.insert(0, block.data[key])
                 else:
-                    debug_return (f'Wrong format of block: {block.convertToStr()}')
+                    debug_return(f'Wrong format of block: {block.convertToStr()}')
                 ta.pack(fill='x', expand=0, side="top")
 
                 self.textAreas[key] = ta
@@ -90,27 +94,28 @@ class TextEditor:
                     #ta.bind("Return", lambda: self.close(-1))
             elif editing_type == 'multiline':
                 if header:
-                    lbl = tk.Label(master=self.editFrame, bg=textBG, fg=textFG, text=header)
+                    lbl = tk.Label(master=self.editFrame,
+                                   bg=textBG, fg=textFG, text=header)
                     lbl.pack(fill='x', expand=0)
 
                 ln = len(block.data[key].split('\n'))
-                ta = tk.Text(master=self.editFrame, height=ln+10, width=50, bg=textBG, fg=textFG, wrap='word')
+                ta = tk.Text(master=self.editFrame, height=ln+10,
+                             width=50, bg=textBG, fg=textFG, wrap='word')
                 ta.insert('1.0', block.data[key])
                 ta.pack(fill='both', expand=1, side="top")
 
                 self.textAreas[key] = ta
             else:
-                debug_return ('Unknown type of editing field')
+                debug_return('Unknown type of editing field')
 
-
-        #placing buttons to panelFrame
+        # placing buttons to panelFrame
         # panelFrameButtons = [
         #     ('open', lambda: print('open, not implemented')),
         #     ('save', lambda: print('save, not implemented')),
         # ]
         # placeButtons(self.panelFrame, panelFrameButtons)
 
-        #placing buttons to panelFrame
+        # placing buttons to panelFrame
         stateFrameButtons = [
             ('✔ OK', lambda: self.close(1)),
             ('❌ Отмена', lambda: self.close(0)),
@@ -129,6 +134,7 @@ class TextEditor:
 
 # def dialogSaveFile(root, textArea):
 #     open(fileName, 'wt').write(textArea.get('1.0', 'end'))
+
 
     def close(self, state=-1):
         """Закрывает редактор/closing redactor"""
@@ -154,15 +160,15 @@ class TextEditor:
             # self.block.text1 = self.textBox1.get('1.0', 'end')[:-1]
             # print('opening: '+str(self.block.data))
 
-            for key, val in getDictValByPathDef(allTypes, f'<1>.edit.<2>', self.block.classname, self.block.SF.lang).items():
+            for key, val in getDictValByPath(allTypes, f'{self.block.classname}.edit').items():
                 debug_return(f'saving key: {key}')
                 if key == '<class>':
                     cn = getText(self.textAreas[key])
-                    debug_return (f'changing type: {cn}')
+                    debug_return(f'changing type: {cn}')
                     if cn in allTypes:
                         self.block.changeType(cn)
                     else:
-                        debug_return ('Unknown type of block')
+                        debug_return('Unknown type of block')
                     break
                 if key in self.textAreas:
                     self.block.data[key] = getText(self.textAreas[key])
@@ -170,6 +176,7 @@ class TextEditor:
             self.block.text_editor = None
 
         self.canvas.draw(self.block.SF)
+
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

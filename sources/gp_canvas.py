@@ -4,6 +4,7 @@ from gp_block_manager import *
 
 canvas = ...
 
+
 class Canvas:
     def __init__(self, master=None):
         self.master = master
@@ -30,7 +31,10 @@ class Canvas:
         # Линки/ Links
         for _, block in SF.object_ids.items():
             for child in block.childs:
-                self.drawLink(block, SF.object_ids[child])
+                if child in  SF.object_ids:
+                    self.drawLink(block, SF.object_ids[child])
+                else:
+                    print(f'warning Canvas.draw unknown block id: {child}')
         if self.link_creation:
             self.drawLink(self.handling, self.link_creation, creating=1)
 
@@ -41,7 +45,6 @@ class Canvas:
         # Подписи/Subscription
         for _, block in SF.object_ids.items():
             self.drawBlockText(block)
-
 
     def scale(self, pos):
         """положение на холсте -> положение на экране/ Placement on canvas -> placement on screen"""
@@ -62,7 +65,6 @@ class Canvas:
         # print("image size: %dx%d" % (photo.width(), photo.height()))
         # canvas.create_image(x, y, image=photo, anchor='center') #не работает
 
-
         ct = block.classname
         if ct in drawColores:
             color = drawColores[ct]
@@ -72,9 +74,16 @@ class Canvas:
         if chosen:
             chosen_color = drawColores['chosen']
             R = chosen_R * self.viewzoom
-            self.master.create_oval((x - R), (y - R), (x + R), (y + R), fill=chosen_color)
+            self.master.create_oval(
+                *[(x - R), (y - R), (x + R), (y + R)], 
+                fill=chosen_color,
+            )
         else:
-            self.master.create_oval((x - r), (y - r), (x + r), (y + r), fill=color)
+            self.master.create_oval(
+                *[(x - r), (y - r), (x + r), (y + r)], 
+                fill=color, 
+                activewidth=0.1 * self.viewzoom,
+            )
 
     def drawBlockText(self, block):
         """делает подпись блока/Making block subscription"""
@@ -83,8 +92,12 @@ class Canvas:
         fontsize = round(font_size*self.viewzoom)
         text = block.getSub()
         if fontsize:
-            self.master.create_text(x + 1.5 * r, y - fontsize, text=text, anchor='w', font="Consolas "+str(fontsize))
-
+            self.master.create_text(
+                x + 1.5 * r, y - fontsize, 
+                text=text, 
+                anchor='w', 
+                font="Consolas "+str(fontsize),
+                )
 
     def drawLink(self, block, child, creating=0):
         """Рисует линк/ Drawing link"""
@@ -92,10 +105,12 @@ class Canvas:
         thickness = link_width * self.viewzoom
         if creating:
             p2 = child
-            color = getDictValByPathDef(linkColores, '<1>_',  'creating', default='')
+            color = getDictValByPathDef(
+                linkColores, '<1>_',  'creating', default='')
         else:
             p2 = self.scale(child.pos)
-            color = getDictValByPathDef(linkColores, '<1>_<2>',  block.classname, child.classname, default='')
+            color = getDictValByPathDef(
+                linkColores, '<1>_<2>',  block.classname, child.classname, default='')
 
         if p1 == p2:
             return
@@ -125,12 +140,21 @@ class Canvas:
 
         line_end = (p4 + p5)
         line_end /= 2
-        line_end += (line_end - p1).norm() # костыль для отсутствия просвета
+        # line_end += (line_end - p1).norm()  # костыль для отсутствия просвета
 
-        self.master.create_line(*p1.tuple(), *line_end.tuple(), fill=color, width=thickness)
-        self.master.create_polygon([*p2.tuple(), *p4.tuple(), *p5.tuple()], fill=color)
-
-
+        self.master.create_line(
+            *[*p1.tuple(), *line_end.tuple()], 
+            fill=color, 
+            width=thickness, 
+            capstyle='round', 
+            activefill='red',
+        )
+        self.master.create_polygon(
+            [*p2.tuple(), *p4.tuple(), *p5.tuple()], 
+            fill=color, 
+            outline='black', 
+            activefill='red',
+        )
 
 
 if __name__ == "__main__":

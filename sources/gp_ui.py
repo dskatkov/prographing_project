@@ -12,9 +12,11 @@ from gp_block_manager import *
 # canvas - tk.Canvas
 canvasFrame = panelFrame = stateFrame = canvas = mainWindow = ...
 
+
 def saveAs(root):
     """Обработчик кнопки save as handler of save as button"""
-    fileName = tk.filedialog.SaveAs(root, filetypes = [("Visual script", ".vrc")]).show()
+    fileName = tk.filedialog.SaveAs(
+        root, filetypes=[("Visual script", ".vrc")]).show()
     if fileName == '':
         return
     else:
@@ -23,6 +25,7 @@ def saveAs(root):
         source_file.SF.save(fileName)
         mainWindow.title(fileName)
 
+
 def save(root):
     """Обработчик кнопки save/ handler of save button"""
     if source_file.SF.fileName == '':
@@ -30,9 +33,11 @@ def save(root):
     else:
         source_file.SF.save(source_file.SF.fileName)
 
+
 def open(root):
     """Обработчик кнопки open/ handler of open button"""
-    fileName = tk.filedialog.Open(root, filetypes = [("Visual script", ".vrc")]).show()
+    fileName = tk.filedialog.Open(
+        root, filetypes=[("Visual script", ".vrc")]).show()
     if fileName == '':
         return
     else:
@@ -42,33 +47,59 @@ def open(root):
         gp_canvas.canvas.draw(source_file.SF)
         mainWindow.title(fileName)
 
-def build(root):
 
+def build(root):
     """Обработчик кнопки build/ handler of build button"""
     if source_file.SF.buildName == '':
         buildAs(root)
     else:
         source_file.SF.build(source_file.SF.buildName)
 
+
 def buildAs(root):
     """Обработчик кнопки build as/ handler of build as button"""
     ext = '.b.'+source_file.SF.lang
-    fileName = tk.filedialog.SaveAs(root, filetypes = [("Source code", ext)]).show()
+    fileName = tk.filedialog.SaveAs(
+        root, filetypes=[("Source code", ext)]).show()
     if fileName == '':
         return
     else:
-        debug_return ('Building to '+fileName)
+        debug_return('Building to '+fileName)
         if not fileName.endswith(ext):
             fileName += ext
         source_file.SF.build(fileName)
 
-def newFile(root=None):
+def close(root):
+    if source_file.SF.closeQ():
+        del source_file.SF
+        return 1
+    else:
+        ans = tk.messagebox.askyesnocancel("save?", "Save file?", parent=root)
+        if ans == None:
+            return 0
+        if ans == 1:
+            source_file.SF.save()
+            del source_file.SF
+            return 1
+        if ans == 0:
+            del source_file.SF
+            return 1
+
+def newFile(root):
     """Обработчик кнопки new file/ handler of new file button"""
-    source_file.SF = source_file.SourceFile()
-    gp_canvas.canvas.draw(source_file.SF)
-    mainWindow.title('new file')
+    if close(root):
+        source_file.SF = source_file.SourceFile()
+        gp_canvas.canvas.draw(source_file.SF)
+        mainWindow.title('new file')
+
+
+def closeWindow(root):
+    if close(root):
+        root.destroy()
 
 consoleWindow = None
+
+
 def openConsole(root):
     def close(window, entry):
         if entry.get():
@@ -81,7 +112,8 @@ def openConsole(root):
         entry.pack()
         entry.focus()
         consoleWindow.title('console')
-        consoleWindow.protocol("WM_DELETE_WINDOW", lambda: close(consoleWindow, entry))
+        consoleWindow.protocol(
+            "WM_DELETE_WINDOW", lambda: close(consoleWindow, entry))
 
 
 def ui_init(root):
@@ -93,7 +125,7 @@ def ui_init(root):
     root.minsize(200, 200)
 
     root.columnconfigure(0, weight=1, minsize=200)
-    root.rowconfigure([0,2], weight=0, minsize=20)
+    root.rowconfigure([0, 2], weight=0, minsize=20)
     root.rowconfigure(1, weight=1, minsize=100)
 
     panelFrame = tk.Frame(master=root, bg=panelBG)
@@ -116,15 +148,15 @@ def ui_init(root):
     ]
     if debug_flag:
         panelFrameButtons += [
-        ('canvas redraw', lambda: gp_canvas.canvas.draw(source_file.SF)),
-        ('build log', lambda: source_file.SF.build('', 0)),
-        ('save log', lambda: source_file.SF.save('', 0)),
-        ('console', lambda: openConsole(root)),
-    ]
+            ('canvas redraw', lambda: gp_canvas.canvas.draw(source_file.SF)),
+            ('build log', lambda: source_file.SF.build('', 0)),
+            ('save log', lambda: source_file.SF.save('', 0)),
+            ('console', lambda: openConsole(root)),
+            ('exit', lambda: root.destroy()),
+        ]
+    root.protocol("WM_DELETE_WINDOW", lambda: closeWindow(root))
 
     placeButtons(panelFrame, panelFrameButtons)
-
-
 
     mainMenu_tree = {
         "Файл": {
@@ -138,9 +170,9 @@ def ui_init(root):
         },
         "Выход": lambda: print('exit, not implemented'),
         "Язык": {
-            "py": lambda: print('py file, not implemented'),
-            "c": lambda: print('c file, not implemented'),
-            "pas": lambda: print('pas file, not implemented'),
+            "py": lambda: change_lang("python"),
+            "rs": lambda: change_lang("rscript"),
+            "default": lambda: change_lang("default"),
         },
     }
     mainMenu = tk.Menu(master=root)
@@ -155,6 +187,12 @@ def ui_init(root):
         root.state('zoomed')
     except Exception:
         print('Cannot zoom window')
+
+    # Создание нового файла (инициализация source_file.SF)
+    source_file.SF = source_file.SourceFile()
+    gp_canvas.canvas.draw(source_file.SF)
+    mainWindow.title('new file')
+
 
     canvas.bind("<Button-1>", b1)
     canvas.bind("<Button-2>", b2)
@@ -174,10 +212,8 @@ def ui_init(root):
 
     canvas.bind("<MouseWheel>", wheel)
 
-
     canvas.bind("<Control-3>", b3_ctrl)
     canvas.bind("<Control-ButtonRelease-3>", b3_ctrl_release)
-
 
 
 if __name__ == "__main__":

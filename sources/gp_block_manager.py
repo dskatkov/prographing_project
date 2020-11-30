@@ -4,10 +4,10 @@ import os
 from utils import dictMerge
 
 # Цвета соединяющих линий
-# A_B = A-->B
-# A_  = A-->*
-#  _B = *-->B
-#  _  = *-->*
+# A_B = A==>B
+# A_  = A==>*
+#  _B = *==>B
+#  _  = *==>*
 linkColores = {
     "_": "#000000",
 
@@ -24,20 +24,20 @@ linkColores = {
 
     # "for_" :"",
     # "_for" :"",
-    "for_for" :"#ffffff",
+    "for_for": "#ffffff",
 
     # "fun_" :"",
     # "_fun" :"",
-    "fun_fun" :"#ffffff",
+    "fun_fun": "#ffffff",
 
-    "class_" :"#0000ff",
+    "class_": "#0000ff",
     # "_class" :"",
-    "class_class" :"#ffffff",
+    "class_class": "#ffffff",
 
     # "op_if": "#ff0000",
     # "if_op": "#00ff00",
-    "class_fun" :"#8080ff",
-    "class_op" :"#80ff80",
+    "class_fun": "#8080ff",
+    "class_op": "#80ff80",
     # "_" :"",
     # "_" :"",
     # "_" :"",
@@ -65,54 +65,39 @@ drawColores = {
     'dict_long_pair': 'pink',
 }
 
+def json_load(path):
+    """Загружает json-объект из файла"""
+    fp = open(path, 'rt')
+    obj = json.load(fp)
+    fp.close()
+    return obj
 
-languagePrePostfix = {
-    "*": {
-        "prefix": "",
-        "postfix": "",
-    },
-    "c": {
-        "prefix": "",
-        "postfix": "",
-    },
-    "py": {
-        "prefix": "",
-        "postfix": "",
-    },
-    "pas": {
-        "prefix": "BEGIN",
-        "postfix": "END.",
-    },
-}
+def load_lang_blocks(lang):
+    """Загружает"""
+    path = langs[lang]
+    res = {}
+    blocks = json_load(f'block_types/{path}')
+    for block_type, block_path in blocks.items():
+        res[block_type] = json_load(f'block_types/{lang}/{block_path}')
+    return res
 
-type_list = [
-    'undefined',
-    'empty', 
-    'op', 
+def change_lang(lang):
+    print(f'changing lang to {lang}')
+    global allTypes
+    while allTypes != {}:
+        for key in allTypes:
+            allTypes.pop(key)
+            break
+    lng = load_lang_blocks(lang)
+    df = load_lang_blocks('default')
+    new = dictMerge(lng, df)
+    for key, val in new.items():
+        allTypes[key] = val
 
-    'if', 
-    'else', 
-    'elif',
 
-    'for', 
-    'class', 
-    'fun', 
+langs = json_load('block_types/LANGS.json')
+allTypes = load_lang_blocks('default')
 
-    'dict', 
-    'dict_long_pair', 
-    'dict_pair', 
-]
-# Описания типов блоков
-def json_load():
-    allTypes = {}
-    for type in type_list:
-        fp = open(f'block_types/{type}.json', 'rt')
-        obj = json.load(fp)
-        fp.close()
-        allTypes = dictMerge(allTypes, obj)
-    return allTypes
-
-allTypes = json_load()
 
 # print(json.dumps(allTypes, indent=4))
 

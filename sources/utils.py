@@ -2,8 +2,10 @@ import tkinter as tk
 
 from settings import *
 
+
 class Point:
     """Класс точки-вектора/ class of a point-vector"""
+
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
@@ -15,7 +17,7 @@ class Point:
     def __mul__(a, k):
         """a * k"""
         return Point(a.x*k, a.y*k)
-    
+
     def __imul__(self, k):
         self.x *= k
         self.y *= k
@@ -151,7 +153,6 @@ class Point:
         self.x, self.y = self.y, self.x
         return self
 
-
     def normInPlace(self):
         self.divInPlace(self.abs())
         return self
@@ -160,18 +161,20 @@ class Point:
         return Point(self.x, self.y)
 
 
-
-
 debug_log = ...
+
+
 def debug_init(file):
     """Установка файла для дебагового лога/ set file for debug log"""
     global debug_log
     debug_log = file
 
+
 def debug_close():
     """Закрытие файла лога/ Closing log file"""
     global debug_log
     debug_log.close()
+
 
 def debug_return(s):
     """Вывод в дебаговый лог/ output to debug log"""
@@ -180,22 +183,26 @@ def debug_return(s):
     if debug_flag:
         debug_log.write(str(s) + '\n')
 
+
 def createMenu(master, tree):
     """Создает меню и прикрепляет его к master/ create menu and assign it to master"""
     for key, val in tree.items():
         m = tk.Menu(master=master, tearoff=0)
-        if type(val)==type({}):
+        if type(val) == type({}):
             createMenu(m, val)
         else:
             master.add_command(label=key, command=val)
             continue
         master.add_cascade(label=key, menu=m)
 
+
 def placeButtons(master, buttons, side='left', fg=btnFG, bg=btnBG):
     """Располагает кнопки на фрейме/ place buttons on frame"""
     for btn in buttons:
-        b = tk.Button(master=master, text=btn[0], command=btn[1], fg=btnFG, bg=btnBG)
+        b = tk.Button(
+            master=master, text=btn[0], command=btn[1], fg=btnFG, bg=btnBG)
         b.pack(side=side, padx=3, pady=3)
+
 
 def getSettingsByLang(lang):
     """Устанавливает настройки в связи с языком программирования/Set setting associated with programming language"""
@@ -203,22 +210,25 @@ def getSettingsByLang(lang):
     res = {}
     for type in allTypes:
         res = dictMerge(
-            res, 
+            res,
             createDictByPath(
                 f'{type}.build',
                 dictMerge(
-                    getDictValByPath(allTypes, f'{type}.build.{lang}')
-                    , getDictValByPath(allTypes, f'{type}.build.*')
+                    getDictValByPath(allTypes, f'{type}.build.{lang}'), getDictValByPath(allTypes, f'{type}.build.*')
                 )
             )
         )
         for key, val in allTypes[type].items():
             if not (key in ['build']):
-                res = dictMerge(res, {type:{key:val}})
+                res = dictMerge(res, {type: {key: val}})
     return res
 
-takeFirst = lambda x, y: x
-takeSecond = lambda x, y: y
+
+def takeFirst(x, y): return x
+
+
+def takeSecond(x, y): return y
+
 
 def normalMerge(a, b, f=None):
     """Функция слияния двух элементов/ Function of merging two elements"""
@@ -232,6 +242,7 @@ def normalMerge(a, b, f=None):
             return a
     else:
         return dictMerge(a, b)
+
 
 def dictMerge(*dicts, f=None):
     """Соединяет несколько словарей в один/ merge s number of dictionaries into one"""
@@ -272,6 +283,7 @@ def getDictValByPath(d, path, err=0):
             return err
     return val
 
+
 def createDictByPath(path, val):
     """Создает вложенный словарь с одним элементом по пути/ create inserted dictionary with one element by path"""
     raise Exception('Warning')
@@ -284,12 +296,13 @@ def createDictByPath(path, val):
         d = {key: d}
     return d
 
+
 def setDictValByPath(d, path, val):
     """Устанавливает значение во вложенном словаре по пути/ Set value in inserted dictionary by path"""
     return dictMerge(d, createDictByPath(path, val), f=takeSecond)
 
-# Страшная вещь)/ Scary thing)
 def getDictValByPathDef(d, form, *args, braces='<>', default='*'):
+    debug_return(f'Warning! getDictValByPathDef')
     lb, rb = braces[0], braces[1]
     n = 0
     res = ...
@@ -308,6 +321,8 @@ def getDictValByPathDef(d, form, *args, braces='<>', default='*'):
         raise Exception(f'Cannot get dict value by path: \ndict:{d} \npath:{form} \nargs: {args}')
     return res
 
+
+
 def distance_to_line(begin, end, point):
     """Расстояние от отрезка (begin, end) до точки point/ distance from the segment (begin, end) to the point"""
     assert isinstance(begin, Point)
@@ -320,13 +335,14 @@ def distance_to_line(begin, end, point):
     if begin == end:
         dist = (begin - end).abs()
     else:
-        #A, B, C are factors of Ax+By+C=0 equation
-        a = (x2 - x1) # 1/A
-        b = (y1 - y2) # 1/B
-        c = -x1*b -y1*a # C/AB
+        # A, B, C are factors of Ax+By+C=0 equation
+        a = (x2 - x1)  # 1/A
+        b = (y1 - y2)  # 1/B
+        c = -x1*b - y1*a  # C/AB
         dist = (b*x + a*y + c) / (a**2 + b**2)**0.5
         dist = abs(dist)
     return dist
+
 
 def near_to_line(begin, end, point):
     """Проверяет близость точки прямой/ Check whether point is near to the line"""
@@ -341,6 +357,7 @@ def near_to_line(begin, end, point):
     x, y = point.tuple()
 
     return (d < eps) and (min(x1, x2) - eps < x < max(x1, x2) + eps) and (min(y1, y2) - eps < y < max(y1, y2) + eps)
+
 
 def findCycle(SF, block, root):
     """Проверяет существование цикла ссылок/ checking existance of cycle links"""
@@ -357,21 +374,23 @@ def cycle_checkout(SF, block):
     """Проверяет существование цикла ссылок/ checking existance of cycle links"""
     return findCycle(SF, block, block)
 
+
 def find_block_(click, canvas, SF, mode=1):
     """Находит блок по позиции клика/ Find block by its position"""
-    scale = lambda pos: canvas.scale(pos)
-    unscale = lambda pos: canvas.unscale(pos)
+    def scale(pos): return canvas.scale(pos)
+
+    def unscale(pos): return canvas.unscale(pos)
     clickpos = Point(click.x, click.y)
     sfclick = unscale(clickpos)
     debug_return(f'handling click: {clickpos}')
-    if mode == 0: # находжение по радиусу блока
+    if mode == 0:  # находжение по радиусу блока
         for _, block in SF.object_ids.items():
             #debug_return('checking block: ' + block.convertToStr())
             distance = (block.pos - sfclick).abs()
             if distance <= blockR:
                 debug_return(f'block found: {block.convertToStr()}')
                 return block
-    elif mode == 1: # нахождение по клетке клика
+    elif mode == 1:  # нахождение по клетке клика
         for _, block in SF.object_ids.items():
             #debug_return('checking block: ' + block.convertToStr())
             d = block.pos - sfclick

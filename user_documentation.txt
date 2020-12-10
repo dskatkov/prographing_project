@@ -1,0 +1,133 @@
+Пользовательская документация.
+
+prographing progect (далее GP) - среда графического программирования, в которой код представляется в виде блоков различных типов и стрелок(связей зависимости) между ними. По замыслу авторов, GP призван упростить разработку програмных продуктов, содержащих сложные логические связи и зависимости между частями кода, при помощи визуализации этих связей.
+*на данный момент поддерживается только язык программирования python.
+
+При запуске исполнения программы главного модкля(main.py) возникает окно с панелью над ним.
+
+Кнопки панели
+
+1.new
+создает новый пустой холст, предварительно предлагая сохранить открытый файл. Автоматическое название файла - "new file.vrc"
+
+2.open
+открывает уже сохраненный файл в формате (.vrc), то есть ранее созданный с помощью GP логический граф
+
+3.save
+сохраняет измененный логический граф в формате (.vrc), то есть в формате, подходящем для дальнейшей разработке в среде GP, под прежним именем и в прежней директории.
+
+4.save as
+сохраняет созданный или измененный логический граф в формате (.vrc), то есть в формате, подходящем для дальнейшей разработке в среде GP, под заданным именем в заданной директории.
+
+5.build
+экспортирует файл, то есть позволяет создать файл с кодом build_file.py, в котором содержится код, в который преобразован логический граф. файл готов к запуску
+
+6.build as
+аналогично build, только позволяет выбрать название файла и директорию, куда его поместить.
+
+Работа с холстом
+
+1.Двойное нажатие левой кнопки мыши 
+создает новый блок типа untitled, если нажато в пустое место, или открывает окно работы с блоком, если нажато на блок.
+
+2.движение с зажатой левой кнопкой мыши
+позволяет создавать стрелочки между блоками(направленый ребра в графе)
+
+3.движение с зажатой правой кнопкой мыши
+позволяет перемещать блоки по холсту
+
+4.двойное нажатие колесом мыши
+позволяет удалять стрелочки и блоки. при нажатии на блок необходимо подтверждение его удаления.
+
+5.кручение колеса мыши 
+регулирует масштаб изображения
+
+Работа с блоками
+
+тип
+При нажатии на блок открывается поле работы с ним. для начала вас спросят какого типа блок. типы блоков будут описаны далее, но можно написать op - последовательное выполнение, и делать с ним далее что угодно.
+
+
+редактор содержимого
+после ввода типа блока открывается окно редактирования блока, куда можно писать код. далее этот код будет содержаться в блоке и при экспортировании будет записан в итоговый файл
+
+преобразование в код.
+при экспорте берется сверху вниз слева направо первый ранее не обработаный блок и перемещается в итоговый файл. за любым блоком по порядку сверху вниз слева направо идут его дочерние блоки(те, в которые он указывает стрелкой).
+*заметьте, что если на блок C ссылаются два разных блока A и B, то в итоговом файле текст блока C (и всех его дочерних) будет присутствовать дважды. поэтому дважды ссылаться на один блок мы не рекомендуем
+**циклы запрещены (то есть ссылки типа A=>B=>C=>A)
+
+типы блоков
+
+1. op
+последовательное исполнение
+
+2.if
+предназначен для логического ветсвления. предлагается чтобы из него выходило два зависимых блока, первый из которых будет "then" а другой "else". содержимое блока if будет преобразовано в строку if <содержимое блока> :
+#to be continued
+_________________________________________________________________________________
+
+User documentation.
+
+prographing progect (hereinafter GP) is a graphical programming environment in which code is represented as blocks of various types and arrows (dependency links) between them. As conceived by the authors, GP is intended to simplify the development of software products containing complex logical connections and dependencies between parts of the code by visualizing these connections.
+* currently only supported by the python programming language.
+
+When the execution of the program of the main module (main.py) starts, a window appears with a panel above it.
+
+Panel buttons
+
+1.new
+creates a new blank canvas, first prompting you to save the open file. The automatic file name is "new file.vrc"
+
+2.open
+opens an already saved file in the (.vrc) format, that is, a logical graph previously created using GP
+
+3.save
+saves the modified logical graph in the (.vrc) format, that is, in a format suitable for further development in the GP environment, under the same name and in the old directory.
+
+4.save as
+saves the created or modified logical graph in the (.vrc) format, that is, in a format suitable for further development in the GP environment, under the specified name in the specified directory.
+
+5.build
+exports a file, that is, allows you to create a file with the code build_file.py, which contains the code into which the logical graph is converted. file is ready to run
+
+6.build as
+similar to build, only allows you to choose the name of the file and the directory where to put it.
+
+
+Working with canvas
+
+1.Double click the left mouse button
+creates a new block of untitled type, if clicked in an empty space, or opens a window for working with the block, if clicked on the block.
+
+2.Move with the left mouse button pressed
+allows you to create arrows between blocks (directed edges in a graph)
+
+3.Move with the right mouse button pressed
+allows you to move blocks around the canvas
+
+4.Double click with the mouse wheel
+allows you to remove arrows and blocks. when you click on a block, you need to confirm its deletion.
+
+5.mouse wheel spin
+adjusts the image scale
+Working with blocks
+
+a type
+When you click on a block, a field for working with it opens. first you will be asked what type of block. types of blocks will be described later, but you can write op - sequential execution, and do whatever you want with it.
+
+
+content editor
+after entering the block type, the block editing window opens, where you can write code. further, this code will be contained in the block and, when exported, will be written to the final file
+conversion to code.
+during export, the first previously unprocessed block is taken from top to bottom from left to right and moved to the resulting file. any block is followed in order from top to bottom from left to right by its child blocks (those to which it points with an arrow).
+* note that if block C is referenced by two different blocks A and B, then the text of block C (and all its children) will appear twice in the final file. therefore, we do not recommend referencing the same block twice
+** loops are not allowed (i.e. references like A => B => C => A)
+
+block types
+
+1.op
+sequential execution
+
+2.if
+intended for logical branching. it is proposed that two dependent blocks exit from it, the first of which will be "then" and the other "else". the content of the if block will be converted to the string if <block content>:
+#to be continued

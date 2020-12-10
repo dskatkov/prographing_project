@@ -164,7 +164,7 @@ class Block:
             # self.tooltip = ""
         self.SF.object_ids[self.id] = self
 
-    def __del__(self):
+    def delete(self):
         """Удаляет ссылку на себя из SF и свой id из всех блоков/ delete link to itself from SF and its id"""
         self.SF.wasEdited = True
         if self.id in self.SF.object_ids:

@@ -1,5 +1,7 @@
 Пользовательская документация.
 
+В данный момент программа работает только на ОС Windows
+
 prographing progect (далее GP) - среда графического программирования, в которой код представляется в виде блоков различных типов и стрелок(связей зависимости) между ними. По замыслу авторов, GP призван упростить разработку програмных продуктов, содержащих сложные логические связи и зависимости между частями кода, при помощи визуализации этих связей.
 *на данный момент поддерживается только язык программирования python.
 
@@ -62,8 +64,28 @@ prographing progect (далее GP) - среда графического про
 последовательное исполнение
 
 2.if
-предназначен для логического ветсвления. предлагается чтобы из него выходило два зависимых блока, первый из которых будет "then" а другой "else". содержимое блока if будет преобразовано в строку if <содержимое блока> :
-#to be continued
+предназначен для логического ветсвления. предлагается чтобы из него выходило два зависимых блока, первый из которых будет "op" а другой "else". 
+содержимое блока if будет преобразовано в строку if <содержимое блока> :
+
+3.else
+предполагается что идет после if 
+содержимое блока будет преобразовано в else: <содержимое блока>
+
+4.empty
+пустой блок, для технических целей
+содержимого нет
+
+5.for
+представляет цикл for
+преобразует содержимое в for <var> in <range>:
+
+6.class
+для описания классов
+преобразует содержимое в class <name>(<supers>):
+
+7.fun
+описывает функции
+преобразует содержимое в def <name>(<params>):
 _________________________________________________________________________________
 
 User documentation.
@@ -131,3 +153,23 @@ sequential execution
 2.if
 intended for logical branching. it is proposed that two dependent blocks exit from it, the first of which will be "then" and the other "else". the content of the if block will be converted to the string if <block content>:
 #to be continued
+
+3.else
+should come after if
+the content of the block will be converted to else: <block content>
+
+4.empty
+empty block, for technical purposes
+no content
+
+5.for
+represents a for loop
+converts content to for <var> in <range>:
+
+6.class
+for class description
+converts content to class <name> (<supers>):
+
+7.fun
+describes the functions
+converts content to def <name> (<params>):

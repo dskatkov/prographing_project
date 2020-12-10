@@ -29,7 +29,7 @@ arrow_width = 0.15
 arrow_length = 0.2
 
 # Флаг дебага/Debug flag
-debug_flag = 1
+debug_flag = 0
 debug_to_console = 0
 
 # Флаг профилирования/Profiling flag

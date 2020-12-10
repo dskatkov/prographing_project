@@ -1,0 +1,31 @@
+{
+	"subversion": 3,
+	"lang": "python",
+	"build_path": "",
+	"blocks": [
+		{"type":"undefined", "id":0, "childs":[], "pos":[7,20], "data":{"<class>": ""}},
+		{"type":"empty", "id":1, "childs":[], "pos":[7,21], "data":{}},
+		{"type":"op", "id":2, "childs":[10], "pos":[7,22], "data":{"<desc>": "", "<1>": ""}},
+		{"type":"if", "id":3, "childs":[12], "pos":[7,23], "data":{"<desc>": "", "<1>": ""}},
+		{"type":"else", "id":4, "childs":[], "pos":[7,24], "data":{"<desc>": ""}},
+		{"type":"for", "id":5, "childs":[15], "pos":[7,25], "data":{"<desc>": "", "<1>": "", "<2>": ""}},
+		{"type":"class", "id":6, "childs":[13, 10, 16, 17, 14], "pos":[7,27], "data":{"<desc>": "", "<1>": "", "<2>": ""}},
+		{"type":"fun", "id":7, "childs":[16], "pos":[7,26], "data":{"<desc>": "", "<1>": "", "<2>": ""}},
+		{"type":"op", "id":10, "childs":[], "pos":[14,22], "data":{"<desc>": "", "<1>": ""}},
+		{"type":"empty", "id":11, "childs":[], "pos":[14,21], "data":{}},
+		{"type":"if", "id":12, "childs":[], "pos":[14,23], "data":{"<desc>": "", "<1>": ""}},
+		{"type":"undefined", "id":13, "childs":[], "pos":[14,20], "data":{"<class>": ""}},
+		{"type":"else", "id":14, "childs":[], "pos":[14,24], "data":{"<desc>": ""}},
+		{"type":"for", "id":15, "childs":[], "pos":[14,25], "data":{"<desc>": "", "<1>": "", "<2>": ""}},
+		{"type":"fun", "id":16, "childs":[], "pos":[14,26], "data":{"<desc>": "", "<1>": "", "<2>": ""}},
+		{"type":"class", "id":17, "childs":[], "pos":[14,27], "data":{"<desc>": "", "<1>": "", "<2>": ""}},
+		{"type":"empty", "id":18, "childs":[22], "pos":[21,19], "data":{}},
+		{"type":"empty", "id":20, "childs":[21], "pos":[22,14], "data":{}},
+		{"type":"empty", "id":21, "childs":[], "pos":[22,21], "data":{}},
+		{"type":"empty", "id":22, "childs":[], "pos":[21,21], "data":{}},
+		{"type":"empty", "id":23, "childs":[24], "pos":[20,20], "data":{}},
+		{"type":"empty", "id":24, "childs":[], "pos":[20,21], "data":{}},
+		{"type":"empty", "id":25, "childs":[], "pos":[23,21], "data":{}},
+		{"type":"empty", "id":26, "childs":[25], "pos":[23,-366], "data":{}}
+	]
+}

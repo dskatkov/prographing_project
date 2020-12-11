@@ -37,6 +37,8 @@ profile = 1
 
 openEditorAfterCreating = 1
 
+ban_impositions = 0
+
 descend_moving = 0
 
 if __name__ == "__main__":

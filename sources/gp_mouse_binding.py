@@ -158,7 +158,11 @@ def b3_motion(click):
     # сдвиг блоков/block movement
     if canvas.canvas.handling:
         clickpos = Point(click.x, click.y)
-        block = find_block(scale(unscale(clickpos).round()))
+        if ban_impositions:
+            block = find_block(scale(unscale(clickpos).round()))
+        else:
+            block = 0
+
         if not block:
             newpos = unscale(clickpos).round()
             shift = newpos - canvas.canvas.handling.pos
@@ -216,8 +220,24 @@ def b3_release(click):
 
 
 def wheel(click):
-    debug_return(f'wheel:({click.x},{click.y}) {click.delta}')
-    k = e ** (zoomSpeed*click.delta/120)
+    click.d = 0
+    if hasattr(click, 'num') and click.num != '??':
+        if click.num == 4:
+            click.d = 1
+        elif click.num == 5:
+            click.d = -1
+        else:
+            print(f'Invalid mouse wheel event attribute: {click}, click.num={click.num}')
+            return
+    elif hasattr(click, 'delta'):
+        click.d = click.delta
+        if click.d % 120 == 0:
+            click.d /= 120 # for Windows
+    else:
+        print(f'Unknown mouse wheel event: {click}')
+        return
+    debug_return(f'wheel:({click.x},{click.y}) {click.d}')
+    k = e ** (zoomSpeed * click.d)
 
     clickpos = Point(click.x, click.y)
     SF_pos_old = unscale(clickpos)

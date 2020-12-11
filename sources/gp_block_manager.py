@@ -1,6 +1,3 @@
-import json
-import os
-
 from utils import *
 
 # Цвета соединяющих линий
@@ -64,13 +61,6 @@ drawColores = {
     'dict_pair': 'yellow',
     'dict_long_pair': 'pink',
 }
-
-def json_load(path):
-    """Загружает json-объект из файла"""
-    fp = open(path, 'rt')
-    obj = json.load(fp)
-    fp.close()
-    return obj
 
 def load_lang_blocks(lang):
     """Загружает"""

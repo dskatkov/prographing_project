@@ -1,3 +1,6 @@
+import json
+import os
+
 import tkinter as tk
 
 from settings import *
@@ -183,6 +186,12 @@ def debug_return(s):
     if debug_flag:
         debug_log.write(str(s) + '\n')
 
+def json_load(path):
+    """Загружает json-объект из файла"""
+    fp = open(path, 'rt')
+    obj = json.load(fp)
+    fp.close()
+    return obj
 
 def createMenu(master, tree):
     """Создает меню и прикрепляет его к master/ create menu and assign it to master"""

@@ -210,7 +210,9 @@ def ui_init(root):
     canvas.bind("<ButtonRelease-2>", b2_release)
     canvas.bind("<ButtonRelease-3>", b3_release)
 
-    canvas.bind("<MouseWheel>", wheel)
+    canvas.bind("<MouseWheel>", wheel) # for Windows, MacOS
+    canvas.bind("<Button-4>", wheel) # for Linux
+    canvas.bind("<Button-5>", wheel) # for Linux
 
     canvas.bind("<Control-3>", b3_ctrl)
     canvas.bind("<Control-ButtonRelease-3>", b3_ctrl_release)

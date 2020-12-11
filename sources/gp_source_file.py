@@ -25,7 +25,7 @@ class SourceFile:
         self.fileName = ''
         self.buildName = ''
         self.data = 0
-        self.lang = 'default'
+        self.lang = 'python'
         self.wasEdited = False
 
     def changeLang(self, lang):
@@ -37,22 +37,24 @@ class SourceFile:
         self.wasEdited = False
 
         self.data += 1
-        s = ''
-        s += str(self.data) + '\n'
-        s += self.lang + '\n'
-        s += self.buildName + '\n'
-        for _, block in self.object_ids.items():
-            s += block.convertToStr() + '\n'
+
+        data = {
+            'subversion': self.data,
+            'lang': self.lang,
+            'build_path': self.buildName,
+            'blocks': [val.toDict() for key, val in self.object_ids.items()]
+        }
+
 
         if save:
             if fileName:
                 self.fileName = fileName
-                file = open(self.fileName, 'wt')
-                file.write(s)
-                file.close()
+                with open(self.fileName, 'w') as outfile:
+                    json.dump(data, outfile)
+
         else:
             print('Save log:')
-            print(s)
+            print(json.dumps(data, indent=4))
 
     def open(self, fileName):
         """Загружает из файла/ load from file"""
@@ -327,6 +329,15 @@ class Block:
         self.data = {}
         for key_, _ in getDictValByPath(allTypes, f'{self.classname}.edit').items():
             self.data[key_] = ''
+
+    def toDict(self):
+        return {
+            'type': self.classname,
+            'id': self.id,
+            'childs': self.childs,
+            'pos': list(self.pos.tuple()),
+            'data': self.data,
+        }
 
 
 if __name__ == "__main__":

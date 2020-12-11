@@ -88,7 +88,7 @@ def highlight(code):
         else:
             next = ' '
 
-        if (state == states.NONE and char == '/' and next == '/'):
+        if (state == states.NONE and char == '#'):
             state = states.SL_COMMENT
             output += startTag(code, i, colors.SL_COMMENT) + char
             continue
@@ -98,15 +98,15 @@ def highlight(code):
             output += char + endTag(code, i)
             continue
 
-        if (state == states.NONE and char == '/' and next == '*'):
-            state = states.ML_COMMENT
-            output += startTag(code, i, colors.ML_COMMENT) + char
-            continue
+        # if (state == states.NONE and char == '/' and next == '*'):
+        #     state = states.ML_COMMENT
+        #     output += startTag(code, i, colors.ML_COMMENT) + char
+        #     continue
 
-        if (state == states.ML_COMMENT and char == '/' and prev == '*'):
-            state = states.NONE
-            output += char + endTag(code, i)
-            continue
+        # if (state == states.ML_COMMENT and char == '/' and prev == '*'):
+        #     state = states.NONE
+        #     output += char + endTag(code, i)
+        #     continue
 
         closingCharNotEscaped = prev != '\\' or prev == '\\' and code[i-2] == '\\'
         if (state == states.NONE and char == '\''):
@@ -203,7 +203,7 @@ def highlight(code):
     return tags
 
 
-fp = open('code.txt', 'rt', encoding="utf-8")
+fp = open('syntax_coloring.py', 'rt', encoding="utf-8")
 code = fp.read()
 fp.close()
 

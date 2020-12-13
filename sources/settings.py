@@ -1,4 +1,4 @@
-# Цвета различных элементов?Colors of different elements
+# Цвета различных элементов/Colors of different elements
 btnBG = '#202020'
 btnFG = '#ffffff'
 

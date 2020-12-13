@@ -9,7 +9,6 @@ from settings import *
 from utils import *
 from gp_block_manager import *
 
-# canvas - tk.Canvas
 canvasFrame = panelFrame = stateFrame = canvas = mainWindow = ...
 
 
@@ -188,7 +187,7 @@ def ui_init(root):
     except Exception:
         print('Cannot zoom window')
 
-    # Создание нового файла (инициализация source_file.SF)
+    # Создание нового файла (инициализация source_file.SF)/Creation of the new file(initialization new source_file.SF)
     source_file.SF = source_file.SourceFile()
     gp_canvas.canvas.draw(source_file.SF)
     mainWindow.title('new file')

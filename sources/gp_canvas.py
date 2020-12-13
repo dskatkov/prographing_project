@@ -59,12 +59,6 @@ class Canvas:
         x, y = self.scale(block.pos).tuple()
         r = blockR * self.viewzoom
 
-        # photo_ = Image.open(getcwd() + '\\Image\\' + block.classname + '.bmp')
-        # photo = ImageTk.PhotoImage(photo_)
-        # photo = tk.PhotoImage(file='C:\\GitHub\\prographing_project\\sources\\Image\\' + block.classname + '.gif')
-        # print("image size: %dx%d" % (photo.width(), photo.height()))
-        # canvas.create_image(x, y, image=photo, anchor='center') #не работает
-
         ct = block.classname
         if ct in drawColores:
             color = drawColores[ct]
@@ -140,7 +134,6 @@ class Canvas:
 
         line_end = (p4 + p5)
         line_end /= 2
-        # line_end += (line_end - p1).norm()  # костыль для отсутствия просвета
 
         self.master.create_line(
             *[*p1.tuple(), *line_end.tuple()], 

@@ -90,8 +90,5 @@ def change_lang(lang):
 langs = json_load('block_types/LANGS.json')
 allTypes = load_lang_blocks('default')
 
-
-# print(json.dumps(allTypes, indent=4))
-
 if __name__ == '__main__':
     print('This module is not for direct call!')

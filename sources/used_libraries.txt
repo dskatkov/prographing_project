@@ -1,0 +1,22 @@
+Используемые библиотеки/Used libraries:
+
+Профилирование памяти (из консоли)/Profiling from memory
+memory_profiler
+
+Рисование графика/graph drawing
+matplotlib
+
+Профилирование памяти/Memory profiling
+pympler
+
+Граф ссылок/ link graph
+objgraph
+
+Для рисования графа/drawing graph
+xdot
+graphvix
+
+Реализация графики/ graphics
+tkinter
+
+===To be continued===

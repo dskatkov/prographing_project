@@ -38,18 +38,10 @@ class TextEditor:
         self.root = root
         self.canvas = canvas
 
-        # configuring main window
-        #root.minsize(400, 200)
-
         root.columnconfigure(0, weight=1, minsize=0)
         root.rowconfigure(0, weight=0, minsize=0)  # 20)
         root.rowconfigure(1, weight=1, minsize=0)
         root.rowconfigure(2, weight=0, minsize=20)
-
-        # creating menu
-        # mainMenu = tk.Menu(master=root)
-        # createMenu(mainMenu, textEditorMenu_tree)
-        # root.config(menu=mainMenu)
 
         # creating and placing frames
         self.panelFrame = tk.Frame(master=root, bg=panelBG)
@@ -66,8 +58,6 @@ class TextEditor:
         focused = 0  # TODO: параметр для автофокуса
         debug_return('block fields: ' + str(getDictValByPath(allTypes, f'{block.classname}.edit')))
         for key, val in getDictValByPath(allTypes, f'{block.classname}.edit').items():
-            # editing_type = getDictValByPath(allTypes, f'{block.classname}.edit.{key}.type')
-            # header = getDictValByPath(allTypes, f'{block.classname}.edit.{key}.header')
             editing_type = val['type']
             header = val['header']
             
@@ -91,7 +81,6 @@ class TextEditor:
                 if not focused:
                     ta.focus()
                     focused = 1
-                    #ta.bind("Return", lambda: self.close(-1))
             elif editing_type == 'multiline':
                 if header:
                     lbl = tk.Label(master=self.editFrame,
@@ -107,15 +96,6 @@ class TextEditor:
                 self.textAreas[key] = ta
             else:
                 debug_return('Unknown type of editing field')
-
-        # placing buttons to panelFrame
-        # panelFrameButtons = [
-        #     ('open', lambda: print('open, not implemented')),
-        #     ('save', lambda: print('save, not implemented')),
-        # ]
-        # placeButtons(self.panelFrame, panelFrameButtons)
-
-        # placing buttons to panelFrame
         stateFrameButtons = [
             ('✔ OK', lambda: self.close(1)),
             ('❌ Отмена', lambda: self.close(0)),
@@ -124,16 +104,6 @@ class TextEditor:
 
         self.root.protocol("WM_DELETE_WINDOW", lambda: self.close(-1))
         self.root.title(block.getSub())
-
-# def dialogOpenFile(root, textArea):
-
-#     textArea.delete('1.0', 'end')
-#     textArea.insert('1.0', open(fileName, 'rt').read())
-#     root.title(fileName)
-
-
-# def dialogSaveFile(root, textArea):
-#     open(fileName, 'wt').write(textArea.get('1.0', 'end'))
 
 
     def close(self, state=-1):
@@ -157,8 +127,6 @@ class TextEditor:
 
         if state == 1:
             # сохраниить и закрыть/ save and close
-            # self.block.text1 = self.textBox1.get('1.0', 'end')[:-1]
-            # print('opening: '+str(self.block.data))
 
             for key, val in getDictValByPath(allTypes, f'{self.block.classname}.edit').items():
                 debug_return(f'saving key: {key}')

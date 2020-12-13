@@ -31,9 +31,9 @@ class Point:
         self.y += other.y
         return self
 
-    # def __ineg__(self):
-    #     self.x *= -1
-    #     self.y *= -1
+    def __ineg__(self):
+        self.x *= -1
+        self.y *= -1
 
     def __isub__(self, other):
         self.x -= other.x
@@ -153,6 +153,7 @@ class Point:
         return self
 
     def swapInPlace(self):
+        """interchange x and y coordinates"""
         self.x, self.y = self.y, self.x
         return self
 
@@ -161,6 +162,7 @@ class Point:
         return self
 
     def copy(self):
+        """Make copy of the point"""
         return Point(self.x, self.y)
 
 
@@ -408,7 +410,7 @@ def find_block_(click, canvas, SF, mode=1):
                 return block
 
 
-# Число Эйлера/ Eiler's number
+# Число Эйлера и число пи/ Eiler's number and pi number
 e = 2.718281828459045
 pi = 3.1415926535
 

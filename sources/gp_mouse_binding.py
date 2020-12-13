@@ -1,6 +1,4 @@
 import tkinter as tk
-import tkinter.font
-#import time
 from random import uniform
 
 from gp_mouse_binding import *
@@ -60,7 +58,6 @@ def b2(click):
     debug_return(f'wheel click: ({click.x},{click.y})')
     clickpos = Point(click.x, click.y)
     block = find_block(clickpos)
-    #canvas.canvas.handling = block
     # удаление блока/block deletion
     if block:
         if tk.messagebox.askyesno("Delete?", "Do you want to delete block '" + block.getSub() + "'?", parent=canvasFrame):

@@ -1,7 +1,6 @@
 import tkinter as tk
 from random import uniform
 
-from gp_mouse_binding import *
 from settings import *
 from utils import *
 import gp_source_file as source_file
@@ -15,7 +14,10 @@ def scale(pos): return canvas.canvas.scale(pos)
 def unscale(pos): return canvas.canvas.unscale(pos)
 
 
-def assign_canvasFrame(canvasframe):
+canvasFrame = ...
+
+
+def assign_canvas_frame(canvasframe):
     """Передает в модуль поверхность/ transmit surface into the module"""
     global canvasFrame
     canvasFrame = canvasframe
@@ -32,14 +34,9 @@ def find_block(click, mode=1):
 
 """Обработчики нажатия клавиш/ Mouse and keys handlers"""
 
-b1_state = ''
-b2_state = ''
-b3_state = ''
-
 
 def b1(click):
     """левая кнопка мыши/ left mouse button"""
-    b1_state = 'n'
     debug_return(f'canvas view pos: {canvas.canvas.viewpos}')
     debug_return(f'left click: ({click.x},{click.y})')
     block = find_block(click)
@@ -53,14 +50,16 @@ def b1(click):
 
 
 def b2(click):
-    '''колесо/ wheel'''
-    b2_state = 'n'
+    """колесо/ wheel"""
     debug_return(f'wheel click: ({click.x},{click.y})')
     clickpos = Point(click.x, click.y)
     block = find_block(clickpos)
     # удаление блока/block deletion
     if block:
-        if tk.messagebox.askyesno("Delete?", "Do you want to delete block '" + block.getSub() + "'?", parent=canvasFrame):
+        if tk.messagebox.askyesno(
+                "Delete?",
+                "Do you want to delete block '" + block.getSub() + "'?",
+                parent=canvasFrame):
             block.delete()
     # удаление линка/link deletion
     if not block:
@@ -81,7 +80,6 @@ def b2(click):
 
 
 def b3(click):
-    b2_state = 'n'
     debug_return(f'right click: ({click.x},{click.y})')
     block = find_block(click)
     # установка перемещаемого блока/set of moving block
@@ -94,7 +92,6 @@ def b3(click):
 
 def b1_double(click):
     """левый двойной щелок/ left doubleclick"""
-    b1_state = 'd'
     debug_return(f'left double click: ({click.x},{click.y})')
     block = find_block(click)
     clickpos = Point(click.x, click.y)
@@ -116,7 +113,6 @@ def b1_double(click):
 
 def b2_double(click):
     """двойной щелчок колесом/wheel doubleclick"""
-    b2_state = 'd'
     debug_return(f'wheel double click: ({click.x},{click.y})')
     ...
     redraw()
@@ -124,7 +120,6 @@ def b2_double(click):
 
 def b3_double(click):
     """правый двойной щелчок/ right doubleclick"""
-    b3_state = 'd'
     debug_return(f'right double click: ({click.x},{click.y})')
 
     redraw()
@@ -132,7 +127,6 @@ def b3_double(click):
 
 def b1_motion(click):
     """движение с зажатой левой клавишей/ movement with pressed left button"""
-    b1_state = 'm'
     debug_return(f'left motion: ({click.x},{click.y})')
     # сдвиг конца стрелки/ arrow end movement
     if canvas.canvas.handling:
@@ -142,7 +136,6 @@ def b1_motion(click):
 
 def b2_motion(click):
     """движение с зажатым колесом/ movement with pressed wheel"""
-    b2_state = 'm'
     debug_return(f'wheel motion:({click.x},{click.y})')
     ...
     redraw()
@@ -150,7 +143,6 @@ def b2_motion(click):
 
 def b3_motion(click):
     """движение с зажатой правой клавишей/ movement with pressed right button"""
-    b3_state = 'm'
     debug_return(f'right motion:({click.x},{click.y})')
     # сдвиг блоков/block movement
     if canvas.canvas.handling:
@@ -171,19 +163,20 @@ def b3_motion(click):
 
 def b1_release(click):
     """отпускание левой клавиши/ release of the left button"""
-    b3_state = ''
     debug_return(f'left release:({click.x},{click.y})')
     block = find_block(click)
     # создание линка/Link creation
     if canvas.canvas.handling:
-        if (block) and (not block == canvas.canvas.handling) and (not block in canvas.canvas.handling.childs):
+        if block and (not block == canvas.canvas.handling) and (block not in canvas.canvas.handling.childs):
+            block_id = None
             for obj in source_file.SF.object_ids:
                 if source_file.SF.object_ids[obj] == block:
-                    id = obj
-            canvas.canvas.handling.addLink(id)
-            if cycle_checkout(source_file.SF, block):
-                canvas.canvas.handling.delLink(id)
-                debug_return('ban cycle!!!')
+                    block_id = obj
+            if block_id is not None:
+                canvas.canvas.handling.addLink(block_id)
+                if cycle_checkout(source_file.SF, block):
+                    canvas.canvas.handling.delLink(block_id)
+                    debug_return('ban cycle!!!')
     canvas.canvas.touch = None
     canvas.canvas.link_creation = False
     if canvas.canvas.handling:
@@ -194,7 +187,6 @@ def b1_release(click):
 
 def b2_release(click):
     """отпускание колеса/ release of the wheel"""
-    b2_state = ''
     debug_return(f'wheel release:({click.x},{click.y})')
     ...
     redraw()
@@ -202,7 +194,6 @@ def b2_release(click):
 
 def b3_release(click):
     """отпускание правой клавиши/ release of the right button"""
-    b1_state = ''
     debug_return(f'right release:({click.x},{click.y})')
     # сброс таскаемого блока
     canvas.canvas.touch = None
@@ -229,7 +220,7 @@ def wheel(click):
     elif hasattr(click, 'delta'):
         click.d = click.delta
         if click.d % 120 == 0:
-            click.d /= 120 # for Windows
+            click.d /= 120  # for Windows
     else:
         print(f'Unknown mouse wheel event: {click}')
         return

@@ -2,7 +2,7 @@
     "canvas": {
 		"image": "",
 		"tooltip": "",
-		"desc":"for <1> in <2>"
+		"desc":"while <1>"
     },
     "edit": {
 		"<desc>": {
@@ -10,18 +10,14 @@
 			"type": "invisible"
 		},
 		"<1>": {
-			"header": "var",
-			"type": "singleline"
-		},
-		"<2>": {
-			"header": "range",
+			"header": "condition",
 			"type": "singleline"
 		}
     },
     "build": {
 		"incTab": 1,
 		"hasPrefix": 1,
-		"prefix": "for <1> in <2>:",
+		"prefix": "while <1>:",
 		"hasPostfix": 0,
 		"postfix": "",
 		"multiline": 0

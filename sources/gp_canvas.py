@@ -1,5 +1,5 @@
-from settings import *
-from utils import *
+# from settings import *
+# from utils import *
 from gp_block_manager import *
 
 canvas = ...
@@ -13,63 +13,64 @@ class Canvas:
         self.handling = None
         self.touch = None
         self.link_creation = None
+        self.SF = None
 
     def draw(self, SF):
         """Рисует холст (блоки + линки)/ drawing canvas (blocks + links)"""
         # Очистка/Cleaning
         self.SF = SF
         try:
-            self.master.delete("all")
+            self.master.delete("all")  # TODO: убрать это и добавить изменение атрибутов существующих спрайтов.
         except Exception:
             print('Cannot delete all figures')
         self.master.create_rectangle(0, 0, 2000, 2000, fill=textBG)
 
         # Выбранный блок / Chosen block
         if self.handling:
-            self.drawBlock(self.handling, chosen=1)
+            self.draw_block(self.handling, chosen=1)
 
         # Линки/ Links
         for _, block in SF.object_ids.items():
             for child in block.childs:
-                if child in  SF.object_ids:
-                    self.drawLink(block, SF.object_ids[child])
+                if child in SF.object_ids:
+                    self.draw_link(block, SF.object_ids[child])
                 else:
-                    print(f'warning Canvas.draw unknown block id: {child}')
+                    print(f'Warning: [Canvas.draw] unknown block id: {child}')
         if self.link_creation:
-            self.drawLink(self.handling, self.link_creation, creating=1)
+            self.draw_link(self.handling, self.link_creation, creating=1)
 
         # Блоки/Blocks
         for _, block in SF.object_ids.items():
-            self.drawBlock(block)
+            self.draw_block(block)
 
         # Подписи/Subscription
         for _, block in SF.object_ids.items():
-            self.drawBlockText(block)
+            self.draw_block_text(block)
 
     def scale(self, pos):
         """положение на холсте -> положение на экране/ Placement on canvas -> placement on screen"""
         return (pos - self.viewpos) * self.viewzoom
 
-    def unscale(self, pos):
+    def unscale(self, pos: Point):
         """положение на экране -> положение на холсте/ placement on screen -> placement on canvas"""
         return pos * (1 / self.viewzoom) + self.viewpos
 
-    def drawBlock(self, block, chosen=0):
+    def draw_block(self, block, chosen=0):
         """Рисует блок/ Drawing block"""
         x, y = self.scale(block.pos).tuple()
         r = blockR * self.viewzoom
 
         ct = block.classname
-        if ct in drawColores:
-            color = drawColores[ct]
+        if ct in drawColors:
+            color = drawColors[ct]
         else:
-            color = drawColores['?']
+            color = drawColors['undefined']
 
         if chosen:
-            chosen_color = drawColores['chosen']
-            R = chosen_R * self.viewzoom
+            chosen_color = drawColors['chosen']
+            r_sel = chosen_R * self.viewzoom
             self.master.create_oval(
-                *[(x - R), (y - R), (x + R), (y + R)], 
+                *[(x - r_sel), (y - r_sel), (x + r_sel), (y + r_sel)],
                 fill=chosen_color,
             )
         else:
@@ -79,7 +80,7 @@ class Canvas:
                 activewidth=0.1 * self.viewzoom,
             )
 
-    def drawBlockText(self, block):
+    def draw_block_text(self, block):
         """делает подпись блока/Making block subscription"""
         x, y = self.scale(block.pos).tuple()
         r = blockR * self.viewzoom
@@ -93,33 +94,35 @@ class Canvas:
                 font="Consolas "+str(fontsize),
                 )
 
-    def drawLink(self, block, child, creating=0):
+    def draw_link(self, block, child, creating=0):
         """Рисует линк/ Drawing link"""
         p1 = self.scale(block.pos)
         thickness = link_width * self.viewzoom
         if creating:
             p2 = child
-            color = getDictValByPathDef(
-                linkColores, '<1>_',  'creating', default='')
+            color = linkColors['creating_']
         else:
             p2 = self.scale(child.pos)
-            color = getDictValByPathDef(
-                linkColores, '<1>_<2>',  block.classname, child.classname, default='')
+            left = block.classname
+            right = child.classname
+            for key in [f'{left}_{right}', f'{left}_', f'_{right}', f'_']:
+                if key in linkColors:
+                    color = linkColors[key]
 
         if p1 == p2:
             return
 
         dist = p1.dist(p2)
 
-        l = arrow_length * self.viewzoom / dist
+        length = arrow_length * self.viewzoom / dist
         if not creating:
-            l *= dist / (dist - blockR * self.viewzoom)
+            length *= dist / (dist - blockR * self.viewzoom)
 
         if not creating:
             dif = (blockR * self.viewzoom) / dist
             p2 += (p1 - p2) * dif
 
-        p3 = p2 - (p2 - p1) * l
+        p3 = p2 - (p2 - p1) * length
 
         delta = p2.copy()
         delta -= p1

@@ -58,21 +58,18 @@ def pos(code, i):
 def highlight(code):
     tags = {}
 
-    class A:
-        n = 0
-    id = A()
-    id.n = 0
+    id = [0]
 
-    def startTag(code, i, color, tags=tags, id=id):
-        tags[id.n] = {}
-        tags[id.n][0] = pos(code, i)
-        tags[id.n][1] = None
-        tags[id.n][2] = color
+    def startTag(i, color, id=id):
+        tags[id[0]] = {}
+        tags[id[0]][0] = pos(code, i)
+        tags[id[0]][1] = None
+        tags[id[0]][2] = color
         return f'<span style="color: {color}">'
 
-    def endTag(code, i, tags=tags, id=id):
-        tags[id.n][1] = pos(code, i+1)
-        id.n += 1
+    def endTag(i, id=id):
+        tags[id[0]][1] = pos(code, i+1)
+        id[0] += 1
         return '</span>'
 
     output = ''
@@ -90,91 +87,44 @@ def highlight(code):
 
         if (state == states.NONE and char == '#'):
             state = states.SL_COMMENT
-            output += startTag(code, i, colors.SL_COMMENT) + char
+            output += startTag(i, colors.SL_COMMENT) + char
             continue
 
         if (state == states.SL_COMMENT and char == '\n'):
             state = states.NONE
-            output += char + endTag(code, i)
+            output += char + endTag(i)
             continue
 
-        # if (state == states.NONE and char == '/' and next == '*'):
-        #     state = states.ML_COMMENT
-        #     output += startTag(code, i, colors.ML_COMMENT) + char
-        #     continue
-
-        # if (state == states.ML_COMMENT and char == '/' and prev == '*'):
-        #     state = states.NONE
-        #     output += char + endTag(code, i)
-        #     continue
 
         closingCharNotEscaped = prev != '\\' or prev == '\\' and code[i-2] == '\\'
         if (state == states.NONE and char == '\''):
             state = states.SINGLE_QUOTE
-            output += startTag(code, i, colors.SINGLE_QUOTE) + char
+            output += startTag(i, colors.SINGLE_QUOTE) + char
             continue
 
         if (state == states.SINGLE_QUOTE and char == '\'' and closingCharNotEscaped):
             state = states.NONE
-            output += char + endTag(code, i)
+            output += char + endTag(i)
             continue
 
         if (state == states.NONE and char == '"'):
             state = states.DOUBLE_QUOTE
-            output += startTag(code, i, colors.DOUBLE_QUOTE) + char
+            output += startTag(i, colors.DOUBLE_QUOTE) + char
             continue
 
         if (state == states.DOUBLE_QUOTE and char == '"' and closingCharNotEscaped):
             state = states.NONE
-            output += char + endTag(code, i)
+            output += char + endTag(i)
             continue
-
-        if (state == states.NONE and char == '`'):
-            state = states.ML_QUOTE
-            output += startTag(code, i, colors.ML_QUOTE) + char
-            continue
-
-        if (state == states.ML_QUOTE and char == '`' and closingCharNotEscaped):
-            state = states.NONE
-            output += char + endTag(code, i)
-            continue
-
-        # if (state == states.NONE and char == '/'):
-        #     word = ''
-        #     j = 0
-        #     isRegex = True
-        #     while (i + j >= 0):
-        #         j -= 1
-        #         if (code[i+j] in symbols):
-        #             break
-        #         if (not isAlphaNumericChar(code[i+j]) and len(word) > 0):
-        #             break
-        #         if (isAlphaNumericChar(code[i+j])):
-        #             word = code[i+j] + word
-        #         if (code[i+j] in ')]}'):
-        #             isRegex = False
-        #             break
-
-        #     if (len(word) > 0 and not (word in keywords)):
-        #         isRegex = False
-        #     if (isRegex):
-        #         state = states.REGEX_LITERAL
-        #         output += startTag(code, i, colors.REGEX_LITERAL) + char
-        #         continue
-
-        # if (state == states.REGEX_LITERAL and char == '/' and closingCharNotEscaped):
-        #     state = states.NONE
-        #     output += char + endTag(code, i)
-        #     continue
 
         if (state == states.NONE and (char in digits) and not isAlphaNumericChar(prev)):
             state = states.NUMBER_LITERAL
-            output += startTag(code, i, colors.NUMBER_LITERAL) + char
+            output += startTag(i, colors.NUMBER_LITERAL) + char
             continue
 
         if (state == states.NUMBER_LITERAL and (char not in digits) and (char != '.')):
             state = states.NONE
-            output += endTag(code, i-1)
+            output += endTag(i-1)
 
         if (state == states.NONE and not isAlphaNumericChar(prev)):
             word = ''
@@ -185,19 +135,19 @@ def highlight(code):
 
             if (word in keywords):
                 state = states.KEYWORD
-                output += startTag(code, i, colors.KEYWORD)
+                output += startTag(i, colors.KEYWORD)
 
             if (word in specials):
                 state = states.SPECIAL
-                output += startTag(code, i, colors.SPECIAL)
+                output += startTag(i, colors.SPECIAL)
 
         if ((state == states.KEYWORD or state == states.SPECIAL) and not isAlphaNumericChar(char)):
             state = states.NONE
-            output += endTag(code, i)
+            output += endTag(i)
 
         if (state == states.NONE and (char in symbols)):
-            output += startTag(code, i, colors.SYMBOLS) + \
-                char + endTag(code, i)
+            output += startTag(i, colors.SYMBOLS) + \
+                char + endTag(i)
             continue
 
     return tags

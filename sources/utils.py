@@ -1,5 +1,5 @@
 import json
-import os
+# import os
 
 import tkinter as tk
 
@@ -15,11 +15,11 @@ class Point:
 
     def __add__(a, b):
         """a + b"""
-        return Point(a.x+b.x, a.y+b.y)
+        return Point(a.x + b.x, a.y + b.y)
 
     def __mul__(a, k):
         """a * k"""
-        return Point(a.x*k, a.y*k)
+        return Point(a.x * k, a.y * k)
 
     def __imul__(self, k):
         self.x *= k
@@ -61,7 +61,7 @@ class Point:
     def __truediv__(a, k):
         """a * k"""
         if k:
-            return Point(a.x/k, a.y/k)
+            return Point(a.x / k, a.y / k)
         else:
             return Point(0, 0)
 
@@ -85,7 +85,8 @@ class Point:
         """Длина вектора/vector length"""
         return (self.x ** 2 + self.y ** 2) ** 0.5
 
-    def fromTuple(self, tup):
+    @staticmethod
+    def fromTuple(tup):
         """Создает Point из кортежа/ create point out of tuple"""
         return Point(*tup)
 
@@ -100,16 +101,16 @@ class Point:
 
     def round(self, s=1):
         """Округляет координаты до требуемой точности/ round to the necessary accuracy"""
-        return Point(round(self.x/s)*s, round(self.y/s)*s)
+        return Point(round(self.x / s) * s, round(self.y / s) * s)
 
     def swap(self):
         return Point(self.y, self.x)
 
     def norm(self, k=1):
-        return self / (self.abs()/k)
+        return self / (self.abs() / k)
 
     def dist(self, other):
-        return ((self.x-other.x)**2+(self.y-other.y)**2)**0.5
+        return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2) ** 0.5
 
     def setInPlace(self, x, y):
         self.x = x
@@ -126,7 +127,7 @@ class Point:
         self.y *= k
         return self
 
-    def negInPlace(self, other):
+    def negInPlace(self):
         self.x *= -1
         self.y *= -1
         return self
@@ -148,8 +149,8 @@ class Point:
 
     def roundInPlace(self, s=1):
         """Округляет координаты до требуемой точности/ round to the necessary accuracy"""
-        self.x = round(self.x/s)*s,
-        self.y = round(self.y/s)*s
+        self.x = round(self.x / s) * s,
+        self.y = round(self.y / s) * s
         return self
 
     def swapInPlace(self):
@@ -181,25 +182,27 @@ def debug_close():
     debug_log.close()
 
 
-def debug_return(s):
+def debug_return(s: str):
     """Вывод в дебаговый лог/ output to debug log"""
     if debug_to_console:
         print(s)
     if debug_flag:
         debug_log.write(str(s) + '\n')
 
-def json_load(path):
+
+def json_load(path: str):
     """Загружает json-объект из файла"""
     fp = open(path, 'rt')
     obj = json.load(fp)
     fp.close()
     return obj
 
-def createMenu(master, tree):
+
+def createMenu(master, tree: dict):
     """Создает меню и прикрепляет его к master/ create menu and assign it to master"""
     for key, val in tree.items():
         m = tk.Menu(master=master, tearoff=0)
-        if type(val) == type({}):
+        if isinstance(val, dict):
             createMenu(m, val)
         else:
             master.add_command(label=key, command=val)
@@ -207,7 +210,7 @@ def createMenu(master, tree):
         master.add_cascade(label=key, menu=m)
 
 
-def placeButtons(master, buttons, side='left', fg=btnFG, bg=btnBG):
+def placeButtons(master, buttons: list, side: str = 'left', fg=btnFG, bg=btnBG):
     """Располагает кнопки на фрейме/ place buttons on frame"""
     for btn in buttons:
         b = tk.Button(
@@ -215,24 +218,24 @@ def placeButtons(master, buttons, side='left', fg=btnFG, bg=btnBG):
         b.pack(side=side, padx=3, pady=3)
 
 
-def getSettingsByLang(lang):
-    """Устанавливает настройки в связи с языком программирования/Set setting associated with programming language"""
-    raise Exception
-    res = {}
-    for type in allTypes:
-        res = dictMerge(
-            res,
-            createDictByPath(
-                f'{type}.build',
-                dictMerge(
-                    getDictValByPath(allTypes, f'{type}.build.{lang}'), getDictValByPath(allTypes, f'{type}.build.*')
-                )
-            )
-        )
-        for key, val in allTypes[type].items():
-            if not (key in ['build']):
-                res = dictMerge(res, {type: {key: val}})
-    return res
+# def getSettingsByLang(lang):
+#     """Устанавливает настройки в связи с языком программирования/Set setting associated with programming language"""
+#     raise Exception
+#     res = {}
+#     for type in allTypes:
+#         res = dictMerge(
+#             res,
+#             createDictByPath(
+#                 f'{type}.build',
+#                 dictMerge(
+#                     getDictValByPath(allTypes, f'{type}.build.{lang}'), getDictValByPath(allTypes, f'{type}.build.*')
+#                 )
+#             )
+#         )
+#         for key, val in allTypes[type].items():
+#             if not (key in ['build']):
+#                 res = dictMerge(res, {type: {key: val}})
+#     return res
 
 
 def takeFirst(x, y): return x
@@ -243,16 +246,15 @@ def takeSecond(x, y): return y
 
 def normalMerge(a, b, f=None):
     """Функция слияния двух элементов/ Function of merging two elements"""
-    if type(a) != dict or type(b) != dict:
+    if isinstance(a, dict) and isinstance(b, dict):
+        return dictMerge(a, b)
+    else:
         if a == b:
             return a
         elif f is not None:
             return f(a, b)
         else:
             raise Exception(f'Merge conflict: {a} and {b}')
-            return a
-    else:
-        return dictMerge(a, b)
 
 
 def dictMerge(*dicts, f=None):
@@ -283,10 +285,11 @@ def dictMerge(*dicts, f=None):
         return dicts[0]
 
 
-def getDictValByPath(d, path, err=0):
-    """Возвращает значение элемента в словаре по пути к элементу/ return element value in dictionary by path to the element"""
-    val = d
-    spl = path.split('.')
+def _getDictValByPath(d: dict, path: str, err=None):
+    """Возвращает значение элемента в словаре по пути к элементу
+    / returns element value in dictionary by path to the element"""
+    val: dict = d
+    spl: list = path.split('.')
     for key in spl:
         if key in val:
             val = val[key]
@@ -295,72 +298,36 @@ def getDictValByPath(d, path, err=0):
     return val
 
 
-def createDictByPath(path, val):
-    """Создает вложенный словарь с одним элементом по пути/ create inserted dictionary with one element by path"""
-    raise Exception('Warning')
-    spl = path.split('.')
-    spl.reverse()
-
-    d = {spl[0]: val}
-
-    for key in spl[1:]:
-        d = {key: d}
-    return d
-
-
-def setDictValByPath(d, path, val):
-    """Устанавливает значение во вложенном словаре по пути/ Set value in inserted dictionary by path"""
-    return dictMerge(d, createDictByPath(path, val), f=takeSecond)
-
-def getDictValByPathDef(d, form, *args, braces='<>', default='*'):
-    debug_return(f'Warning! getDictValByPathDef')
-    lb, rb = braces[0], braces[1]
-    n = 0
-    res = ...
-    while (res == ...) and n < 2 ** len(args):
-        s = form
-        for i in range(len(args)-1, -1, -1):
-            if not (n & (1 << (len(args) - i - 1))):
-                s = s.replace(f'{lb}{i+1}{rb}', args[i])
-            else:
-                s = s.replace(f'{lb}{i+1}{rb}', default)
-        v = getDictValByPath(d, s, err=...)
-        if v != ...:
-            res = v
-        n += 1
-    if res == ...:
+def getDictValByPath(d, form, *args, braces='<>'):
+    lb, rb = braces
+    s = form
+    for i in range(len(args) - 1, -1, -1):
+        s = s.replace(f'{lb}{i + 1}{rb}', args[i])
+    res = _getDictValByPath(d, s)
+    if res is None:
         raise Exception(f'Cannot get dict value by path: \ndict:{d} \npath:{form} \nargs: {args}')
     return res
 
 
-
-def distance_to_line(begin, end, point):
+def distance_to_line(begin: Point, end: Point, point: Point):
     """Расстояние от отрезка (begin, end) до точки point/ distance from the segment (begin, end) to the point"""
-    assert isinstance(begin, Point)
-    assert isinstance(end, Point)
-    assert isinstance(point, Point)
-
     x1, y1 = begin.tuple()
     x2, y2 = end.tuple()
     x, y = point.tuple()
     if begin == end:
-        dist = (begin - end).abs()
+        dist = begin.dist(point)
     else:
         # A, B, C are factors of Ax+By+C=0 equation
         a = (x2 - x1)  # 1/A
         b = (y1 - y2)  # 1/B
-        c = -x1*b - y1*a  # C/AB
-        dist = (b*x + a*y + c) / (a**2 + b**2)**0.5
+        c = -x1 * b - y1 * a  # C/AB
+        dist = (b * x + a * y + c) / (a ** 2 + b ** 2) ** 0.5
         dist = abs(dist)
     return dist
 
 
-def near_to_line(begin, end, point):
+def near_to_line(begin: Point, end: Point, point: Point):
     """Проверяет близость точки прямой/ Check whether point is near to the line"""
-    assert isinstance(begin, Point)
-    assert isinstance(end, Point)
-    assert isinstance(point, Point)
-
     eps = nearToLine
     d = distance_to_line(begin, end, point)
     x1, y1 = begin.tuple()
@@ -369,9 +336,9 @@ def near_to_line(begin, end, point):
 
     return (d < eps) and (min(x1, x2) - eps < x < max(x1, x2) + eps) and (min(y1, y2) - eps < y < max(y1, y2) + eps)
 
-
+# TODO: перенести эти функции в gp_sourcefile.py
 def findCycle(SF, block, root):
-    """Проверяет существование цикла ссылок/ checking existance of cycle links"""
+    """Проверяет существование цикла ссылок/ checking existence of cycle links"""
     for id in block.childs:
         child = SF.object_ids[id]
         if child is root:
@@ -382,37 +349,41 @@ def findCycle(SF, block, root):
 
 
 def cycle_checkout(SF, block):
-    """Проверяет существование цикла ссылок/ checking existance of cycle links"""
+    """Проверяет существование цикла ссылок/ checking existence of cycle links"""
     return findCycle(SF, block, block)
 
 
 def find_block_(click, canvas, SF, mode=1):
     """Находит блок по позиции клика/ Find block by its position"""
-    def scale(pos): return canvas.scale(pos)
 
-    def unscale(pos): return canvas.unscale(pos)
+    # def scale(pos):
+    #     return canvas.scale(pos)
+
+    def unscale(pos):
+        return canvas.unscale(pos)
+
     clickpos = Point(click.x, click.y)
     sfclick = unscale(clickpos)
     debug_return(f'handling click: {clickpos}')
     if mode == 0:  # находжение по радиусу блока
         for _, block in SF.object_ids.items():
-            #debug_return('checking block: ' + block.convertToStr())
+            # debug_return('checking block: ' + block.convertToStr())
             distance = (block.pos - sfclick).abs()
             if distance <= blockR:
                 debug_return(f'block found: {block.convertToStr()}')
                 return block
     elif mode == 1:  # нахождение по клетке клика
         for _, block in SF.object_ids.items():
-            #debug_return('checking block: ' + block.convertToStr())
+            # debug_return('checking block: ' + block.convertToStr())
             d = block.pos - sfclick
             if abs(d.x) < 0.5 and abs(d.y) < 0.5:
                 debug_return(f'block found: {block.convertToStr()}')
                 return block
 
 
-# Число Эйлера и число пи/ Eiler's number and pi number
+# Число Эйлера и число пи/ Euler's number and pi number
 e = 2.718281828459045
-pi = 3.1415926535
+pi: float = 3.1415926535
 
 if __name__ == '__main__':
     print('This module is not for direct call!')

@@ -1,6 +1,6 @@
 import tkinter as tk
-#import tkinter.font
-import time
+# import tkinter.font
+# import time
 
 import gp_source_file as source_file
 import gp_canvas as gp_canvas
@@ -57,24 +57,25 @@ def build(root):
 
 def buildAs(root):
     """Обработчик кнопки build as/ handler of build as button"""
-    ext = '.b.'+source_file.SF.lang
+    ext = '*.*'  # '.b.'+source_file.SF.lang
     fileName = tk.filedialog.SaveAs(
         root, filetypes=[("Source code", ext)]).show()
     if fileName == '':
         return
     else:
-        debug_return('Building to '+fileName)
-        if not fileName.endswith(ext):
-            fileName += ext
+        debug_return('Building to ' + fileName)
+        # if not fileName.endswith(ext):
+        #     fileName += ext
         source_file.SF.build(fileName)
+
 
 def close(root):
     if source_file.SF.closeQ():
         del source_file.SF
         return 1
     else:
-        ans = tk.messagebox.askyesnocancel("save?", "Save file?", parent=root)
-        if ans == None:
+        ans = tk.messagebox.askyesnocancel("Save?", "Save changes?", parent=root)
+        if ans is None:
             return 0
         if ans == 1:
             source_file.SF.save()
@@ -83,6 +84,7 @@ def close(root):
         if ans == 0:
             del source_file.SF
             return 1
+
 
 def newFile(root):
     """Обработчик кнопки new file/ handler of new file button"""
@@ -96,9 +98,8 @@ def closeWindow(root):
     if close(root):
         root.destroy()
 
+
 consoleWindow = None
-
-
 def openConsole(root):
     def close(window, entry):
         if entry.get():
@@ -110,7 +111,7 @@ def openConsole(root):
         entry = tk.Entry(master=consoleWindow)
         entry.pack()
         entry.focus()
-        consoleWindow.title('console')
+        consoleWindow.title('Console')
         consoleWindow.protocol(
             "WM_DELETE_WINDOW", lambda: close(consoleWindow, entry))
 
@@ -138,60 +139,65 @@ def ui_init(root):
     stateFrame.grid(row=2, column=0, sticky='nsew')
 
     panelFrameButtons = [
-        ('new', lambda: newFile(root)),
-        ('open', lambda: open(root)),
-        ('save', lambda: save(root)),
-        ('save as', lambda: saveAs(root)),
-        ('build', lambda: build(root)),
-        ('build as', lambda: buildAs(root)),
+        ('New', lambda: newFile(root)),
+        ('Open...', lambda: open(root)),
+        ('Save', lambda: save(root)),
+        ('Save as...', lambda: saveAs(root)),
+        ('Build', lambda: build(root)),
+        ('Build as...', lambda: buildAs(root)),
+        ('Build log', lambda: source_file.SF.build('', 0)),
     ]
     if debug_flag:
         panelFrameButtons += [
-            ('canvas redraw', lambda: gp_canvas.canvas.draw(source_file.SF)),
-            ('build log', lambda: source_file.SF.build('', 0)),
-            ('save log', lambda: source_file.SF.save('', 0)),
-            ('console', lambda: openConsole(root)),
-            ('exit', lambda: root.destroy()),
+            ('Canvas redraw', lambda: gp_canvas.canvas.draw(source_file.SF)),
+            ('Save log', lambda: source_file.SF.save('', 0)),
+            ('Console', lambda: openConsole(root)),
+            ('Hard exit', lambda: root.destroy()),
         ]
     root.protocol("WM_DELETE_WINDOW", lambda: closeWindow(root))
 
     placeButtons(panelFrame, panelFrameButtons)
 
     mainMenu_tree = {
-        "Файл": {
-            "Новый файл": lambda: print('new file, not implemented'),
-            "Открыть...": lambda: print('open, not implemented'),
-            "Сохранить": lambda: print('save, not implemented'),
-            "Сохранить как...": lambda: print('save as, not implemented'),
+        "File": {
+            "New file": lambda: newFile(root),
+            "Open file...": lambda: open(root),
+            "Save file": lambda: save(root),
+            "Save file as...": lambda: lambda: saveAs(root),
         },
-        "Сборка": {
-            "Собрать исходник": lambda: print('build, not implemented'),
+        "Build": {
+            "Build": lambda: build(root),
+            "Build as...": lambda: buildAs(root),
         },
-        "Выход": lambda: print('exit, not implemented'),
-        "Язык": {
-            "py": lambda: change_lang("python"),
-            "rs": lambda: change_lang("rscript"),
-            "default": lambda: change_lang("default"),
-        },
+        "Exit": lambda: closeWindow(root),
     }
+    if debug_flag:
+        mainMenu_tree["Debug"] = {
+            "Hard exit": lambda: root.destroy(),
+            "Lang": {
+                "-> python": lambda: change_lang("python"),
+                "-> rscript": lambda: change_lang("rscript"),
+                "-> default": lambda: change_lang("default"),
+            },
+
+        }
     mainMenu = tk.Menu(master=root)
     createMenu(mainMenu, mainMenu_tree)
     root.config(menu=mainMenu)
 
-    assign_canvasFrame(canvasFrame)
+    assign_canvas_frame(canvasFrame)
     # Указываем нашему холсту на tk.Canvas, на котором он будет рисовать/ assign canvas to tk.canvas to draw on
     gp_canvas.canvas.master = canvas
 
     try:
         root.state('zoomed')
     except Exception:
-        print('Cannot zoom window')
+        print('Cannot zoom window (non-Windows OS)')
 
     # Создание нового файла (инициализация source_file.SF)/Creation of the new file(initialization new source_file.SF)
     source_file.SF = source_file.SourceFile()
     gp_canvas.canvas.draw(source_file.SF)
     mainWindow.title('new file')
-
 
     canvas.bind("<Button-1>", b1)
     canvas.bind("<Button-2>", b2)
@@ -209,9 +215,9 @@ def ui_init(root):
     canvas.bind("<ButtonRelease-2>", b2_release)
     canvas.bind("<ButtonRelease-3>", b3_release)
 
-    canvas.bind("<MouseWheel>", wheel) # for Windows, MacOS
-    canvas.bind("<Button-4>", wheel) # for Linux
-    canvas.bind("<Button-5>", wheel) # for Linux
+    canvas.bind("<MouseWheel>", wheel)  # for Windows, MacOS
+    canvas.bind("<Button-4>", wheel)  # for Linux # TODO: видимо это не работает, нужно почитать и починить
+    canvas.bind("<Button-5>", wheel)  # for Linux
 
     canvas.bind("<Control-3>", b3_ctrl)
     canvas.bind("<Control-ButtonRelease-3>", b3_ctrl_release)

@@ -1,6 +1,9 @@
 from .lexer import TokenType
 from .ast import *
-import rangers.script as s
+
+
+def s(msg):
+    print(msg)
 
 
 class ParseError(RuntimeError):
@@ -141,7 +144,6 @@ class Parser(object):
             initializer = None
             if self._match(TokenType.ASSIGN):
                 initializer = self._expression()
-
 
             variables.append((type, name, initializer))
             if not self._match(TokenType.COMMA):

@@ -1,5 +1,3 @@
-from ast import literal_eval
-
 import text_editor
 from settings import *
 from utils import *
@@ -25,7 +23,7 @@ class SourceFile:
         self.fileName = ''
         self.buildName = ''
         self.data = 0
-        self.lang = 'python'
+        self.changeLang('python')
         self.wasEdited = False
 
     def changeLang(self, lang):
@@ -45,13 +43,11 @@ class SourceFile:
             'blocks': [val.toDict() for key, val in self.object_ids.items()]
         }
 
-
         if save:
             if fileName:
                 self.fileName = fileName
                 with open(self.fileName, 'w') as outfile:
-                    json.dump(data, outfile)
-
+                    json.dump(data, outfile, indent=4)
         else:
             print('Save log:')
             print(json.dumps(data, indent=4))
@@ -67,43 +63,48 @@ class SourceFile:
         self.fileName = fileName
 
         self.data = obj["subversion"]
-        try:
+        if isinstance(self.data, int):
             self.data = int(self.data)
-        except ValueError:
-            debug_return(f'bad subversion: {self.data}; setting subversion to {0}')
+        else:
+            debug_return(f'Bad subversion: {self.data}; setting subversion to {0}')
             self.data = 0
 
         self.changeLang(obj["lang"])
         self.buildName = obj["build_path"]
         blocks = obj["blocks"]
         for b in blocks:
-            line = str(b)
-            if len(line.strip()) == 0 or line.strip()[0] == ';':
-                continue  # пустые строки и строки-комментарии пропускаем/ leave empty and comment strings
-            type = literal_eval(line)["type"]
-            if type in allTypes:
-                Block(self, line.strip(), creating_type=1)
+            block_type = b['type']
+            if block_type in allTypes:
+                Block(self, b, creating_type=1)
             else:
-                raise Exception(f'Unknown type of block! Line: "{line}\nallTypes: {allTypes}"')
+                raise Exception(f'Unknown type of block: {block_type}! \nBlock: "{b}\nallTypes: {allTypes}"')
 
-    def parents(self, id):
+            # line = str(b)
+            # if len(line.strip()) == 0 or line.strip()[0] == ';':
+            #     continue  # пустые строки и строки-комментарии пропускаем/ leave empty and comment strings
+            # type = literal_eval(line)["type"]
+            # if type in allTypes:
+            #     Block(self, line.strip(), creating_type=1)
+            # else:
+
+    def parents(self, block_id):
         """Возвращает id всех блоков, для которых данный является дочерним/ return ids of all child blocks"""
         res = []
         for i, obj in self.object_ids.items():
-            if id in obj.childs:
+            if block_id in obj.childs:
                 res = res + [i]
         return res
 
     def build(self, fileName, save=1):
         """Составляет текст программы и сохраняет его в файл/ create program text and save it to file"""
 
-        rootBlock = Block(self, type='empty')
+        rootBlock = Block(self, block_type='empty')
         for i, _ in self.object_ids.items():
             if not self.parents(i):
                 rootBlock.addLink(i)
         rootBlock.sortChilds()
         s = rootBlock.build('')
-        del rootBlock
+        rootBlock.delete()
 
         if save:
             self.buildName = fileName
@@ -135,9 +136,9 @@ class Block:
     classname - тип блока строкой/ string of block type
     data - словарь данных блока для подстановок/ dictionary of block data for inserting
     """
-    #__slots__ = "classname", "id", "childs", "pos", "text"
+    # __slots__ = "classname", "id", "childs", "pos", "text"
 
-    def __init__(self, SF, str='', type='undefined', creating_type=0, chosen=False):
+    def __init__(self, SF, data=None, block_type='undefined', creating_type=0, chosen=False):
         self.SF = SF
         self.text_editor = None
         self.chosen = chosen
@@ -145,17 +146,15 @@ class Block:
         # creating_type == 0 - создание нового элемента/creation of new element
         # creating_type == 1 - парсинг элемента из файла/ parcing from file
         if creating_type == 1:
-            self.parseFromStr(str)
+            self.fromDict(data)
             self.SF.object_ids[self.id] = self
             self.SF.max_id = max(self.SF.max_id, self.id + 1)
         else:
-            max_id = len(SF.object_ids)
-
             self.id = SF.max_id
             self.childs = []
             self.pos = Point(0, 0)
             self.data = {}
-            self.classname = type
+            self.classname = block_type
 
             for key, val in getDictValByPath(allTypes, f'{self.classname}.edit').items():
                 self.data[key] = ''
@@ -195,14 +194,14 @@ class Block:
         result = result.replace('\n', '\\n')
         return result
 
-    def parseFromStr(self, s):
-        """Распаковывает блок из строки-словаря/ parce block from dictionary - string"""
-        dct = literal_eval(s)
-        self.classname = dct["type"]
-        self.id = dct["id"]
-        self.childs = dct["childs"]
-        self.pos = Point().fromTuple(dct["pos"])
-        self.data = dct["data"]
+    def fromDict(self, d):
+        """Распаковывает блок из строки-словаря/ parse block from dictionary - string"""
+        # dct = literal_eval(s)
+        self.classname = d["type"]
+        self.id = d["id"]
+        self.childs = d["childs"]
+        self.pos = Point().fromTuple(d["pos"])
+        self.data = d["data"]
 
     def formatStr(self, s):
         """Применяет к строке s все подстановки из self.data/ implement all implements of self.data to the string"""
@@ -217,7 +216,8 @@ class Block:
         return lambda s: self.formatStr(s)
 
     def build(self, s, t='    '):
-        """Возвращает строку: текст программы, которую описывает данный блок/ return string: text of the program which block describe"""
+        """Возвращает строку: текст программы, которую описывает данный блок
+        / return string: text of the program which block describe"""
         self.sortChilds()
 
         tab = 0
@@ -281,7 +281,7 @@ class Block:
 
     def sortChilds(self):
         """Сортирует дочерние элементы блока по положению на холсте/ sort child elements by placement on the canvas"""
-        self.childs.sort(key=lambda id: self.SF.object_ids[id].pos)
+        self.childs.sort(key=lambda block_id: self.SF.object_ids[block_id].pos)
 
     def addLink(self, child):
         """Добавляет дочерний элемент/ add child"""
@@ -296,7 +296,7 @@ class Block:
             self.childs.remove(child)
 
     def parents(self):
-        """Возвращает id всех блоков, для которых данный является дочерним/Retern all parent blocks"""
+        """Возвращает id всех блоков, для которых данный является дочерним/Return all parent blocks"""
         return self.SF.parents(self.id)
 
     def shift(self, shift, desc=0, shift_id=0):

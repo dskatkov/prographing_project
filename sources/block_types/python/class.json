@@ -2,7 +2,7 @@
     "canvas": {
 		"image": "",
 		"tooltip": "class <1>(<2>):",
-		"desc":"class <1>"
+		"desc":"class <1>(<2>)"
 	},
     "edit": {
 		"<desc>": {

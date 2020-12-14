@@ -5,7 +5,7 @@ from utils import *
 # A_  = A==>*
 #  _B = *==>B
 #  _  = *==>*
-linkColores = {
+linkColors = {
     "_": "#000000",
 
     "creating_": "#ffff00",
@@ -46,7 +46,7 @@ linkColores = {
 }
 
 # Цвета кружков блоков разного типа
-drawColores = {
+drawColors = {
     'chosen': '#00ff00',
     "undefined": "#00ff00",
     'empty': '#000000',
@@ -56,11 +56,13 @@ drawColores = {
     "for": "#FD9622",
     "class": "#67D8EF",
     "fun": "#A6E22B",
+    "while": "#FF0000",
 
     'dict': 'red',
     'dict_pair': 'yellow',
     'dict_long_pair': 'pink',
 }
+
 
 def load_lang_blocks(lang):
     """Загружает"""
@@ -70,6 +72,7 @@ def load_lang_blocks(lang):
     for block_type, block_path in blocks.items():
         res[block_type] = json_load(f'block_types/{lang}/{block_path}')
     return res
+
 
 def change_lang(lang):
     global allTypes

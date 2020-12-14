@@ -2,7 +2,7 @@
     "canvas": {
 		"image": "",
 		"tooltip": "",
-		"desc":"def <1>"
+		"desc":"def <1>(<2>)"
     },
     "edit": {
 		"<desc>": {

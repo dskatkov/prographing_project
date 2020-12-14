@@ -10,7 +10,7 @@ from gp_block_manager import *
 
 
 def getText(textArea):
-    """Возвращает содержимое поля/ Return ffield containment"""
+    """Возвращает содержимое поля/ Return field containment"""
     if isinstance(textArea, tk.Entry):
         return textArea.get()
     elif isinstance(textArea, tk.Text):
@@ -38,6 +38,9 @@ class TextEditor:
         self.root = root
         self.canvas = canvas
 
+        # configuring main window
+        # root.minsize(400, 200)
+
         root.columnconfigure(0, weight=1, minsize=0)
         root.rowconfigure(0, weight=0, minsize=0)  # 20)
         root.rowconfigure(1, weight=1, minsize=0)
@@ -48,7 +51,7 @@ class TextEditor:
         self.editFrame = tk.Frame(master=root)
         self.stateFrame = tk.Frame(master=root, bg=stateBG)
 
-        #self.panelFrame.grid(row=0, column=0, sticky='nsew')
+        # self.panelFrame.grid(row=0, column=0, sticky='nsew')
         self.editFrame.grid(row=1, column=0, sticky='nsew')
         self.stateFrame.grid(row=2, column=0, sticky='nsew')
 
@@ -56,7 +59,7 @@ class TextEditor:
         self.textAreas = {}
 
         focused = 0  # TODO: параметр для автофокуса
-        debug_return('block fields: ' + str(getDictValByPath(allTypes, f'{block.classname}.edit')))
+        debug_return('Block fields: ' + str(getDictValByPath(allTypes, f'{block.classname}.edit')))
         for key, val in getDictValByPath(allTypes, f'{block.classname}.edit').items():
             editing_type = val['type']
             header = val['header']
@@ -81,6 +84,7 @@ class TextEditor:
                 if not focused:
                     ta.focus()
                     focused = 1
+                    # ta.bind("Return", lambda: self.close(-1))
             elif editing_type == 'multiline':
                 if header:
                     lbl = tk.Label(master=self.editFrame,

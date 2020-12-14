@@ -21,7 +21,7 @@ link_width = 0.06
 font_size = 0.20
 # Расстояние на котором нажатие мышью удаляет линию/Distance on which mouse click deletes the link
 nearToLine = 0.05
-# Чуствительность зума колесом мыши/Sensetiveness of zoom by wheel
+# Чуствительность зума колесом мыши/Sensitiveness of zoom by wheel
 zoomSpeed = 0.1
 # ширина стрелки/ arrow width
 arrow_width = 0.15
@@ -33,7 +33,7 @@ debug_flag = 0
 debug_to_console = 0
 
 # Флаг профилирования/Profiling flag
-profile = 1
+profile = 0
 
 openEditorAfterCreating = 1
 

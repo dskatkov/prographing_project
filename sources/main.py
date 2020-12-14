@@ -8,11 +8,13 @@ from utils import *
 def main():
     # Главное окно/main window
     ui.mainWindow = tk.Tk()
-    # Инициализация UI (создание и расположение фреймов + обработчики мыши)/ UI initialization (creation and placement of frames + handlers)
+    # Инициализация UI (создание и расположение фреймов + обработчики мыши)
+    # / UI initialization (creation and placement of frames + handlers)
     ui.ui_init(ui.mainWindow)
 
     # Цикл событий tkinter/ tkinter event loop
     ui.mainWindow.mainloop()
+
 
 if __name__ == "__main__":
     # Профилирование/Profiling

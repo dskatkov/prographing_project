@@ -14,7 +14,7 @@ _tokens = ["LPAREN", "RPAREN", "LBRACE", "RBRACE", "LSQUARE", "RSQUARE",
            "IF", "ELSE", "WHILE", "FOR", "BREAK", "CONTINUE", "EXIT",
            "FUNCTION", "CLASS", "INCLUDE", "INSERT",
            "TRY", "CATCH", "FINALLY", "THROW",
-          ]
+           ]
 
 # noinspection PyArgumentList
 TokenType = Enum("TokenType", _tokens)
@@ -211,7 +211,7 @@ class Lexer(object):
             return
 
         self._advance()
-        text = self._source[self._start+1 : self._current-1]
+        text = self._source[self._start+1: self._current-1]
         self._add_token(TokenType.STRING, text)
 
     def _literal(self):
@@ -254,6 +254,7 @@ class Lexer(object):
         else:
             print(self._line, f"Invalid directive at {self._start}.")
 
+
 lexer = Lexer(r'''
 	for i in range(0, len(code)):
         char = code[i]
@@ -269,4 +270,4 @@ lexer = Lexer(r'''
 ''')
 tokens = lexer.scan_tokens()
 for token in tokens:
-	print(token)
+    print(token)

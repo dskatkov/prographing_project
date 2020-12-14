@@ -7,5 +7,6 @@
 	"else": "else.json",
 	"for": "for.json",
 	"fun": "fun.json",
-	"if": "if.json"
+	"if": "if.json",
+	"while": "while.json"
 }

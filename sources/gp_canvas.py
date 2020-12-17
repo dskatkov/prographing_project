@@ -14,6 +14,7 @@ class Canvas:
         self.touch = None
         self.link_creation = None
         self.SF = None
+        self.selection = None
 
     def draw(self, SF):
         """Рисует холст (блоки + линки)/ drawing canvas (blocks + links)"""
@@ -24,6 +25,10 @@ class Canvas:
         except Exception:
             print('Cannot delete all figures')
         self.master.create_rectangle(0, 0, 2000, 2000, fill=textBG)
+
+        #Выделение области/ area selection
+        if self.selection:
+            self.draw_selection(self.selection)
 
         # Выбранный блок / Chosen block
         if self.handling:
@@ -54,6 +59,13 @@ class Canvas:
     def unscale(self, pos: Point):
         """положение на экране -> положение на холсте/ placement on screen -> placement on canvas"""
         return pos * (1 / self.viewzoom) + self.viewpos
+
+    def draw_selection(self, area):
+        ul = Point(*self.scale(area.upperleft()).tuple())
+        dr = Point(*self.scale(area.downright()).tuple())
+        area = Area(ul, dr)
+        self.master.create_rectangle(*area.boundrect(), fill = 'deep sky blue')
+        self.master.create_rectangle(*area.rect(), fill='sky blue')
 
     def draw_block(self, block, chosen=0):
         """Рисует блок/ Drawing block"""

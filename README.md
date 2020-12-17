@@ -1,4 +1,4 @@
-# Pro**graph**ing project
+# Prographing project
 Проект для визуализации исходных текстов разветвленных программ
 
 Преимущества визуального редактора перед текстовым:
@@ -15,7 +15,6 @@
 
 Денис Баллах и Денис Катков, ЛФИ МФТИ 2020
 __________________________________________________________________________________
-# Pro ** graph ** ing project
 Project for visualization of source codes of branched programs
 
 The advantages of a visual editor over a text one:

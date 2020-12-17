@@ -166,6 +166,34 @@ class Point:
         """Make copy of the point"""
         return Point(self.x, self.y)
 
+class Area():
+    def __init__(self, p1, p2):
+        self.p1 = p1
+        self.p2 = p2
+
+    def upperleft(self):
+        x = min(self.p1.x, self.p2.x)
+        y = min(self.p1.y, self.p2.y)
+        return Point(x, y)
+
+    def downright(self):
+        x = max(self.p1.x, self.p2.x)
+        y = max(self.p1.y, self.p2.y)
+        return Point(x, y)
+
+    def rect(self):
+        return(self.upperleft().x, self.upperleft().y, self.downright().x, self.downright().y)
+
+    def boundrect(self):
+        s = selection_boundary
+        return (self.upperleft().x - 1*s, self.upperleft().y - 1*s, self.downright().x + 2*s, self.downright().y + 2*s)
+
+    def height(self):
+        return (self.downright().y - self.upperleft().y)
+
+    def width(self):
+        return (self.downright().x - self.upperleft().x)
+
 
 debug_log = ...
 

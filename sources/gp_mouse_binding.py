@@ -87,6 +87,10 @@ def b3(click):
         block.chosen = True
         canvas.canvas.handling = block
         canvas.canvas.touch = Point(click.x, click.y)
+    else:
+        #выделение
+        p = unscale(Point(click.x, click.y))
+        canvas.canvas.selection = (Area(p, p))
     redraw()
 
 
@@ -158,6 +162,10 @@ def b3_motion(click):
             canvas.canvas.handling.shift(
                 shift, desc=descend_moving, shift_id=uniform(0, 1))
             canvas.canvas.touch = clickpos
+    #выделение/selection
+    elif canvas.canvas.selection:
+        clickpos = unscale(Point(click.x, click.y))
+        canvas.canvas.selection.p2 = clickpos
     redraw()
 
 
@@ -197,6 +205,7 @@ def b3_release(click):
     debug_return(f'right release:({click.x},{click.y})')
     # сброс таскаемого блока
     canvas.canvas.touch = None
+    canvas.canvas.selection = None
     if canvas.canvas.handling:
         canvas.canvas.handling.chosen = False
     canvas.canvas.handling = None

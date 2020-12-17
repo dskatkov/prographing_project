@@ -19,6 +19,7 @@ blockR = 0.4
 chosen_R = 0.6
 link_width = 0.06
 font_size = 0.20
+selection_boundary = 0.04
 # Расстояние на котором нажатие мышью удаляет линию/Distance on which mouse click deletes the link
 nearToLine = 0.05
 # Чуствительность зума колесом мыши/Sensitiveness of zoom by wheel

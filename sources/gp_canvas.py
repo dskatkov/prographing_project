@@ -15,6 +15,8 @@ class Canvas:
         self.link_creation = None
         self.SF = None
         self.selection = None
+        self.move_eye = False
+        self.group_of_blocks = None
 
     def draw(self, SF):
         """Рисует холст (блоки + линки)/ drawing canvas (blocks + links)"""
@@ -30,9 +32,13 @@ class Canvas:
         if self.selection:
             self.draw_selection(self.selection)
 
-        # Выбранный блок / Chosen block
+        # Выбранный блок / Chosen block(s)
         if self.handling:
             self.draw_block(self.handling, chosen=1)
+
+        if self.group_of_blocks:
+            for block in self.group_of_blocks:
+                self.draw_block(block, chosen=1)
 
         # Линки/ Links
         for _, block in SF.object_ids.items():

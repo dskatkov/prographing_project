@@ -166,6 +166,11 @@ class Point:
         """Make copy of the point"""
         return Point(self.x, self.y)
 
+    def same(self, other):
+        if self.x == other.x and self.y == other.y:
+            return True
+        return False
+
 class Area():
     def __init__(self, p1, p2):
         self.p1 = p1
@@ -193,6 +198,12 @@ class Area():
 
     def width(self):
         return (self.downright().x - self.upperleft().x)
+
+    def __contains__(self, other):
+        if (other.x >= self.upperleft().x) and (other.x <= self.downright().x):
+            if (other.y >= self.upperleft().y) and (other.y <= self.downright().y):
+                return True
+        return False
 
 
 debug_log = ...

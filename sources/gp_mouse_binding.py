@@ -46,6 +46,9 @@ def b1(click):
         canvas.canvas.handling = block
         canvas.canvas.link_creation = Point(click.x, click.y)
         canvas.canvas.touch = Point(click.x, click.y)
+    else:
+        canvas.canvas.group_of_blocks = None
+        canvas.canvas.move_eye = unscale(Point(click.x, click.y))
     redraw()
 
 
@@ -62,7 +65,8 @@ def b2(click):
                 parent=canvasFrame):
             block.delete()
     # удаление линка/link deletion
-    if not block:
+    else:
+        canvas.canvas.group_of_blocks = None
         stop = 0
         for p in source_file.SF.object_ids:
             parent = source_file.SF.object_ids[p]
@@ -88,6 +92,7 @@ def b3(click):
         canvas.canvas.handling = block
         canvas.canvas.touch = Point(click.x, click.y)
     else:
+        canvas.canvas.group_of_blocks = None
         #выделение
         p = unscale(Point(click.x, click.y))
         canvas.canvas.selection = (Area(p, p))
@@ -135,6 +140,10 @@ def b1_motion(click):
     # сдвиг конца стрелки/ arrow end movement
     if canvas.canvas.handling:
         canvas.canvas.link_creation = Point(click.x, click.y)
+    elif canvas.canvas.move_eye:
+        clickpos = unscale(Point(click.x, click.y))
+        shift = clickpos - canvas.canvas.move_eye
+        canvas.canvas.viewpos -= shift
     redraw()
 
 
@@ -148,7 +157,7 @@ def b2_motion(click):
 def b3_motion(click):
     """движение с зажатой правой клавишей/ movement with pressed right button"""
     debug_return(f'right motion:({click.x},{click.y})')
-    # сдвиг блоков/block movement
+    # сдвиг блоков/block(s) movement
     if canvas.canvas.handling:
         clickpos = Point(click.x, click.y)
         if ban_impositions:
@@ -162,6 +171,10 @@ def b3_motion(click):
             canvas.canvas.handling.shift(
                 shift, desc=descend_moving, shift_id=uniform(0, 1))
             canvas.canvas.touch = clickpos
+            if canvas.canvas.group_of_blocks:
+                for block in canvas.canvas.group_of_blocks:
+                    if block != canvas.canvas.handling:
+                        block.shift(shift, desc=descend_moving, shift_id=uniform(0, 1))
     #выделение/selection
     elif canvas.canvas.selection:
         clickpos = unscale(Point(click.x, click.y))
@@ -187,6 +200,7 @@ def b1_release(click):
                     debug_return('ban cycle!!!')
     canvas.canvas.touch = None
     canvas.canvas.link_creation = False
+    canvas.canvas.move_eye = False
     if canvas.canvas.handling:
         canvas.canvas.handling.chosen = False
     canvas.canvas.handling = None
@@ -205,7 +219,6 @@ def b3_release(click):
     debug_return(f'right release:({click.x},{click.y})')
     # сброс таскаемого блока
     canvas.canvas.touch = None
-    canvas.canvas.selection = None
     if canvas.canvas.handling:
         canvas.canvas.handling.chosen = False
     canvas.canvas.handling = None
@@ -213,6 +226,16 @@ def b3_release(click):
     # копия b3_ctrl_release
     global descend_moving
     descend_moving = 0
+
+    #действие выделения
+    if canvas.canvas.selection:
+        area = canvas.canvas.selection
+        canvas.canvas.selection = None
+        for _, block in source_file.SF.object_ids.items():
+            if block.pos in area:
+                if canvas.canvas.group_of_blocks == None:
+                    canvas.canvas.group_of_blocks = []
+                canvas.canvas.group_of_blocks.append(block)
     redraw()
 
 

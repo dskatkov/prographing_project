@@ -14,6 +14,7 @@
 примеры визуальных программ можно найти в папке examples
 
 Денис Баллах и Денис Катков, ЛФИ МФТИ 2020
+контакт denis.s.katkov@gmail.com
 __________________________________________________________________________________
 Project for visualization of source codes of branched programs
 
@@ -30,3 +31,4 @@ More detailed instructions for use and functionality can be found in the file us
 examples of visual programs can be found in the examples folder
 
 Denis Ballakh and Denis Katkov, DGAP MIPT 2020
+contact us denis.s.katkov@gmail.com

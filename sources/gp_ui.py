@@ -33,7 +33,7 @@ def save(root):
         source_file.SF.save(source_file.SF.fileName)
 
 
-def open(root):
+def open_button(root):
     """Обработчик кнопки open/ handler of open button"""
     fileName = tk.filedialog.Open(
         root, filetypes=[("Visual script", ".vrc")]).show()
@@ -93,6 +93,24 @@ def newFile(root):
         gp_canvas.canvas.draw(source_file.SF)
         mainWindow.title('new file')
 
+def documentation(root):
+    root = tk.Tk()
+    root.title('Documentation')
+    Scrollbar = tk.Scrollbar(root)
+    doc_window = tk.Text(root, height=40, width=100, bg = textBG, fg = textFG)
+    Scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    doc_window.pack(side=tk.LEFT, fill=tk.Y)
+    Scrollbar.config(command=doc_window.yview)
+    doc_window.config(yscrollcommand=Scrollbar.set)
+    doc_window.pack()
+
+    file = open ("user_documentation.txt", "r")
+    doc_text =  file.read()
+
+    doc_window.insert(tk.END, doc_text)
+
+
+
 
 def closeWindow(root):
     if close(root):
@@ -140,12 +158,13 @@ def ui_init(root):
 
     panelFrameButtons = [
         ('New', lambda: newFile(root)),
-        ('Open...', lambda: open(root)),
+        ('Open...', lambda: open_button(root)),
         ('Save', lambda: save(root)),
         ('Save as...', lambda: saveAs(root)),
         ('Build', lambda: build(root)),
         ('Build as...', lambda: buildAs(root)),
         ('Build log', lambda: source_file.SF.build('', 0)),
+        ('Help', lambda: documentation(root))
     ]
     if debug_flag:
         panelFrameButtons += [
@@ -161,7 +180,7 @@ def ui_init(root):
     mainMenu_tree = {
         "File": {
             "New file": lambda: newFile(root),
-            "Open file...": lambda: open(root),
+            "Open file...": lambda: open_button(root),
             "Save file": lambda: save(root),
             "Save file as...": lambda: lambda: saveAs(root),
         },

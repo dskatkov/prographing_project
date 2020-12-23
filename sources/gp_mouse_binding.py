@@ -39,17 +39,19 @@ def b1(click):
     """левая кнопка мыши/ left mouse button"""
     debug_return(f'canvas view pos: {canvas.canvas.viewpos}')
     debug_return(f'left click: ({click.x},{click.y})')
+    # установка перемещаемого блока/set of moving block
     block = find_block(click)
-    # установка начальной точки стрелки/setting of the initial arrow point
     if block:
         block.chosen = True
         canvas.canvas.handling = block
-        canvas.canvas.link_creation = Point(click.x, click.y)
         canvas.canvas.touch = Point(click.x, click.y)
     else:
         canvas.canvas.group_of_blocks = None
-        canvas.canvas.move_eye = unscale(Point(click.x, click.y))
+        #выделение
+        p = unscale(Point(click.x, click.y))
+        canvas.canvas.selection = (Area(p, p))
     redraw()
+
 
 
 def b2(click):
@@ -59,11 +61,21 @@ def b2(click):
     block = find_block(clickpos)
     # удаление блока/block deletion
     if block:
-        if tk.messagebox.askyesno(
-                "Delete?",
-                "Do you want to delete block '" + block.getSub() + "'?",
-                parent=canvasFrame):
-            block.delete()
+        if canvas.canvas.group_of_blocks:
+            if tk.messagebox.askyesno(
+                    "Delete?",
+                    "Do you want to delete a group of " +
+                    str(len(canvas.canvas.group_of_blocks))+ " blocks?",
+                    parent=canvasFrame):
+                for block in canvas.canvas.group_of_blocks:
+                    block.delete()
+                canvas.canvas.group_of_blocks = None
+        else:
+            if tk.messagebox.askyesno(
+                    "Delete?",
+                    "Do you want to delete block '" + block.getSub() + "'?",
+                    parent=canvasFrame):
+                block.delete()
     # удаление линка/link deletion
     else:
         canvas.canvas.group_of_blocks = None
@@ -86,16 +98,15 @@ def b2(click):
 def b3(click):
     debug_return(f'right click: ({click.x},{click.y})')
     block = find_block(click)
-    # установка перемещаемого блока/set of moving block
+    # установка начальной точки стрелки/setting of the initial arrow point
     if block:
         block.chosen = True
         canvas.canvas.handling = block
+        canvas.canvas.link_creation = Point(click.x, click.y)
         canvas.canvas.touch = Point(click.x, click.y)
     else:
         canvas.canvas.group_of_blocks = None
-        #выделение
-        p = unscale(Point(click.x, click.y))
-        canvas.canvas.selection = (Area(p, p))
+        canvas.canvas.move_eye = unscale(Point(click.x, click.y))
     redraw()
 
 
@@ -137,26 +148,6 @@ def b3_double(click):
 def b1_motion(click):
     """движение с зажатой левой клавишей/ movement with pressed left button"""
     debug_return(f'left motion: ({click.x},{click.y})')
-    # сдвиг конца стрелки/ arrow end movement
-    if canvas.canvas.handling:
-        canvas.canvas.link_creation = Point(click.x, click.y)
-    elif canvas.canvas.move_eye:
-        clickpos = unscale(Point(click.x, click.y))
-        shift = clickpos - canvas.canvas.move_eye
-        canvas.canvas.viewpos -= shift
-    redraw()
-
-
-def b2_motion(click):
-    """движение с зажатым колесом/ movement with pressed wheel"""
-    debug_return(f'wheel motion:({click.x},{click.y})')
-    ...
-    redraw()
-
-
-def b3_motion(click):
-    """движение с зажатой правой клавишей/ movement with pressed right button"""
-    debug_return(f'right motion:({click.x},{click.y})')
     # сдвиг блоков/block(s) movement
     if canvas.canvas.handling:
         clickpos = Point(click.x, click.y)
@@ -175,18 +166,72 @@ def b3_motion(click):
                 for block in canvas.canvas.group_of_blocks:
                     if block != canvas.canvas.handling:
                         block.shift(shift, desc=descend_moving, shift_id=uniform(0, 1))
-    #выделение/selection
+    # выделение/selection
     elif canvas.canvas.selection:
         clickpos = unscale(Point(click.x, click.y))
         canvas.canvas.selection.p2 = clickpos
     redraw()
 
 
+def b2_motion(click):
+    """движение с зажатым колесом/ movement with pressed wheel"""
+    debug_return(f'wheel motion:({click.x},{click.y})')
+    ...
+    redraw()
+
+
+def b3_motion(click):
+    """движение с зажатой правой клавишей/ movement with pressed right button"""
+    debug_return(f'right motion:({click.x},{click.y})')
+    # сдвиг конца стрелки/ arrow end movement
+    if canvas.canvas.handling:
+        canvas.canvas.link_creation = Point(click.x, click.y)
+    elif canvas.canvas.move_eye:
+        clickpos = unscale(Point(click.x, click.y))
+        shift = clickpos - canvas.canvas.move_eye
+        canvas.canvas.viewpos -= shift
+    redraw()
+
+
+
 def b1_release(click):
     """отпускание левой клавиши/ release of the left button"""
     debug_return(f'left release:({click.x},{click.y})')
-    block = find_block(click)
+    # сброс таскаемого блока
+    canvas.canvas.touch = None
+    if canvas.canvas.handling:
+        canvas.canvas.handling.chosen = False
+    canvas.canvas.handling = None
+
+    # копия b3_ctrl_release
+    global descend_moving
+    descend_moving = 0
+
+    # действие выделения
+    if canvas.canvas.selection:
+        area = canvas.canvas.selection
+        canvas.canvas.selection = None
+        for _, block in source_file.SF.object_ids.items():
+            if block.pos in area:
+                if canvas.canvas.group_of_blocks == None:
+                    canvas.canvas.group_of_blocks = []
+                canvas.canvas.group_of_blocks.append(block)
+    redraw()
+
+
+
+def b2_release(click):
+    """отпускание колеса/ release of the wheel"""
+    debug_return(f'wheel release:({click.x},{click.y})')
+    ...
+    redraw()
+
+
+def b3_release(click):
+    """отпускание правой клавиши/ release of the right button"""
+    debug_return(f'right release:({click.x},{click.y})')
     # создание линка/Link creation
+    block = find_block(click)
     if canvas.canvas.handling:
         if block and (not block == canvas.canvas.handling) and (block not in canvas.canvas.handling.childs):
             block_id = None
@@ -206,37 +251,6 @@ def b1_release(click):
     canvas.canvas.handling = None
     redraw()
 
-
-def b2_release(click):
-    """отпускание колеса/ release of the wheel"""
-    debug_return(f'wheel release:({click.x},{click.y})')
-    ...
-    redraw()
-
-
-def b3_release(click):
-    """отпускание правой клавиши/ release of the right button"""
-    debug_return(f'right release:({click.x},{click.y})')
-    # сброс таскаемого блока
-    canvas.canvas.touch = None
-    if canvas.canvas.handling:
-        canvas.canvas.handling.chosen = False
-    canvas.canvas.handling = None
-
-    # копия b3_ctrl_release
-    global descend_moving
-    descend_moving = 0
-
-    #действие выделения
-    if canvas.canvas.selection:
-        area = canvas.canvas.selection
-        canvas.canvas.selection = None
-        for _, block in source_file.SF.object_ids.items():
-            if block.pos in area:
-                if canvas.canvas.group_of_blocks == None:
-                    canvas.canvas.group_of_blocks = []
-                canvas.canvas.group_of_blocks.append(block)
-    redraw()
 
 
 def wheel(click):

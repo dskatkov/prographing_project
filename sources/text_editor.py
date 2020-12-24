@@ -5,8 +5,7 @@ import tkinter.font
 
 from settings import *
 from utils import *
-import gp_canvas as canvas
-#import syntax_coloring
+from coloring_module import *
 from gp_block_manager import *
 
 
@@ -76,6 +75,7 @@ class TextEditor:
                 ta = tk.Entry(master=self.editFrame, bg=textBG, fg=textFG)
                 if key in block.data:
                     ta.insert(0, block.data[key])
+                    #applyTags(ta, highlight(block.data[key]))
                 else:
                     debug_return(f'Wrong format of block: {block.convertToStr()}')
                 ta.pack(fill='x', expand=0, side="top")
@@ -96,6 +96,7 @@ class TextEditor:
                 ta = tk.Text(master=self.editFrame, height=ln+10,
                              width=50, bg=textBG, fg=textFG, wrap='word')
                 ta.insert('1.0', block.data[key])
+                #applyTags(ta, highlight(block.data[key]))
                 ta.pack(fill='both', expand=1, side="top")
 
                 self.textAreas[key] = ta
